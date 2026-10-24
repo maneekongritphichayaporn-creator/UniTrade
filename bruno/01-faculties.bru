@@ -1,0 +1,19 @@
+meta {
+  name: Faculties
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/faculties
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 with list and other option", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().data.length).to.be.above(20);
+    expect(res.getBody().other_value).to.equal("other");
+  });
+}

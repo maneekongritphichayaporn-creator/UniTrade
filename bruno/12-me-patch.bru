@@ -1,0 +1,35 @@
+meta {
+  name: Me — PATCH profile
+  type: http
+  seq: 12
+}
+
+patch {
+  url: {{baseUrl}}/auth/me
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "phone_number": "",
+    "line_id": "bruno_new",
+    "faculty": "other",
+    "faculty_other": "สำนักงานมหาวิทยาลัย",
+    "role": "admin"
+  }
+}
+
+tests {
+  test("200, contact swapped, role unchanged", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().phone_number).to.equal(null);
+    expect(res.getBody().line_id).to.equal("bruno_new");
+    expect(res.getBody().faculty).to.equal("สำนักงานมหาวิทยาลัย");
+    expect(res.getBody().role).to.equal("member");
+  });
+}

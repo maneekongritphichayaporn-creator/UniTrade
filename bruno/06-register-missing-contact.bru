@@ -1,0 +1,29 @@
+meta {
+  name: Register — MISSING_CONTACT
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{email}}",
+    "password": "UniTrade2026!",
+    "full_name": "ผู้ทดสอบ บรูโน",
+    "phone_number": "",
+    "line_id": "",
+    "faculty": "คณะวิศวกรรมศาสตร์"
+  }
+}
+
+tests {
+  test("422 MISSING_CONTACT", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("MISSING_CONTACT");
+  });
+}

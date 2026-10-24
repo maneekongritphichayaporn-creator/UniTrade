@@ -1,0 +1,29 @@
+meta {
+  name: Register — EMAIL_TAKEN
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{email}}",
+    "password": "UniTrade2026!",
+    "full_name": "ผู้ทดสอบ บรูโน",
+    "phone_number": "0812345678",
+    "line_id": "bruno_test",
+    "faculty": "คณะวิศวกรรมศาสตร์"
+  }
+}
+
+tests {
+  test("409 EMAIL_TAKEN", function () {
+    expect(res.getStatus()).to.equal(409);
+    expect(res.getBody().error.code).to.equal("EMAIL_TAKEN");
+  });
+}

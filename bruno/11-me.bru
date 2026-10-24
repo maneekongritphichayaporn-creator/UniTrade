@@ -1,0 +1,25 @@
+meta {
+  name: Me — profile
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/auth/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("200 with profile and stats", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().email).to.equal(bru.getVar("email"));
+    expect(res.getBody().faculty).to.equal("คณะวิศวกรรมศาสตร์");
+    expect(res.getBody().stats).to.deep.equal({ active_listings: 0, sold_items: 0, wishlist_count: 0 });
+    expect(res.getBody()).to.not.have.property("password_hash");
+  });
+}
