@@ -1,0 +1,20 @@
+meta {
+  name: Pickup locations
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/pickup-locations
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 with fixed pickup list", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().data).to.be.an("array");
+    expect(res.getBody().data.length).to.be.above(0);
+    expect(res.getBody().data).to.include("ศาลาพระเกี้ยว");
+  });
+}
