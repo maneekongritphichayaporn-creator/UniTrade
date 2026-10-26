@@ -1,0 +1,19 @@
+meta {
+  name: Products - invalid page
+  type: http
+  seq: 23
+}
+
+get {
+  url: {{baseUrl}}/products?page=0
+  body: none
+  auth: none
+}
+
+tests {
+  test("422 VALIDATION_ERROR on field page", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("VALIDATION_ERROR");
+    expect(res.getBody().error.field).to.equal("page");
+  });
+}

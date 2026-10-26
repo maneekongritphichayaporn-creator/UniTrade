@@ -1,0 +1,26 @@
+meta {
+  name: Product detail logged in
+  type: http
+  seq: 26
+}
+
+get {
+  url: {{baseUrl}}/products/{{productId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("200 with boolean is_owner and is_wishlisted", function () {
+    if (!bru.getVar("productId")) return;
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.is_owner).to.be.a("boolean");
+    expect(body.is_wishlisted).to.be.a("boolean");
+    expect(body.seller).to.not.have.any.keys("phone_number", "line_id", "email", "password_hash");
+  });
+}

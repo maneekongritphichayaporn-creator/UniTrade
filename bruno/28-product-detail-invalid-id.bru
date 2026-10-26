@@ -1,0 +1,18 @@
+meta {
+  name: Product detail - invalid id
+  type: http
+  seq: 28
+}
+
+get {
+  url: {{baseUrl}}/products/not-a-uuid
+  body: none
+  auth: none
+}
+
+tests {
+  test("404 PRODUCT_NOT_FOUND for an id that is not a UUID", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error.code).to.equal("PRODUCT_NOT_FOUND");
+  });
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Products - page past the end
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{baseUrl}}/products?page=99999
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 with empty data, not an error", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.data).to.deep.equal([]);
+    expect(body.pagination.page).to.equal(99999);
+    expect(body.message).to.be.a("string");
+  });
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Products - list logged in
+  type: http
+  seq: 24
+}
+
+get {
+  url: {{baseUrl}}/products
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("200 and is_wishlisted is a boolean on every card", function () {
+    expect(res.getStatus()).to.equal(200);
+    for (const card of res.getBody().data) {
+      expect(card.is_wishlisted).to.be.a("boolean");
+    }
+  });
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Products - no match
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{baseUrl}}/products?status=all&keyword=zzqx-no-such-product-7731
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 with empty data and a message, never 404", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.data).to.deep.equal([]);
+    expect(body.pagination.total).to.equal(0);
+    expect(body.pagination.total_pages).to.equal(0);
+    expect(body.message).to.be.a("string");
+  });
+}
