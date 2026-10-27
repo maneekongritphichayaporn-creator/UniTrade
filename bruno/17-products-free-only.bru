@@ -1,0 +1,21 @@
+meta {
+  name: Products - free only
+  type: http
+  seq: 17
+}
+
+get {
+  url: {{baseUrl}}/products?status=all&free_only=true
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 and every item is free", function () {
+    expect(res.getStatus()).to.equal(200);
+    for (const card of res.getBody().data) {
+      expect(card.price).to.equal(0);
+      expect(card.is_free).to.equal(true);
+    }
+  });
+}

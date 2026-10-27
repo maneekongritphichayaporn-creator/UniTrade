@@ -1,0 +1,19 @@
+meta {
+  name: Products - invalid sort
+  type: http
+  seq: 22
+}
+
+get {
+  url: {{baseUrl}}/products?sort=abc
+  body: none
+  auth: none
+}
+
+tests {
+  test("422 VALIDATION_ERROR on field sort", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("VALIDATION_ERROR");
+    expect(res.getBody().error.field).to.equal("sort");
+  });
+}

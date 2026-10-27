@@ -1,0 +1,18 @@
+meta {
+  name: Products - keyword with special characters
+  type: http
+  seq: 19
+}
+
+get {
+  url: {{baseUrl}}/products?status=all&keyword=%2C%28%29%25_%22%5C
+  body: none
+  auth: none
+}
+
+tests {
+  test("commas, brackets, percent, underscore, quote, backslash do not break search", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().data).to.be.an("array");
+  });
+}

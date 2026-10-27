@@ -1,0 +1,41 @@
+meta {
+  name: Products - list
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{baseUrl}}/products
+  body: none
+  auth: none
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && Array.isArray(body.data) && body.data.length > 0) {
+    bru.setVar("productId", body.data[0].product_id);
+  }
+}
+
+tests {
+  test("200 with data and pagination, defaults applied", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.data).to.be.an("array");
+    expect(body.data.length).to.be.at.most(20);
+    expect(body.pagination.page).to.equal(1);
+    expect(body.pagination.per_page).to.equal(20);
+    expect(body.pagination.total_pages).to.equal(Math.ceil(body.pagination.total / 20));
+  });
+
+  test("cards are public-safe, available only, is_free computed", function () {
+    for (const card of res.getBody().data) {
+      expect(card.status).to.equal("available");
+      expect(card.is_free).to.equal(card.price === 0);
+      expect(card.is_wishlisted).to.equal(false);
+      expect(card).to.not.have.property("description");
+      expect(card).to.not.have.property("seller_id");
+      expect(card.seller).to.not.have.any.keys("phone_number", "line_id", "email", "password_hash");
+    }
+  });
+}

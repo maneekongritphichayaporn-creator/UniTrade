@@ -1,0 +1,31 @@
+meta {
+  name: Product detail
+  type: http
+  seq: 25
+}
+
+get {
+  url: {{baseUrl}}/products/{{productId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 plain object, images, seller without contact details", function () {
+    if (!bru.getVar("productId")) return; // database has no products yet, skip
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.product_id).to.equal(bru.getVar("productId"));
+    expect(body).to.not.have.property("data");
+    expect(body).to.not.have.property("seller_id");
+    expect(body.images).to.be.an("array");
+    if (body.images.some((img) => img.is_primary)) {
+      expect(body.images[0].is_primary).to.equal(true);
+    }
+    expect(body.is_free).to.equal(body.price === 0);
+    expect(body.seller).to.have.property("active_listings");
+    expect(body.seller).to.not.have.any.keys("phone_number", "line_id", "email", "password_hash");
+    expect(body.is_wishlisted).to.equal(false);
+    expect(body.is_owner).to.equal(false);
+  });
+}

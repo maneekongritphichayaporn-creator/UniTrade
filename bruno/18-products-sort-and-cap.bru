@@ -1,0 +1,21 @@
+meta {
+  name: Products - price asc and per_page cap
+  type: http
+  seq: 18
+}
+
+get {
+  url: {{baseUrl}}/products?status=all&sort=price_asc&per_page=999
+  body: none
+  auth: none
+}
+
+tests {
+  test("per_page is capped at 50 and prices ascend", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.pagination.per_page).to.equal(50);
+    const prices = body.data.map((card) => card.price);
+    expect(prices).to.deep.equal([...prices].sort((a, b) => a - b));
+  });
+}

@@ -1,0 +1,18 @@
+meta {
+  name: Product detail - invalid id
+  type: http
+  seq: 28
+}
+
+get {
+  url: {{baseUrl}}/products/not-a-uuid
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 with empty data array for an id that is not a UUID", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.deep.equal({ data: [] });
+  });
+}
