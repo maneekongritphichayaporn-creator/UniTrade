@@ -1,0 +1,59 @@
+.form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 40px 0 42px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-size: 14px;
+}
+
+.input::placeholder {
+  color: var(--muted);
+}
+
+.input:focus {
+  border-color: var(--brand-200);
+  background: var(--white);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--brand-100);
+}
+
+/* ซ่อนปุ่มกากบาทที่เบราว์เซอร์ใส่มาให้ input[type=search] เพราะเรามีปุ่มล้างของตัวเอง */
+.input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.submit,
+.clear {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--muted);
+}
+
+.submit {
+  left: 5px;
+}
+
+.clear {
+  right: 5px;
+}
+
+.submit:hover,
+.clear:hover {
+  background: var(--brand-100);
+  color: var(--brand-600);
+}
