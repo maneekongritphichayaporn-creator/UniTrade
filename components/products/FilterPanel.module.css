@@ -1,0 +1,60 @@
+.panel {
+  padding: 4px 0;
+}
+
+/* หัวข้อชิดซ้าย ปุ่มล้างชิดขวาเสมอ แม้ไม่มีหัวข้อ (ใน drawer บนมือถือ) */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.heading {
+  margin-right: auto;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.group {
+  margin: 0;
+  padding: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: 10px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.loading {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash {
+  color: var(--muted);
+}
+
+.error {
+  margin-top: 8px;
+  color: var(--brand-700);
+  font-size: 12px;
+}
