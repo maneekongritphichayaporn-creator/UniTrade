@@ -1,0 +1,54 @@
+.sellerName {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.faculty {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pickup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.pickup svg {
+  flex-shrink: 0;
+  color: var(--brand-500);
+}
+
+.channels {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.channelValue {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.safety {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.safety svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--brand-500);
+}
