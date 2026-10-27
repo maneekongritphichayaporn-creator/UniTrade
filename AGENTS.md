@@ -134,7 +134,7 @@ export const PATCH = requireAuth(async (request, { params, user }) => {
 | `INVALID_PAYLOAD` | 400 | Body is not JSON / not multipart when it must be |
 | `UNAUTHORIZED` / `TOKEN_EXPIRED` | 401 | Handled by `requireAuth` |
 | `NOT_OWNER` | 403 | Logged in, but not the listing's seller |
-| `PRODUCT_NOT_FOUND` | 404 | No product with that id, **or the id is not a valid UUID** |
+| `PRODUCT_NOT_FOUND` | 404 | Write routes only (`PATCH`/`DELETE /products/:id`): no product with that id, **or the id is not a valid UUID**. `GET /products/:id` does **not** use it — it answers `200` + `{ "data": [] }` |
 | `FILE_TOO_LARGE` | 413 | One image > 2 MB, or all images together > 4 MB |
 | `VALIDATION_ERROR` | 422 | Any field or query param fails a rule without a more specific code. Always set `field`. |
 | `NO_IMAGE` | 422 | POST with zero images |
@@ -262,14 +262,14 @@ Build the filters in one function (`applyProductFilters(query, filters)`) so the
 ### 7.5 `GET /api/v1/products/:id`
 
 Public, `optionalAuth`. Returns the detail object for any status (sold items stay viewable).
-An invalid UUID or unknown id → 404 `PRODUCT_NOT_FOUND` with message `"ไม่พบสินค้านี้ อาจถูกลบไปแล้ว"`.
+An invalid UUID or unknown id → `200` with the body `{ "data": [] }`. **Never 404** (decided by wz in the TASK-09 review). The FE tells "found" from "not found" by checking that the body has a `product_id` (found) or an empty `data` array (not found).
 **No seller contact information in this response.** The contact endpoint is a separate, out-of-scope endpoint.
 
 ### 7.6 Done when
 
 - [ ] 4 routes: `app/api/v1/categories/route.js`, `pickup-locations/route.js`, `products/route.js` (GET), `products/[id]/route.js` (GET)
 - [ ] `lib/products.js` with the select, the card/detail mappers, short-name and query parsing; unit tests for short-name and query parsing (bad page, bad UUID, min > max, unknown sort)
-- [ ] Bruno requests: categories, pickup-locations, list default, list with filters, list empty result (200 + `[]`), keyword containing `,()%"`, detail, detail 404 with a random UUID, detail 404 with `not-a-uuid`. Also assert that the detail response has no `phone_number`, `line_id` or `email` anywhere in `seller`.
+- [ ] Bruno requests: categories, pickup-locations, list default, list with filters, list empty result (200 + `[]`), keyword containing `,()%"`, detail, detail with a random UUID (200 + `{ data: [] }`), detail with `not-a-uuid` (200 + `{ data: [] }`). Also assert that the detail response has no `phone_number`, `line_id` or `email` anywhere in `seller`.
 - [ ] `npm test`, `npm run build`, `npm run test:api` all pass; PR opened against `main`
 
 ## 8. TASK-12 — Create, edit, delete products and upload images
@@ -337,7 +337,7 @@ Response: **204** with no body (`noContent()`).
 
 - [ ] Routes: `products/route.js` (POST alongside the TASK-09 GET), `products/[id]/route.js` (PATCH and DELETE alongside the GET), `products/[id]/status/route.js` (PATCH)
 - [ ] Image checks are a pure function in `lib/` with unit tests (byte sniffing, 2 MB, 4 MB total, 0 files, 6 files)
-- [ ] Bruno: create (201) with `bruno/fixtures/` images, `NO_IMAGE`, a fake `.jpg` that is really text (`UNSUPPORTED_FILE_TYPE`), `INVALID_PICKUP_LOCATION`, edit (200), status change (200), `INVALID_STATUS`, a **second user** trying to edit and delete (403 `NOT_OWNER`), delete (204), detail after delete (404)
+- [ ] Bruno: create (201) with `bruno/fixtures/` images, `NO_IMAGE`, a fake `.jpg` that is really text (`UNSUPPORTED_FILE_TYPE`), `INVALID_PICKUP_LOCATION`, edit (200), status change (200), `INVALID_STATUS`, a **second user** trying to edit and delete (403 `NOT_OWNER`), delete (204), detail after delete (200 + `{ data: [] }`)
 - [ ] After a Bruno run, the bucket has no folder left for the deleted product (check it in the Supabase dashboard, or by listing it with a short script)
 - [ ] `npm test`, `npm run build`, `npm run test:api` all pass; PR opened against `main`
 
@@ -400,7 +400,7 @@ Deleting users cascades to their products, but **not** to Storage files, so alwa
    query.or(`title.ilike.${ilikeContains(kw)},description.ilike.${ilikeContains(kw)}`);
    ```
    The table was empty when this was tested, so confirm with real data that a search for `50%` matches the text `50%` and does not match everything.
-3. **An invalid UUID gives Postgres `22P02`**, which would become a 500. Validate `:id` and `category_id` with a UUID regex first and answer 404 or 422 yourself.
+3. **An invalid UUID gives Postgres `22P02`**, which would become a 500. Validate `:id` and `category_id` with a UUID regex first and answer yourself (`GET /products/:id` → 200 + `{ data: [] }`, `category_id` → 422).
 4. **The embedded select in 7.1 works** (`categories`, `users` via `seller_id`, `product_images`).
 5. **Listing a folder that doesn't exist** in the bucket returns `[]` without an error.
 6. `count: 'exact'` together with `.range()` gives the filtered total in one query.
