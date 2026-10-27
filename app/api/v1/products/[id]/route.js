@@ -1,17 +1,18 @@
-import { ok, ApiError } from '@/lib/http.js';
+import { ok } from '@/lib/http.js';
 import { optionalAuth } from '@/lib/auth.js';
 import { db } from '@/lib/supabase.js';
 import { ACTIVE_STATUSES } from '@/lib/constants.js';
 import { PRODUCT_SELECT, isUuid, toDetail } from '@/lib/products.js';
 
-// GET /products/:id — รายละเอียดสินค้า 1 ชิ้น พร้อมรูปทั้งหมดและข้อมูลผู้ขายเบื้องต้น (Spec §4.4)
+// GET /products/:id — รายละเอียดสินค้า 1 ชิ้น พร้อมรูปทั้งหมดและข้อมูลผู้ขายเบื้องต้น
 // ไม่ส่งข้อมูลติดต่อผู้ขายเด็ดขาด (FR-06) — ต้องเรียก /products/:id/contact แยกต่างหาก
 
-const notFound = () => new ApiError(404, 'PRODUCT_NOT_FOUND', 'ไม่พบสินค้านี้ อาจถูกลบไปแล้ว');
+// ไม่พบสินค้า (หรือ id ไม่ใช่ UUID): ตอบ 200 + { data: [] } ห้ามส่ง 404 (ยืนยันโดย wz ตอนรีวิว TASK-09)
+const notFound = () => ok({ data: [] });
 
 export const GET = optionalAuth(async (request, { params, user }) => {
   const { id } = await params; // Next.js 15: params เป็น Promise
-  if (!isUuid(id)) throw notFound();
+  if (!isUuid(id)) return notFound();
 
   const supabase = db();
 
@@ -21,7 +22,7 @@ export const GET = optionalAuth(async (request, { params, user }) => {
     .eq('product_id', id)
     .maybeSingle(); // ไม่พบจะได้ null ไม่ใช่ error
   if (error) throw error;
-  if (!row) throw notFound();
+  if (!row) return notFound();
 
   // จำนวนประกาศที่ผู้ขายยังขายอยู่ (available + reserved)
   const { count: activeListings, error: countError } = await supabase

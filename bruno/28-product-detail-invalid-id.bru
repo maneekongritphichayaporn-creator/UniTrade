@@ -11,8 +11,8 @@ get {
 }
 
 tests {
-  test("404 PRODUCT_NOT_FOUND for an id that is not a UUID", function () {
-    expect(res.getStatus()).to.equal(404);
-    expect(res.getBody().error.code).to.equal("PRODUCT_NOT_FOUND");
+  test("200 with empty data array for an id that is not a UUID", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.deep.equal({ data: [] });
   });
 }
