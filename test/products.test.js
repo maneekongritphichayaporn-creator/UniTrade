@@ -10,6 +10,8 @@ import {
   toCard,
   toDetail,
   validateProductInput,
+  validateStatusInput,
+  statusLabel,
 } from '../lib/products.js';
 
 const parse = (qs) => parseProductQuery(new URLSearchParams(qs));
@@ -230,4 +232,19 @@ test('partial edit keeps only the fields sent and ignores status and seller_id',
   });
   assert.deepEqual(validateProductInput({}, { partial: true }), {});
   rejectsInput({ title: 'ab' }, 'title', 'VALIDATION_ERROR', { partial: true });
+});
+
+test('validateStatusInput accepts only the three statuses', () => {
+  assert.equal(validateStatusInput({ status: 'reserved' }), 'reserved');
+  for (const body of [{ status: 'deleted' }, { status: 'Reserved' }, {}, null]) {
+    assert.throws(
+      () => validateStatusInput(body),
+      (e) => e instanceof ApiError && e.status === 422 && e.code === 'INVALID_STATUS' && e.field === 'status',
+    );
+  }
+});
+
+test('statusLabel capitalises the status for the message', () => {
+  assert.equal(statusLabel('reserved'), 'Reserved');
+  assert.equal(statusLabel('sold'), 'Sold');
 });
