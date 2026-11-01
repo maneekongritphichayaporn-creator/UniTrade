@@ -9,6 +9,9 @@ import {
   buildPagination,
   toCard,
   toDetail,
+  validateProductInput,
+  validateStatusInput,
+  statusLabel,
 } from '../lib/products.js';
 
 const parse = (qs) => parseProductQuery(new URLSearchParams(qs));
@@ -167,4 +170,81 @@ test('toDetail puts the primary image first and never exposes contact details', 
   assert.equal(detail.seller.active_listings, 4);
   assert.equal(/phone|line_id|email|password/.test(JSON.stringify(detail)), false);
   assert.equal(toDetail({ ...row, description: undefined }).description, null);
+});
+
+const validInput = {
+  title: '  CALCULUS I  ',
+  description: '',
+  category_id: '00000000-0000-4000-8000-000000000001',
+  item_condition: 'like_new',
+  price: '250',
+  pickup_location: 'ศาลาพระเกี้ยว',
+};
+
+const rejectsInput = (input, field, code = 'VALIDATION_ERROR', options) =>
+  assert.throws(
+    () => validateProductInput(input, options),
+    (e) => e instanceof ApiError && e.status === 422 && e.code === code && e.field === field,
+  );
+
+test('validateProductInput normalises a valid listing', () => {
+  assert.deepEqual(validateProductInput(validInput), {
+    title: 'CALCULUS I',
+    description: null,
+    category_id: '00000000-0000-4000-8000-000000000001',
+    item_condition: 'like_new',
+    price: 250,
+    pickup_location: 'ศาลาพระเกี้ยว',
+  });
+});
+
+test('title must be 3 to 255 characters', () => {
+  rejectsInput({ ...validInput, title: ' ab ' }, 'title');
+  rejectsInput({ ...validInput, title: 'ก'.repeat(256) }, 'title');
+  rejectsInput({ ...validInput, title: undefined }, 'title');
+  assert.equal(validateProductInput({ ...validInput, title: 'ก'.repeat(255) }).title.length, 255);
+});
+
+test('price must be 0 to 999999.99 with at most two decimals', () => {
+  for (const price of [undefined, '', '-1', '1000000', '12.345', 'abc', '1e3']) {
+    rejectsInput({ ...validInput, price }, 'price');
+  }
+  assert.equal(validateProductInput({ ...validInput, price: '0' }).price, 0);
+  assert.equal(validateProductInput({ ...validInput, price: '999999.99' }).price, 999999.99);
+  assert.equal(validateProductInput({ ...validInput, price: 12.5 }).price, 12.5);
+});
+
+test('category, condition and pickup location must be known values', () => {
+  rejectsInput({ ...validInput, category_id: 'abc' }, 'category_id');
+  rejectsInput({ ...validInput, item_condition: 'broken' }, 'item_condition');
+  rejectsInput({ ...validInput, pickup_location: 'ที่ไหนสักแห่ง' }, 'pickup_location', 'INVALID_PICKUP_LOCATION');
+});
+
+test('description is optional and limited to 2000 characters', () => {
+  assert.equal(validateProductInput({ ...validInput, description: '  ใช้เทอมเดียว ' }).description, 'ใช้เทอมเดียว');
+  assert.equal(validateProductInput({ ...validInput, description: null }).description, null);
+  rejectsInput({ ...validInput, description: 'ก'.repeat(2001) }, 'description');
+});
+
+test('partial edit keeps only the fields sent and ignores status and seller_id', () => {
+  assert.deepEqual(validateProductInput({ price: '99', status: 'sold', seller_id: 'x' }, { partial: true }), {
+    price: 99,
+  });
+  assert.deepEqual(validateProductInput({}, { partial: true }), {});
+  rejectsInput({ title: 'ab' }, 'title', 'VALIDATION_ERROR', { partial: true });
+});
+
+test('validateStatusInput accepts only the three statuses', () => {
+  assert.equal(validateStatusInput({ status: 'reserved' }), 'reserved');
+  for (const body of [{ status: 'deleted' }, { status: 'Reserved' }, {}, null]) {
+    assert.throws(
+      () => validateStatusInput(body),
+      (e) => e instanceof ApiError && e.status === 422 && e.code === 'INVALID_STATUS' && e.field === 'status',
+    );
+  }
+});
+
+test('statusLabel capitalises the status for the message', () => {
+  assert.equal(statusLabel('reserved'), 'Reserved');
+  assert.equal(statusLabel('sold'), 'Sold');
 });
