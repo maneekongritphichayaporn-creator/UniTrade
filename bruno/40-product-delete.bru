@@ -1,0 +1,21 @@
+meta {
+  name: Product delete
+  type: http
+  seq: 40
+}
+
+delete {
+  url: {{baseUrl}}/products/{{product_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("204 with no body (row and Storage files removed)", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

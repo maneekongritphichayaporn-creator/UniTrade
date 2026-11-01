@@ -1,0 +1,32 @@
+meta {
+  name: Product create - unknown pickup location
+  type: http
+  seq: 32
+}
+
+post {
+  url: {{baseUrl}}/products
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  title: CALCULUS I (2110101)
+  category_id: 00000000-0000-4000-8000-000000000001
+  item_condition: like_new
+  price: 250
+  pickup_location: nowhere
+  images: @file(fixtures/book.jpg)
+}
+
+tests {
+  test("422 INVALID_PICKUP_LOCATION", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("INVALID_PICKUP_LOCATION");
+    expect(res.getBody().error.field).to.equal("pickup_location");
+  });
+}

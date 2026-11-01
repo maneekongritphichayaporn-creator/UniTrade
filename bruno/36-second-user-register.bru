@@ -1,0 +1,31 @@
+meta {
+  name: Second user - register
+  type: http
+  seq: 36
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("email2", "bruno." + Date.now() + "b@student.chula.ac.th");
+}
+
+body:json {
+  {
+    "email": "{{email2}}",
+    "password": "UniTrade2026!",
+    "full_name": "Bruno Second",
+    "phone_number": "0812345679",
+    "faculty": "คณะวิศวกรรมศาสตร์"
+  }
+}
+
+tests {
+  test("201 for the second test user", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}

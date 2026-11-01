@@ -1,0 +1,31 @@
+meta {
+  name: Product create - no image
+  type: http
+  seq: 30
+}
+
+post {
+  url: {{baseUrl}}/products
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  title: CALCULUS I (2110101)
+  category_id: 00000000-0000-4000-8000-000000000001
+  item_condition: like_new
+  price: 250
+  pickup_location: ศาลาพระเกี้ยว
+}
+
+tests {
+  test("422 NO_IMAGE", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("NO_IMAGE");
+    expect(res.getBody().error.field).to.equal("images");
+  });
+}

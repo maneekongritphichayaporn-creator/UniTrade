@@ -1,0 +1,22 @@
+meta {
+  name: Product delete - not owner
+  type: http
+  seq: 39
+}
+
+delete {
+  url: {{baseUrl}}/products/{{product_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("403 NOT_OWNER", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().error.code).to.equal("NOT_OWNER");
+  });
+}

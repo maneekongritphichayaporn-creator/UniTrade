@@ -1,0 +1,28 @@
+meta {
+  name: Product edit - not owner
+  type: http
+  seq: 38
+}
+
+patch {
+  url: {{baseUrl}}/products/{{product_id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+body:json {
+  {
+    "title": "hacked by someone else"
+  }
+}
+
+tests {
+  test("403 NOT_OWNER", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().error.code).to.equal("NOT_OWNER");
+  });
+}

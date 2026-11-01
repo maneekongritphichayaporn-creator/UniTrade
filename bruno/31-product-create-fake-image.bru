@@ -1,0 +1,31 @@
+meta {
+  name: Product create - text file named .jpg
+  type: http
+  seq: 31
+}
+
+post {
+  url: {{baseUrl}}/products
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  title: CALCULUS I (2110101)
+  category_id: 00000000-0000-4000-8000-000000000001
+  item_condition: like_new
+  price: 250
+  pickup_location: ศาลาพระเกี้ยว
+  images: @file(fixtures/fake.jpg)
+}
+
+tests {
+  test("422 UNSUPPORTED_FILE_TYPE (type is read from the bytes, not the name)", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("UNSUPPORTED_FILE_TYPE");
+  });
+}
