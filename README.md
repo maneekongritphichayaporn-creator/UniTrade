@@ -17,13 +17,18 @@ Next.js 15 (App Router, JavaScript) · API อยู่ใต้ `/api/v1` · �
 | **TASK-06** | Backend: Register, Login, Profile, JWT | @wz | ✅ **เสร็จ** — ทดสอบกับ Supabase จริงผ่าน 13/13 |
 | **TASK-07** | Frontend: Layout, Navbar, Routing, Theme | @yat | ✅ **เสร็จ** — ดูหัวข้อ "หน้าเว็บ (Frontend)" |
 | TASK-08 | Frontend: หน้า Login, Register, Profile | @warixm | ⏳ ยังไม่มีโค้ดใน repo — **ต่อ API ได้แล้ว** |
-| TASK-09 | Backend: API ดึงสินค้า, หมวดหมู่, จุดนัดรับ | @SArunPoB | 🔜 **เริ่มได้เลย** |
+| **TASK-09** | Backend: API ดึงสินค้า, หมวดหมู่, จุดนัดรับ | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #1) ดู [`docs/TASK-09-CHANGELOG.md`](docs/TASK-09-CHANGELOG.md) |
 | **TASK-10** | Frontend: หน้า Home + Product Grid | @yat | ✅ **เสร็จ** — ต่อ `GET /products` และ `GET /categories` แล้ว |
 | **TASK-16** | Frontend: Search Bar + Filter Sidebar | @yat | ✅ **เสร็จ** — ตัวกรองทั้งหมด sync กับ URL |
-| **TASK-18** | Frontend: หน้ารายละเอียด + ข้อมูลติดต่อผู้ขาย | @yat | ✅ **เสร็จ** — รอ `GET /products/:id/contact` จากฝั่ง BE |
+| **TASK-18** | Frontend: หน้ารายละเอียด + ข้อมูลติดต่อผู้ขาย | @yat | ✅ **เสร็จ** — รอ `GET /products/:id/contact` จากฝั่ง BE (ดู "เรื่องที่ฝาก BE / ทีม") |
 | TASK-11 | Testing: Test Cases ระบบ Login และการแสดงสินค้า | @Aud | 🔜 ส่วน Login เริ่มได้เลย ใช้ `bruno/` เป็นตัวอย่าง |
-| TASK-12 | Backend: API สร้าง/แก้ไข/ลบสินค้า + อัปโหลดรูป | @SArunPoB | 🔜 **เริ่มได้เลย** (`requireAuth` พร้อมแล้ว) |
-| TASK-13 | Frontend: ฟอร์มลงประกาศ + แก้ไขสินค้า | @warixm | 🔜 รอ TASK-12 |
+| **TASK-12** | Backend: API สร้าง/แก้ไข/ลบสินค้า + อัปโหลดรูป | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #2) ดู [`docs/TASK-12-CHANGELOG.md`](docs/TASK-12-CHANGELOG.md) |
+| TASK-13 | Frontend: ฟอร์มลงประกาศ + แก้ไขสินค้า | @warixm | 🔜 **เริ่มได้เลย** — TASK-12 merge แล้ว |
+| TASK-14 | Frontend: เปลี่ยนสถานะสินค้า + ประกาศของฉัน | @warixm | 🔜 **เริ่มได้เลย** — `PATCH /products/:id/status` พร้อมแล้ว |
+| TASK-15 | Backend: Search & Filter | @SArunPoB | ✅ รวมอยู่ใน TASK-09 แล้ว (`GET /products`) |
+| TASK-17 | Wishlist (FE + BE) | @warixm | 🔜 ยังไม่เริ่ม — endpoint ยังไม่มี |
+| TASK-19 | Backend: Report + Admin | @SArunPoB | 🔜 กำลังทำ |
+| TASK-20 | Frontend: หน้าจัดการรายงาน (Admin) | @warixm | 🔜 รอ TASK-19 |
 
 ฐานข้อมูลบน Supabase รัน migration ครบแล้ว (0001–0004) ไม่ต้องรันซ้ำ
 
@@ -34,6 +39,7 @@ Next.js 15 (App Router, JavaScript) · API อยู่ใต้ `/api/v1` · �
 
 **@yat** — ตาม Spec §1.1 หน้าเว็บกับ API อยู่ในโปรเจกต์ Next.js เดียวกัน deploy ที่ Vercel ที่เดียว ไม่ต้องตั้ง CORS
 วางหน้าใน `app/` ได้เลย (เช่น `app/login/page.js`) แทน `app/page.js` ที่เป็นหน้าชั่วคราว — ถ้ามีโปรเจกต์ FE แยกอยู่แล้ว บอก @wz ก่อน
+> **ตอบ @wz (3 พ.ย.):** ไม่ได้แยกโปรเจกต์ครับ ย้ายมาทำใน repo นี้ตามที่บอกไว้ หน้าเว็บอยู่ใน `app/`, `components/` และ `lib/client/` — ไม่ได้แตะไฟล์ของ backend เลย ดูหัวข้อ "หน้าเว็บ (Frontend)"
 
 **@warixm** — TASK-08 ต่อ API ได้แล้ว (ดูหัวข้อ "API ที่ใช้ได้แล้ว") · สำหรับ TASK-13: **ต้องย่อรูปฝั่งเบราว์เซอร์ก่อนส่ง** ให้รวมทุกรูปไม่เกิน 4MB
 เพราะ Vercel รับ request ได้ไม่เกิน 4.5MB ทุกแพ็กเกจ (5 รูป × 2MB = 10MB จะโดนปฏิเสธบน production) แนะนำย่อด้านยาวเหลือ ~1600px แล้วบันทึกเป็น JPEG
@@ -163,7 +169,10 @@ AGENTS.md            คู่มือละเอียดสำหรับ�
 
 ## หน้าเว็บ (Frontend)
 
-> อัปเดต 27 ต.ค. 2569 โดย @yat (FE Lead) — TASK-07, 10, 16, 18
+> อัปเดต 3 พ.ย. 2569 โดย @yat (FE Lead) — TASK-07, 10, 16, 18
+>
+> เอกสารส่งงานฉบับเต็ม: [`docs/TASK-07-10-16-18-CHANGELOG.md`](docs/TASK-07-10-16-18-CHANGELOG.md)
+> เนื้อหาสำหรับรายงาน (หัวข้อ 4.6, 5.1, 5.3 ส่วนหน้าเว็บ): [`docs/REPORT-FRONTEND.md`](docs/REPORT-FRONTEND.md)
 
 | Path | หน้า | Task | เจ้าของ |
 |---|---|---|---|
@@ -231,11 +240,9 @@ try {
    ขอให้ @wz บอกว่าจะทำใน task ไหน รูปแบบที่หน้าเว็บรออยู่คือ
    `{ seller: { full_name, faculty }, channels: [{ type: 'line'|'phone', value, deep_link, is_primary }], pickup_location, safety_note }`
    (ถ้าส่ง `phone_number` / `line_id` มาตรง ๆ หน้าเว็บก็สร้างลิงก์ LINE/โทรเองได้ รองรับไว้แล้ว)
-2. `GET /products/:id` ตอนไม่พบสินค้า โค้ดจริงตอบ **200 + `{ "data": [] }`** แต่ AGENTS.md §7.5 ยังเขียนว่า 404 `PRODUCT_NOT_FOUND`
-   หน้าเว็บรองรับทั้งสองแบบแล้ว แต่ควรแก้เอกสารให้ตรงกับโค้ด
-3. `GET /categories` ส่ง `name` เป็นภาษาอังกฤษ (Textbooks, Apparel, …) หน้าเว็บแปลงเป็นภาษาไทยจาก `category_id`
+2. `GET /categories` ส่ง `name` เป็นภาษาอังกฤษ (Textbooks, Apparel, …) หน้าเว็บแปลงเป็นภาษาไทยจาก `category_id`
    ที่ `lib/client/format.js` → `CATEGORY_LABELS_TH` ถ้าอยากให้ API ส่งชื่อไทยมาเลยค่อยคุยกัน
-4. ตอนนี้รูปสินค้าใช้ `<img>` ธรรมดา ถ้าจะเปลี่ยนไปใช้ `next/image` ต้องเพิ่ม `images.remotePatterns` ของโดเมน Supabase ใน `next.config.mjs` — ขอ @wz ก่อน
+3. ตอนนี้รูปสินค้าใช้ `<img>` ธรรมดา ถ้าจะเปลี่ยนไปใช้ `next/image` ต้องเพิ่ม `images.remotePatterns` ของโดเมน Supabase ใน `next.config.mjs` — ขอ @wz ก่อน
 
 ---
 
