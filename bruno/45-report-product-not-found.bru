@@ -1,0 +1,28 @@
+meta {
+  name: Report - product not found
+  type: http
+  seq: 45
+}
+
+post {
+  url: {{baseUrl}}/products/00000000-0000-4000-8000-0000000000ff/reports
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+body:json {
+  {
+    "reason": "spam"
+  }
+}
+
+tests {
+  test("404 PRODUCT_NOT_FOUND", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error.code).to.equal("PRODUCT_NOT_FOUND");
+  });
+}

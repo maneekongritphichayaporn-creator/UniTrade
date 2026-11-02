@@ -1,0 +1,29 @@
+meta {
+  name: Report - invalid reason
+  type: http
+  seq: 44
+}
+
+post {
+  url: {{baseUrl}}/products/{{report_product_id}}/reports
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+body:json {
+  {
+    "reason": "fraud"
+  }
+}
+
+tests {
+  test("422 INVALID_REASON on field reason", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("INVALID_REASON");
+    expect(res.getBody().error.field).to.equal("reason");
+  });
+}

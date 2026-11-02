@@ -1,0 +1,28 @@
+meta {
+  name: Report - own listing
+  type: http
+  seq: 43
+}
+
+post {
+  url: {{baseUrl}}/products/{{report_product_id}}/reports
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "reason": "scam"
+  }
+}
+
+tests {
+  test("403 SELF_REPORT", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().error.code).to.equal("SELF_REPORT");
+  });
+}
