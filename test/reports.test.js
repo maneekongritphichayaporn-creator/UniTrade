@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateReportInput, validateReportStatusInput } from '../lib/reports.js';
+import { validateReportInput, validateReportStatusInput, toAdminReport } from '../lib/reports.js';
 import { REPORT_REASONS } from '../lib/constants.js';
 
 const errorCode = (fn) => {
@@ -38,4 +38,45 @@ test('validateReportStatusInput accepts only dismissed', () => {
       field: 'status',
     });
   }
+});
+
+const seller = { user_id: 's1', full_name: 'ผู้ขาย ทดสอบ', faculty: 'คณะวิศวกรรมศาสตร์' };
+const reporter = { user_id: 'r1', full_name: 'ผู้รายงาน ทดสอบ', faculty: 'คณะวิทยาศาสตร์' };
+const baseRow = { report_id: 'rep1', reason: 'scam', status: 'pending', created_at: '2026-11-03T00:00:00Z', reporter };
+
+test('toAdminReport picks the primary image and converts price to a number', () => {
+  const out = toAdminReport({
+    ...baseRow,
+    product: {
+      product_id: 'p1',
+      title: 'หนังสือ',
+      price: '250.00',
+      status: 'available',
+      created_at: '2026-11-01T00:00:00Z',
+      seller,
+      images: [
+        { image_url: 'https://x/2.png', is_primary: false },
+        { image_url: 'https://x/1.jpg', is_primary: true },
+      ],
+    },
+  });
+  assert.equal(out.product.primary_image_url, 'https://x/1.jpg');
+  assert.equal(out.product.price, 250);
+  assert.deepEqual(out.product.seller, seller);
+  assert.deepEqual(out.reporter, reporter);
+  assert.equal('images' in out.product, false);
+});
+
+test('toAdminReport keeps reports whose product was deleted, with product null', () => {
+  const out = toAdminReport({ ...baseRow, product: null });
+  assert.equal(out.product, null);
+  assert.equal(out.reason, 'scam');
+});
+
+test('toAdminReport never adds contact fields', () => {
+  const out = toAdminReport({ ...baseRow, product: { product_id: 'p1', title: 't', price: 1, status: 'sold', seller, images: [] } });
+  for (const person of [out.reporter, out.product.seller]) {
+    for (const key of ['email', 'phone_number', 'line_id', 'password_hash']) assert.equal(key in person, false);
+  }
+  assert.equal(out.product.primary_image_url, null);
 });
