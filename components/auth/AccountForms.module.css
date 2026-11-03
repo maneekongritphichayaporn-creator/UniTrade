@@ -1,0 +1,16 @@
+.page { width: min(470px, calc(100% - 32px)); margin: 70px auto 90px; }
+.heading { text-align: center; margin-bottom: 24px; }
+.heading h1 { color: var(--brand-500); font-size: 26px; }
+.heading p { color: var(--muted); font-size: 17px; }
+.card { padding: 28px 34px; border: 1px solid var(--line); border-radius: 10px; background: white; box-shadow: var(--shadow); }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+.field span { color: var(--brand-600); font-size: 14px; font-weight: 600; }
+.field input, .field select { width: 100%; min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; background: white; font-size: 14px; }
+.field input:focus, .field select:focus { outline: 2px solid var(--brand-200); }
+.field input:disabled { background: var(--surface); color: var(--muted); }
+.error { color: #b42318; font-size: 13px; }
+.message { margin: 12px 0; font-size: 13px; }
+.actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+.switch { margin-top: 20px; text-align: center; color: var(--muted); font-size: 14px; }
+.switch a { color: var(--brand-600); font-weight: 600; }
+@media (max-width: 480px) { .page { margin-top: 42px; } .card { padding: 24px 20px; } }

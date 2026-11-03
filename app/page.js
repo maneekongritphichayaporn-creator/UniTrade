@@ -1,4 +1,6 @@
-// หน้าชั่วคราว FE จะแทนที่ด้วยหน้า Home (TASK-10)
+import { Suspense } from 'react';
+import { MarketplaceHome } from '@/components/home/MarketplaceHome.js';
+
 export default function Home() {
-  return <main>UniTrade API — /api/v1</main>;
+  return <Suspense fallback={null}><MarketplaceHome /></Suspense>;
 }
