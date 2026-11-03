@@ -1,0 +1,28 @@
+meta {
+  name: Admin dismiss report - member is refused
+  type: http
+  seq: 51
+}
+
+patch {
+  url: {{baseUrl}}/admin/reports/{{report_id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+body:json {
+  {
+    "status": "dismissed"
+  }
+}
+
+tests {
+  test("403 ADMIN_REQUIRED for a normal member", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().error.code).to.equal("ADMIN_REQUIRED");
+  });
+}
