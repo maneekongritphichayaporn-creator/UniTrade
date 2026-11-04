@@ -1,0 +1,22 @@
+meta {
+  name: Admin delete product - member is refused
+  type: http
+  seq: 52
+}
+
+delete {
+  url: {{baseUrl}}/admin/products/{{report_product_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("403 ADMIN_REQUIRED and the product is still there", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().error.code).to.equal("ADMIN_REQUIRED");
+  });
+}
