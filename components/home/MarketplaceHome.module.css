@@ -11,7 +11,9 @@
 .filters { display: flex; flex-wrap: wrap; gap: 18px; }
 .toolbar select { min-height: 44px; padding: 0 18px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: white; cursor: pointer; }
 .grid { max-width: 1270px; margin: auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 44px; }
-.card { min-width: 0; padding: 21px; border: 1px solid var(--line); border-radius: 8px; transition: transform .2s, box-shadow .2s; }
+.card { position: relative; min-width: 0; padding: 21px; border: 1px solid var(--line); border-radius: 8px; transition: transform .2s, box-shadow .2s; }
+.cardLink { display: block; }
+.heart { position: absolute; top: 28px; right: 28px; }
 .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .image { aspect-ratio: 1; margin-bottom: 10px; display: grid; place-items: center; overflow: hidden; color: #b6b6ba; background: #e7e7e8; }
 .image img { width: 100%; height: 100%; object-fit: cover; }
@@ -31,5 +33,5 @@
 .pagination button { padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; background: white; }
 .pagination button:disabled { opacity: .5; cursor: default; }
 @media (max-width: 900px) { .hero { grid-template-columns: 1fr; gap: 26px; } .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; } }
-@media (max-width: 720px) { .hero { min-height: auto; padding: 35px 20px 28px; } .hero h1 { font-size: 29px; } .catalog { padding: 18px 18px 50px; } .toolbar { flex-direction: column; } .filters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } .toolbar select { width: 100%; padding: 0 8px; font-size: 12px; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } .card { padding: 13px; } .card h2 { font-size: 15px; } }
+@media (max-width: 720px) { .hero { min-height: auto; padding: 35px 20px 28px; } .hero h1 { font-size: 29px; } .catalog { padding: 18px 18px 50px; } .toolbar { flex-direction: column; } .filters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } .toolbar select { width: 100%; padding: 0 8px; font-size: 12px; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } .card { padding: 13px; } .card h2 { font-size: 15px; } .heart { top: 18px; right: 18px; } }
 @media (max-width: 380px) { .filters { grid-template-columns: 1fr; } }

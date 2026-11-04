@@ -7,6 +7,7 @@ import { SearchIcon, UserIcon, ImageIcon } from '@/components/ui/icons.js';
 import { getCategories } from '@/lib/client/catalog.js';
 import { listProducts } from '@/lib/client/products.js';
 import { routes } from '@/lib/client/routes.js';
+import { WishlistButton } from '@/components/products/WishlistButton.js';
 import styles from './MarketplaceHome.module.css';
 
 const conditions = { new: 'ใหม่', like_new: 'เหมือนใหม่', good: 'สภาพดี', fair: 'พอใช้' };
@@ -120,7 +121,8 @@ export function MarketplaceHome() {
 }
 
 function ProductCard({ product }) {
-  return <Link href={routes.product(product.product_id)} className={styles.card}>
+  return <article className={styles.card}>
+    <Link href={routes.product(product.product_id)} className={styles.cardLink}>
     <div className={styles.image}>{product.primary_image_url
       ? <img src={product.primary_image_url} alt={product.title} /> : <ImageIcon size={64} />}</div>
     <span className={`${styles.status} ${styles[product.status]}`}>
@@ -130,5 +132,7 @@ function ProductCard({ product }) {
     <strong className={styles.price}>{product.is_free ? 'ฟรี' : `฿${product.price.toLocaleString()}`}</strong>
     <p>หมวดหมู่ : {product.category?.name ?? 'อื่น ๆ'}</p>
     <div className={styles.seller}><span><UserIcon size={14} /></span>{product.seller?.full_name}</div>
-  </Link>;
+    </Link>
+    <WishlistButton productId={product.product_id} initialSaved={product.is_wishlisted} compact className={styles.heart} />
+  </article>;
 }
