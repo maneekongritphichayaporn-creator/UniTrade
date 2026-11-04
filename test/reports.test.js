@@ -1,6 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateReportInput, validateReportStatusInput, toAdminReport } from '../lib/reports.js';
+import {
+  validateReportInput,
+  validateReportStatusInput,
+  parseAdminReportQuery,
+  toAdminReport,
+  ADMIN_REPORTS_PER_PAGE,
+  ADMIN_REPORTS_MAX_PER_PAGE,
+} from '../lib/reports.js';
 import { REPORT_REASONS } from '../lib/constants.js';
 
 const errorCode = (fn) => {
@@ -25,18 +32,44 @@ test('validateReportInput drops extra fields', () => {
 
 test('validateReportInput rejects unknown, missing, wrong case and non-string reasons', () => {
   for (const body of [{ reason: 'fraud' }, {}, { reason: 'SCAM' }, { reason: ' scam' }, { reason: 1 }, { reason: null }]) {
-    assert.deepEqual(errorCode(() => validateReportInput(body)), { status: 422, code: 'INVALID_REASON', field: 'reason' });
+    assert.deepEqual(errorCode(() => validateReportInput(body)), {
+      status: 422,
+      code: 'INVALID_REPORT_REASON',
+      field: 'reason',
+    });
   }
 });
 
-test('validateReportStatusInput accepts only dismissed', () => {
+test('validateReportStatusInput accepts only dismissed, otherwise VALIDATION_ERROR', () => {
   assert.deepEqual(validateReportStatusInput({ status: 'dismissed' }), { status: 'dismissed' });
   for (const status of ['actioned', 'pending', 'Dismissed', undefined, 3]) {
     assert.deepEqual(errorCode(() => validateReportStatusInput({ status })), {
       status: 422,
-      code: 'INVALID_STATUS',
+      code: 'VALIDATION_ERROR',
       field: 'status',
     });
+  }
+});
+
+const q = (s) => parseAdminReportQuery(new URLSearchParams(s));
+
+test('parseAdminReportQuery defaults to pending, page 1', () => {
+  assert.deepEqual(q(''), { status: 'pending', page: 1, perPage: ADMIN_REPORTS_PER_PAGE });
+  assert.deepEqual(q('status=all&page=3&per_page=5'), { status: 'all', page: 3, perPage: 5 });
+  assert.equal(q('per_page=999').perPage, ADMIN_REPORTS_MAX_PER_PAGE);
+});
+
+test('parseAdminReportQuery rejects bad status and page with VALIDATION_ERROR', () => {
+  for (const [s, field] of [
+    ['status=open', 'status'],
+    ['status=PENDING', 'status'],
+    ['page=0', 'page'],
+    ['page=-1', 'page'],
+    ['page=1.5', 'page'],
+    ['page=abc', 'page'],
+    ['per_page=0', 'per_page'],
+  ]) {
+    assert.deepEqual(errorCode(() => q(s)), { status: 422, code: 'VALIDATION_ERROR', field });
   }
 });
 

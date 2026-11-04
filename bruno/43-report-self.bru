@@ -21,8 +21,8 @@ body:json {
 }
 
 tests {
-  test("403 SELF_REPORT", function () {
-    expect(res.getStatus()).to.equal(403);
+  test("422 SELF_REPORT", function () {
+    expect(res.getStatus()).to.equal(422);
     expect(res.getBody().error.code).to.equal("SELF_REPORT");
   });
 }

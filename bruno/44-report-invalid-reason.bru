@@ -21,9 +21,9 @@ body:json {
 }
 
 tests {
-  test("422 INVALID_REASON on field reason", function () {
+  test("422 INVALID_REPORT_REASON on field reason", function () {
     expect(res.getStatus()).to.equal(422);
-    expect(res.getBody().error.code).to.equal("INVALID_REASON");
+    expect(res.getBody().error.code).to.equal("INVALID_REPORT_REASON");
     expect(res.getBody().error.field).to.equal("reason");
   });
 }
