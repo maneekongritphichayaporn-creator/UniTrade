@@ -1,0 +1,44 @@
+meta {
+  name: Admin reports - list pending
+  type: http
+  seq: 68
+}
+
+get {
+  url: {{baseUrl}}/admin/reports
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
+}
+
+script:pre-request {
+  // ข้ามเมื่อยังไม่มีบัญชี admin ใน bruno/.env (ไม่มี admin_token)
+  if (!bru.getVar("admin_token")) {
+    bru.runner.skipRequest();
+  }
+}
+
+
+tests {
+  test("200 with both test reports, reporter, product and pagination, no contact fields", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.pagination.page).to.equal(1);
+    expect(body.pagination.total).to.be.a("number");
+    const ids = body.data.map((r) => r.report_id);
+    expect(ids).to.include(bru.getVar("report_id"));
+    expect(ids).to.include(bru.getVar("report_id3"));
+    const mine = body.data.find((r) => r.report_id === bru.getVar("report_id"));
+    expect(mine.status).to.equal("pending");
+    expect(mine.reason).to.equal("scam");
+    expect(mine.product.product_id).to.equal(bru.getVar("report_product_id"));
+    expect(mine.product.primary_image_url).to.be.a("string");
+    for (const person of [mine.reporter, mine.product.seller]) {
+      expect(person).to.not.have.any.keys("email", "phone_number", "line_id", "password_hash");
+    }
+    for (const row of body.data) expect(row.status).to.equal("pending");
+  });
+}

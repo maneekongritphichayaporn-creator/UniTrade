@@ -1,0 +1,37 @@
+meta {
+  name: Admin dismiss - success
+  type: http
+  seq: 73
+}
+
+patch {
+  url: {{baseUrl}}/admin/reports/{{report_id3}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
+}
+
+script:pre-request {
+  // ข้ามเมื่อยังไม่มีบัญชี admin ใน bruno/.env (ไม่มี admin_token)
+  if (!bru.getVar("admin_token")) {
+    bru.runner.skipRequest();
+  }
+}
+
+body:json {
+  { "status": "dismissed" }
+}
+
+tests {
+  test("200 dismissed, product kept", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.report_id).to.equal(bru.getVar("report_id3"));
+    expect(body.status).to.equal("dismissed");
+    expect(body.product_id).to.equal(bru.getVar("report_product_id"));
+    expect(body.message).to.equal("ยกเลิกคำร้องแล้ว ประกาศยังคงอยู่ในระบบ");
+  });
+}

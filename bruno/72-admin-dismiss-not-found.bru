@@ -1,0 +1,33 @@
+meta {
+  name: Admin dismiss - report not found
+  type: http
+  seq: 72
+}
+
+patch {
+  url: {{baseUrl}}/admin/reports/00000000-0000-4000-8000-0000000000ff
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
+}
+
+script:pre-request {
+  // ข้ามเมื่อยังไม่มีบัญชี admin ใน bruno/.env (ไม่มี admin_token)
+  if (!bru.getVar("admin_token")) {
+    bru.runner.skipRequest();
+  }
+}
+
+body:json {
+  { "status": "dismissed" }
+}
+
+tests {
+  test("404 REPORT_NOT_FOUND", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error.code).to.equal("REPORT_NOT_FOUND");
+  });
+}

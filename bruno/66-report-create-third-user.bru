@@ -1,0 +1,35 @@
+meta {
+  name: Report - third user (to be dismissed)
+  type: http
+  seq: 66
+}
+
+post {
+  url: {{baseUrl}}/products/{{report_product_id}}/reports
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token3}}
+}
+
+body:json {
+  {
+    "reason": "spam"
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.report_id) {
+    bru.setVar("report_id3", body.report_id);
+  }
+}
+
+tests {
+  test("201 a second pending report on the same product", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().status).to.equal("pending");
+  });
+}

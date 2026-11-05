@@ -1,0 +1,40 @@
+meta {
+  name: Admin - login
+  type: http
+  seq: 67
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+script:pre-request {
+  // บัญชี admin ของทีมอยู่ใน bruno/.env (gitignore ไว้แล้ว) ห้ามใส่รหัสผ่านในไฟล์ .bru
+  // ถ้าไม่มีไฟล์นี้ request ฝั่ง admin ทั้งหมดจะถูกข้าม
+  if (!bru.getProcessEnv("ADMIN_EMAIL") || !bru.getProcessEnv("ADMIN_PASSWORD")) {
+    bru.runner.skipRequest();
+  }
+}
+
+body:json {
+  {
+    "email": "{{process.env.ADMIN_EMAIL}}",
+    "password": "{{process.env.ADMIN_PASSWORD}}"
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.token) {
+    bru.setVar("admin_token", body.token);
+  }
+}
+
+tests {
+  test("200 with a token for the admin account", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().token).to.be.a("string");
+  });
+}

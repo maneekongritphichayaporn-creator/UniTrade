@@ -1,0 +1,33 @@
+meta {
+  name: Admin dismiss - report already actioned by delete
+  type: http
+  seq: 78
+}
+
+patch {
+  url: {{baseUrl}}/admin/reports/{{report_id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
+}
+
+script:pre-request {
+  // ข้ามเมื่อยังไม่มีบัญชี admin ใน bruno/.env (ไม่มี admin_token)
+  if (!bru.getVar("admin_token")) {
+    bru.runner.skipRequest();
+  }
+}
+
+body:json {
+  { "status": "dismissed" }
+}
+
+tests {
+  test("409 because the delete marked it actioned", function () {
+    expect(res.getStatus()).to.equal(409);
+    expect(res.getBody().error.code).to.equal("REPORT_ALREADY_RESOLVED");
+  });
+}
