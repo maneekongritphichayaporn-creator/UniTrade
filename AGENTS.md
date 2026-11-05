@@ -1,9 +1,10 @@
-# AGENTS.md — UniTrade backend
+# AGENTS.md — UniTrade
 
-Instructions for an AI coding agent working in this repo. Read the whole file before writing code.
-It is self-contained: the API contracts for your tasks are in sections 7 and 8, so you do not need the spec PDF.
+Instructions for an AI coding agent working in this repo, on a backend or a frontend task. Read the whole file before writing code.
+Sections 1–6 and 9–11 apply to every task. Sections 7 and 8 are the contracts of the finished backend tasks (TASK-09, TASK-12), kept as reference.
+For any other endpoint, the **API Specification v2.2** (linked from TASK-05 in the team sheet) is the contract. If this file and the spec disagree, follow the spec and tell your human to raise it with @wz.
 
-Last updated: 24 Oct 2026 by the Backend Lead (@wz).
+Last updated: 5 Nov 2026 by the Backend Lead (@wz).
 
 ---
 
@@ -25,24 +26,33 @@ There is no payment, no shipping, and no in-app chat.
 
 | Handle | Role | Owns |
 |---|---|---|
-| @wz | Backend Lead | Architecture, `lib/`, auth, migrations, PR review. **Ask @wz before changing anything in section 4.3.** |
-| @SArunPoB | Backend Dev | TASK-09, TASK-12 |
-| @yat | Frontend Lead | Layout, home page (consumes TASK-09) |
-| @warixm | Frontend Dev | Listing form (consumes TASK-12) |
-| @Aud | QA | Test cases (uses the Bruno collection) |
+| @wz | Backend Lead | Architecture, backend `lib/`, auth, migrations, PR review · TASK-06, TASK-15. **Ask @wz before changing anything in section 4.3.** |
+| @SArunPoB | Backend Dev | TASK-09, TASK-12 (done) · TASK-19 |
+| @yat | Frontend Lead | TASK-07, TASK-10, TASK-16, TASK-18 (done) · TASK-23 |
+| @warixm | Frontend Dev | TASK-08, TASK-13, TASK-14, TASK-17, TASK-20 |
+| @Aud | QA | TASK-11 test cases (uses the Bruno collection) |
 
-Your human is usually @SArunPoB. If you are not sure who you are working for or which task to do, ask before writing code.
+Several people on the team use AI agents. Before writing code, find out who you are working for and which task; ask if you are not sure.
+Your task is in scope even if this file does not describe it (section 11). Stay inside it, and don't edit files that belong to someone else's task.
 If something here is ambiguous, stop and tell your human to ask @wz. Do not invent response fields, error codes or columns.
 
 ## 3. Current state
 
 | Task | Status |
 |---|---|
-| TASK-04 Database + Supabase setup | Done. Migrations 0001–0004 are applied to the shared Supabase project. |
-| TASK-05 API spec | Done (v2.2). Sections 6–8 below are the parts you need. |
+| TASK-04 Database + Supabase setup | Done. Migrations 0001–0005 are applied to the shared Supabase project (0005 is TASK-19's `moderation_logs`, applied 5 Nov; its file reaches `main` with TASK-19). |
+| TASK-05 API spec | Done (v2.2). The contract for every endpoint. |
 | TASK-06 Auth API | Done and tested: register, login, `GET/PATCH /auth/me`, `/faculties`, `requireAuth`, `optionalAuth`. |
-| **TASK-09** Product read API | **@SArunPoB, to do.** Section 7. Start here. |
-| **TASK-12** Product create/edit/delete + image upload | **@SArunPoB, to do.** Section 8. Start after TASK-09, or in parallel. |
+| TASK-09 Product read API | Done (PR #1). Section 7. |
+| TASK-12 Product create/edit/delete + image upload | Done (PR #2). Section 8. |
+| TASK-15 Search & filter (backend) | Done inside TASK-09; Bruno examples 53–63. See `docs/TASK-15-CHANGELOG.md`. |
+| TASK-07, 10, 16, 18 Frontend: layout, home, search/filter UI, product page | Done (PR #3, PR #7). TASK-18's contact button waits for `GET /products/:id/contact` (section 11). |
+| TASK-23 Deploy to Vercel | Guide merged (`docs/TASK-23-DEPLOY.md`); not deployed yet. |
+| TASK-08, 13, 14, 17 (@warixm) | In progress on feature branches. |
+| TASK-19 Report + admin (@SArunPoB) | In progress on `feature/TASK-19-admin-reports`. |
+| TASK-11, TASK-20 | Not on GitHub yet (TASK-20 waits for TASK-19). |
+
+The status table in `README.md` is updated more often; check it too.
 
 ## 4. Rules
 
@@ -51,9 +61,9 @@ If something here is ambiguous, stop and tell your human to ask @wz. Do not inve
 ```bash
 npm install
 cp .env.example .env.local   # human pastes SUPABASE_SERVICE_ROLE_KEY; generate JWT_SECRET with: openssl rand -base64 48
-npm test                     # unit tests, must stay green (17 at handover)
+npm test                     # unit tests, must stay green
 npm run dev                  # http://localhost:3000/api/v1
-npm run test:api             # Bruno collection against the running dev server (13/13 at handover)
+npm run test:api             # Bruno collection against the running dev server; registers bruno.* users, so clean up after (9.3)
 npm run build                # must pass before every PR
 ```
 
@@ -64,13 +74,13 @@ npm run build                # must pass before every PR
 3. **Every route handler is wrapped** in `requireAuth`, `optionalAuth` or `route`. Because `db()` bypasses all permissions, an unwrapped handler is a data leak.
 4. **Never `select('*')` from `users`**, and never embed `users(*)`. List columns explicitly. Public product responses must never contain the seller's `email`, `phone_number`, `line_id` or `password_hash` (SRS FR-06).
 5. **Never create a Supabase client in browser code**, and never name a Supabase variable `NEXT_PUBLIC_*`.
-6. **Schema changes go in a new migration file** (`supabase/migrations/0005_<name>.sql`), never through the dashboard and never by editing 0001–0004. Tell your human to get @wz's OK; @wz runs it.
+6. **Schema changes go in a new migration file** (`supabase/migrations/0006_<name>.sql`; 0005 is taken by TASK-19), never through the dashboard and never by editing an existing migration. Tell your human to get @wz's OK; @wz runs it.
 7. **The Supabase project is shared with the whole team.** Only create and delete your own test data. Clean up after test runs (section 9.3).
 8. **Do not return Supabase error messages to clients.** `throw error` and let `route()` turn it into a logged 500.
 
 ### 4.3 Do not change without @wz
 
-`lib/auth.js`, `lib/http.js`, `lib/supabase.js`, `lib/validation.js`, `lib/users.js`, migrations 0001–0004, Bruno requests 01–13, and the response shape of any existing endpoint.
+`lib/auth.js`, `lib/http.js`, `lib/supabase.js`, `lib/validation.js`, `lib/users.js`, existing migrations (0001–0005), Bruno requests 01–13, `next.config.mjs`, `package.json` (no new dependencies), and the response shape of any existing endpoint.
 You **may** add exports to `lib/constants.js` and create new `lib/` files (for example `lib/products.js`).
 
 ### 4.4 Code style
@@ -79,21 +89,29 @@ You **may** add exports to `lib/constants.js` and create new `lib/` files (for e
 - User-facing `message` strings are **Thai**. Code comments are short and in Thai, matching the existing files; English is fine where Thai would be awkward.
 - Throw `ApiError` for expected failures. Never build an error `Response` by hand.
 - Small pure helpers (parsing, validation, mapping) go in `lib/` and get unit tests in `test/`.
+- Frontend code goes in `app/` (pages; not `app/api`), `components/` and `lib/client/`. It calls the API only through `request()` in `lib/client/api.js` and never imports backend `lib/*.js` files. The README section "หน้าเว็บ (Frontend)" lists the shared helpers (`useAuth()`, `routes.js`, `format.js`, mock mode).
 
 ## 5. Codebase map
 
 ```
 app/api/v1/auth/{register,login,me}/route.js   TASK-06, done
 app/api/v1/faculties/route.js                  TASK-06, done
+app/api/v1/{categories,pickup-locations}/      TASK-09, done
+app/api/v1/products/...                        TASK-09 (GET) + TASK-12 (POST, PATCH, DELETE, status), done
+app/ (outside app/api), components/            frontend pages and components (TASK-07, 10, 16, 18)
 lib/http.js        ok(body, status) · noContent() · ApiError(status, code, message, field?) · route(handler) · readJson(request)
 lib/auth.js        requireAuth(handler) · optionalAuth(handler) · signToken(user) · TOKEN_TTL_SECONDS
 lib/supabase.js    db() → Supabase client (service_role) · PRODUCT_IMAGES_BUCKET = 'product-images'
 lib/constants.js   FACULTIES · PICKUP_LOCATIONS · PRODUCT_STATUSES · ACTIVE_STATUSES
 lib/validation.js  user rules (TASK-06)
 lib/users.js       PROFILE_COLUMNS · getUserRow · getProfile
-supabase/          migrations 0001–0004 + seed.sql (already applied; for reference)
+lib/products.js    PRODUCT_SELECT · parseProductQuery · applyProductFilters · toCard · toDetail (TASK-09, TASK-12)
+lib/product-images.js  validateImages · sniffImageType · removeProductFolder (TASK-12)
+lib/client/        frontend only: api.js request() · session.js / useAuth.js · routes.js · format.js · mock/
+supabase/          migrations + seed.sql (already applied; for reference)
 test/              node:test unit tests
 bruno/             API collection; environments/local.bru sets baseUrl
+docs/              per-task notes (TASK-<n>-CHANGELOG.md) and the deploy guide
 ```
 
 ### 5.1 How a route looks
@@ -129,6 +147,8 @@ export const PATCH = requireAuth(async (request, { params, user }) => {
 
 ### 6.1 Error codes you will use
 
+These are the codes of TASK-06, TASK-09 and TASK-12. The full catalog, including report and admin codes, is spec §1.5.
+
 | code | status | when |
 |---|---|---|
 | `INVALID_PAYLOAD` | 400 | Body is not JSON / not multipart when it must be |
@@ -145,6 +165,8 @@ export const PATCH = requireAuth(async (request, { params, user }) => {
 | `INTERNAL_ERROR` | 500 | Produced by `route()`; never throw it yourself |
 
 ## 7. TASK-09 — Product read API
+
+**Done** (PR #1, merged 27 Oct). Kept as the contract for these endpoints; don't rebuild them.
 
 Four public endpoints, all wrapped in `optionalAuth` (or `route` where `user` is not needed).
 
@@ -263,7 +285,7 @@ Build the filters in one function (`applyProductFilters(query, filters)`) so the
 
 Public, `optionalAuth`. Returns the detail object for any status (sold items stay viewable).
 An invalid UUID or unknown id → `200` with the body `{ "data": [] }`. **Never 404** (decided by wz in the TASK-09 review). The FE tells "found" from "not found" by checking that the body has a `product_id` (found) or an empty `data` array (not found).
-**No seller contact information in this response.** The contact endpoint is a separate, out-of-scope endpoint.
+**No seller contact information in this response.** Contact details only ever come from `GET /products/:id/contact` (section 11).
 
 ### 7.6 Done when
 
@@ -273,6 +295,8 @@ An invalid UUID or unknown id → `200` with the body `{ "data": [] }`. **Never 
 - [ ] `npm test`, `npm run build`, `npm run test:api` all pass; PR opened against `main`
 
 ## 8. TASK-12 — Create, edit, delete products and upload images
+
+**Done** (PR #2, merged 1 Nov). Kept as the contract for these endpoints; don't rebuild them.
 
 All endpoints use `requireAuth`. For every `:id` route, check in this order:
 **invalid UUID or not found → 404 `PRODUCT_NOT_FOUND`**, then **`seller_id !== user.user_id` → 403 `NOT_OWNER`**, then validate the body (422).
@@ -349,7 +373,7 @@ Response: **204** with no body (`noContent()`).
 
 ### 9.2 Bruno
 
-- Continue numbering at `14-…`. Existing request 02 registers a user and saves `{{email}}`; 09 logs in and saves `{{token}}`. Requests that run after 09 can use `auth: bearer` with `{{token}}`.
+- Use the next free number, and check open branches too: TASK-19 uses 42–52 and 99, TASK-15 uses 53–63. Existing request 02 registers a user and saves `{{email}}`; 09 logs in and saves `{{token}}`. Requests that run after 09 can use `auth: bearer` with `{{token}}`.
 - For the `NOT_OWNER` cases, register and log in a second user in pre-request or post-response scripts (save it as `token2`), with an email that also starts `bruno.` and ends `@student.chula.ac.th`.
 - Save the created product's id with `bru.setVar("product_id", res.getBody().product_id)`.
 - Multipart syntax (verified against Bruno's parser):
@@ -382,6 +406,9 @@ body:multipart-form {
 End the collection with the DELETE request, which also removes the Storage files.
 Then the human runs this in the Supabase SQL Editor (also in the README):
 ```sql
+-- moderation log rows about test listings (TASK-19); must run before the users delete
+delete from public.moderation_logs
+where seller_id in (select user_id from public.users where email like 'bruno.%@student.chula.ac.th');
 delete from public.users where email like 'bruno.%@student.chula.ac.th';
 ```
 Deleting users cascades to their products, but **not** to Storage files, so always delete products through the API first.
@@ -399,12 +426,24 @@ Deleting users cascades to their products, but **not** to Storage files, so alwa
    }
    query.or(`title.ilike.${ilikeContains(kw)},description.ilike.${ilikeContains(kw)}`);
    ```
-   The table was empty when this was tested, so confirm with real data that a search for `50%` matches the text `50%` and does not match everything.
+   Confirmed with real data in TASK-09: a search for `a,b(c) 50%_off` matched exactly 1 listing, not everything.
 3. **An invalid UUID gives Postgres `22P02`**, which would become a 500. Validate `:id` and `category_id` with a UUID regex first and answer yourself (`GET /products/:id` → 200 + `{ data: [] }`, `category_id` → 422).
 4. **The embedded select in 7.1 works** (`categories`, `users` via `seller_id`, `product_images`).
 5. **Listing a folder that doesn't exist** in the bucket returns `[]` without an error.
 6. `count: 'exact'` together with `.range()` gives the filtered total in one query.
 
-## 11. Out of scope — do not build unless @wz asks
+## 11. Scope: who builds what
 
-`GET /me/products`, `GET /products/:id/contact`, wishlist endpoints, reports, admin endpoints, rate limiting, any frontend page, and changes to auth.
+Every task in the team sheet has an owner (section 2). The task your human gives you is in scope even if this file doesn't describe it; the spec is its contract.
+
+| Item | Owner / status |
+|---|---|
+| Frontend pages and components: `app/` (except `app/api`), `components/`, `lib/client/` | Frontend team (@yat, @warixm). Backend tasks don't edit them. |
+| Report and admin endpoints (spec UC-06, UC-07) | TASK-19, @SArunPoB |
+| Wishlist endpoints (spec UC-05) | TASK-17, @warixm |
+| `GET /products/:id/contact` (spec FR-06) | Needed by TASK-18. **Owner not decided:** ask @wz before building it. |
+| `GET /me/products` (spec UC-03) | Needed by TASK-14. **Owner not decided:** ask @wz before building it. |
+| Rate limiting, changes to auth | Out of scope unless @wz asks. |
+
+Backend files (`app/api`, backend `lib/*.js`, `supabase/`, `bruno/`) follow sections 4–6 whoever changes them, and @wz reviews them.
+If your task needs something in this table that isn't yours or has no owner, stop and tell your human to ask @wz.
