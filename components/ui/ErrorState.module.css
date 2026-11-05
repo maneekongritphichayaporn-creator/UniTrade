@@ -1,0 +1,37 @@
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--brand-200);
+  border-radius: var(--radius);
+  background: var(--brand-50);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  color: var(--brand-600);
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.message {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.code {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}

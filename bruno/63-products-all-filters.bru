@@ -1,0 +1,31 @@
+meta {
+  name: Products - all filters together
+  type: http
+  seq: 63
+}
+
+get {
+  url: {{baseUrl}}/products?keyword=calculus&category_id=00000000-0000-4000-8000-000000000001&min_price=0&max_price=1000&status=all&item_condition=good&pickup_location=%E0%B8%A8%E0%B8%B2%E0%B8%A5%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%81%E0%B8%B5%E0%B9%89%E0%B8%A2%E0%B8%A7&sort=price_desc&page=1&per_page=10
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 and every item matches every filter", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.pagination.per_page).to.equal(10);
+    expect(body.pagination.total_pages).to.equal(Math.ceil(body.pagination.total / 10));
+    for (const card of body.data) {
+      expect(card.category.category_id).to.equal("00000000-0000-4000-8000-000000000001");
+      expect(card.price).to.be.within(0, 1000);
+      expect(card.item_condition).to.equal("good");
+      expect(card.pickup_location).to.equal("ศาลาพระเกี้ยว");
+    }
+  });
+
+  test("sorted by price, highest first", function () {
+    const prices = res.getBody().data.map((card) => card.price);
+    expect(prices).to.deep.equal([...prices].sort((a, b) => b - a));
+  });
+}

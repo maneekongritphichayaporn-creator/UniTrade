@@ -1,0 +1,19 @@
+meta {
+  name: Products - Thai keyword
+  type: http
+  seq: 62
+}
+
+get {
+  url: {{baseUrl}}/products?status=all&keyword=%E0%B8%AB%E0%B8%99%E0%B8%B1%E0%B8%87%E0%B8%AA%E0%B8%B7%E0%B8%AD
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 with data and pagination for a Thai keyword", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().data).to.be.an("array");
+    expect(res.getBody().pagination.total).to.be.a("number");
+  });
+}

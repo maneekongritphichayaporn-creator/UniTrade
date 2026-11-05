@@ -1,0 +1,20 @@
+meta {
+  name: Products - one category
+  type: http
+  seq: 53
+}
+
+get {
+  url: {{baseUrl}}/products?status=all&category_id=00000000-0000-4000-8000-000000000001
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 and every item is in that category", function () {
+    expect(res.getStatus()).to.equal(200);
+    for (const card of res.getBody().data) {
+      expect(card.category.category_id).to.equal("00000000-0000-4000-8000-000000000001");
+    }
+  });
+}

@@ -15,15 +15,22 @@ Next.js 15 (App Router, JavaScript) · API อยู่ใต้ `/api/v1` · �
 |---|---|---|---|
 | TASK-01–05 | SRS, UI, ER/Sequence Diagram, Database, API Spec | ทุกคน | ✅ เสร็จ |
 | **TASK-06** | Backend: Register, Login, Profile, JWT | @wz | ✅ **เสร็จ** — ทดสอบกับ Supabase จริงผ่าน 13/13 |
-| TASK-07 | Frontend: Layout, Navbar, Routing, Theme | @yat | ⏳ ยังไม่มีโค้ดใน repo |
+| **TASK-07** | Frontend: Layout, Navbar, Routing, Theme | @yat | ✅ **เสร็จ** — ดูหัวข้อ "หน้าเว็บ (Frontend)" |
 | TASK-08 | Frontend: หน้า Login, Register, Profile | @warixm | ⏳ ยังไม่มีโค้ดใน repo — **ต่อ API ได้แล้ว** |
-| TASK-09 | Backend: API ดึงสินค้า, หมวดหมู่, จุดนัดรับ | @SArunPoB | 🔜 **เริ่มได้เลย** |
-| TASK-10 | Frontend: หน้า Home + Product Grid | @yat | 🔜 รอ TASK-09 (ทำ UI ด้วยข้อมูลตัวอย่างจาก spec §5 ไปก่อนได้) |
+| **TASK-09** | Backend: API ดึงสินค้า, หมวดหมู่, จุดนัดรับ | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #1) ดู [`docs/TASK-09-CHANGELOG.md`](docs/TASK-09-CHANGELOG.md) |
+| **TASK-10** | Frontend: หน้า Home + Product Grid | @yat | ✅ **เสร็จ** — ต่อ `GET /products` และ `GET /categories` แล้ว |
+| **TASK-16** | Frontend: Search Bar + Filter Sidebar | @yat | ✅ **เสร็จ** — ตัวกรองทั้งหมด sync กับ URL |
+| **TASK-18** | Frontend: หน้ารายละเอียด + ข้อมูลติดต่อผู้ขาย | @yat | ✅ **เสร็จ** — รอ `GET /products/:id/contact` จากฝั่ง BE (ดู "เรื่องที่ฝาก BE / ทีม") |
 | TASK-11 | Testing: Test Cases ระบบ Login และการแสดงสินค้า | @Aud | 🔜 ส่วน Login เริ่มได้เลย ใช้ `bruno/` เป็นตัวอย่าง |
-| TASK-12 | Backend: API สร้าง/แก้ไข/ลบสินค้า + อัปโหลดรูป | @SArunPoB | 🔜 **เริ่มได้เลย** (`requireAuth` พร้อมแล้ว) |
-| TASK-13 | Frontend: ฟอร์มลงประกาศ + แก้ไขสินค้า | @warixm | 🔜 รอ TASK-12 |
+| **TASK-12** | Backend: API สร้าง/แก้ไข/ลบสินค้า + อัปโหลดรูป | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #2) ดู [`docs/TASK-12-CHANGELOG.md`](docs/TASK-12-CHANGELOG.md) |
+| TASK-13 | Frontend: ฟอร์มลงประกาศ + แก้ไขสินค้า | @warixm | 🔜 **เริ่มได้เลย** — TASK-12 merge แล้ว |
+| TASK-14 | Frontend: เปลี่ยนสถานะสินค้า + ประกาศของฉัน | @warixm | 🔜 **เริ่มได้เลย** — `PATCH /products/:id/status` พร้อมแล้ว |
+| **TASK-15** | Backend: Search & Filter | @wz | ✅ **เสร็จ** — สร้างไว้ใน TASK-09 (`GET /products`) · ตัวอย่าง Bruno 53–63 · ดู [`docs/TASK-15-CHANGELOG.md`](docs/TASK-15-CHANGELOG.md) |
+| TASK-17 | Wishlist (FE + BE) | @warixm | 🔜 ยังไม่เริ่ม — endpoint ยังไม่มี |
+| TASK-19 | Backend: Report + Admin | @SArunPoB | 🔜 กำลังทำ |
+| TASK-20 | Frontend: หน้าจัดการรายงาน (Admin) | @warixm | 🔜 รอ TASK-19 |
 
-ฐานข้อมูลบน Supabase รัน migration ครบแล้ว (0001–0004) ไม่ต้องรันซ้ำ
+ฐานข้อมูลบน Supabase รัน migration ครบแล้ว (0001–0005 · 0005 ของ TASK-19 รันแล้ว 5 พ.ย. ไฟล์จะเข้า `main` พร้อม TASK-19) ไม่ต้องรันซ้ำ
 
 ## ต้องทำอะไรต่อ
 
@@ -32,6 +39,7 @@ Next.js 15 (App Router, JavaScript) · API อยู่ใต้ `/api/v1` · �
 
 **@yat** — ตาม Spec §1.1 หน้าเว็บกับ API อยู่ในโปรเจกต์ Next.js เดียวกัน deploy ที่ Vercel ที่เดียว ไม่ต้องตั้ง CORS
 วางหน้าใน `app/` ได้เลย (เช่น `app/login/page.js`) แทน `app/page.js` ที่เป็นหน้าชั่วคราว — ถ้ามีโปรเจกต์ FE แยกอยู่แล้ว บอก @wz ก่อน
+> **ตอบ @wz (3 พ.ย.):** ไม่ได้แยกโปรเจกต์ครับ ย้ายมาทำใน repo นี้ตามที่บอกไว้ หน้าเว็บอยู่ใน `app/`, `components/` และ `lib/client/` — ไม่ได้แตะไฟล์ของ backend เลย ดูหัวข้อ "หน้าเว็บ (Frontend)"
 
 **@warixm** — TASK-08 ต่อ API ได้แล้ว (ดูหัวข้อ "API ที่ใช้ได้แล้ว") · สำหรับ TASK-13: **ต้องย่อรูปฝั่งเบราว์เซอร์ก่อนส่ง** ให้รวมทุกรูปไม่เกิน 4MB
 เพราะ Vercel รับ request ได้ไม่เกิน 4.5MB ทุกแพ็กเกจ (5 รูป × 2MB = 10MB จะโดนปฏิเสธบน production) แนะนำย่อด้านยาวเหลือ ~1600px แล้วบันทึกเป็น JPEG
@@ -144,8 +152,10 @@ token อายุ 24 ชั่วโมง ไม่มี refresh และไ
 
 ```
 app/api/v1/          API — หนึ่งโฟลเดอร์ต่อหนึ่ง path
-app/                 หน้าเว็บ (FE) — ตอนนี้มีแค่หน้าชั่วคราว
+app/                 หน้าเว็บ (FE) — ดูหัวข้อ "หน้าเว็บ (Frontend)"
+components/          คอมโพเนนต์ของหน้าเว็บ
 lib/                 โค้ดกลางของ backend: auth, รูปแบบ response, Supabase client, ค่าคงที่
+lib/client/          โค้ดกลางของหน้าเว็บ: เรียก API, session, ตัวกรอง, ข้อความ
 supabase/            migration + seed (รันบน Supabase แล้ว เก็บไว้เป็นหลักฐาน)
 test/                unit test
 bruno/               ชุดทดสอบ API — เปิดด้วยแอป Bruno หรือรัน npm run test:api
@@ -157,11 +167,93 @@ AGENTS.md            คู่มือละเอียดสำหรับ�
 
 ---
 
+## หน้าเว็บ (Frontend)
+
+> อัปเดต 3 พ.ย. 2569 โดย @yat (FE Lead) — TASK-07, 10, 16, 18
+>
+> เอกสารส่งงานฉบับเต็ม: [`docs/TASK-07-10-16-18-CHANGELOG.md`](docs/TASK-07-10-16-18-CHANGELOG.md)
+> เนื้อหาสำหรับรายงาน (หัวข้อ 4.6, 5.1, 5.3 ส่วนหน้าเว็บ): [`docs/REPORT-FRONTEND.md`](docs/REPORT-FRONTEND.md)
+
+| Path | หน้า | Task | เจ้าของ |
+|---|---|---|---|
+| `/` | หน้าแรก: แถบหมวดหมู่, การ์ดสินค้า, ตัวกรอง, แบ่งหน้า | TASK-10 + TASK-16 | @yat |
+| `/products/[id]` | รายละเอียดสินค้า + ปุ่มติดต่อผู้ขาย | TASK-18 | @yat |
+| `/login` | **ตัวชั่วคราว** — แทนที่ได้เลย | TASK-08 | @warixm |
+| `/register`, `/me/profile` | สมัครสมาชิก, โปรไฟล์ | TASK-08 | @warixm |
+| `/products/create`, `/products/[id]/edit` | ฟอร์มลงขาย/แก้ไข | TASK-13 | @warixm |
+| `/me/products` | ประกาศของฉัน + เปลี่ยนสถานะ | TASK-14 | @warixm |
+| `/me/wishlist` | รายการโปรด | TASK-17 | @warixm |
+| `/admin` | จัดการรายงาน | TASK-20 | @warixm |
+
+Path ที่ยังไม่มีไฟล์จะตกไปที่ `app/not-found.js` (หน้า 404) ไม่พัง — สร้าง `app/<path>/page.js` ทับได้เลย
+ชื่อ path ทุกอันรวมอยู่ใน `lib/client/routes.js` ใช้ `routes.xxx` แทนการพิมพ์ path เองจะได้ไม่หลุดกัน
+
+### โครงไฟล์ฝั่งหน้าเว็บ
+
+```
+app/globals.css              ธีม (สี ปุ่ม ป้าย ฟอร์ม) — แก้สีที่ :root ที่เดียว ทุกหน้าเปลี่ยนตาม
+app/layout.js                ฟอนต์ไทย + Navbar + Footer
+components/layout/           Navbar, SearchBar, ProfileMenu, Footer, Logo
+components/products/         การ์ดสินค้า, แถบหมวดหมู่, ตัวกรอง, แบ่งหน้า, หน้ารายละเอียด, modal ติดต่อ
+components/ui/               ไอคอน (inline SVG), Modal, ErrorState
+lib/client/                  โค้ดฝั่งเบราว์เซอร์: เรียก API, session, ตัวกรองใน URL, ข้อความภาษาไทย
+lib/client/mock/             ข้อมูลจำลอง (ดูหัวข้อถัดไป)
+```
+
+`lib/client/` เป็นของฝั่งหน้าเว็บล้วน **ไม่ import อะไรจาก `lib/` ของ backend** และไม่แตะไฟล์ใน `lib/` เลย
+ไม่ได้ลงไลบรารีเพิ่มสักตัว (ไม่มี Tailwind/ไลบรารีไอคอน) `package.json` จึงไม่เปลี่ยน — ใช้ CSS Modules กับ inline SVG แทน
+
+### เรียก API จากหน้าเว็บ
+
+```js
+import { listProducts } from '@/lib/client/products.js';
+import { ApiError } from '@/lib/client/api.js';
+
+try {
+  const { data, pagination } = await listProducts({ keyword: 'calculus', sort: 'price_asc' });
+} catch (error) {
+  if (error instanceof ApiError) {
+    // error.code เช่น 'VALIDATION_ERROR' · error.message เป็นภาษาไทย แสดงให้ผู้ใช้ได้เลย
+    // error.field บอกว่าช่องไหนผิด ใช้กับฟอร์มได้
+  }
+}
+```
+
+- แนบ `Authorization: Bearer <token>` ให้อัตโนมัติ ถ้า API ตอบ 401 จะล้าง session ทิ้งให้เอง
+- เช็กสถานะล็อกอินด้วย `useAuth()` → `{ status: 'loading' | 'guest' | 'authenticated', user, isAdmin }`
+- ล็อกอิน/ออกจากระบบด้วย `login(email, password)` และ `logout()` จาก `lib/client/auth.js` (จัดการ token ให้แล้ว)
+- เพิ่ม endpoint ใหม่: เพิ่มฟังก์ชันใน `lib/client/*.js` ที่เรียก `request()` แล้วเพิ่ม mock ใน `lib/client/mock/handlers.js`
+
+### โหมดข้อมูลจำลอง (mock)
+
+ใส่ `NEXT_PUBLIC_USE_MOCK_API=true` ใน `.env.local` แล้ว `npm run dev` — หน้าเว็บจะใช้ข้อมูลใน `lib/client/mock/`
+แทนการยิง `/api/v1` ทำให้เปิดดู/เดโม/ทำ UI ได้โดยไม่ต้องมีคีย์ Supabase และไม่ต้องรอ TASK-09 merge
+
+- สินค้าตัวอย่าง 22 ชิ้น หมวดหมู่และจุดนัดรับตรงกับ `supabase/seed.sql` และ `lib/constants.js`
+- หน้า `/login` จะมีปุ่มล็อกอินด้วยบัญชีทดสอบให้กด (`nisit.k@student.chula.ac.th` / `UniTrade2026!` และ `admin@chula.ac.th` / `Admin2026!`)
+- mock ลอกรูปแบบ response ของจริงมาทั้งหมด รวมถึง `{ data: [] }` ตอนไม่พบสินค้า — เปลี่ยนค่าเป็น `false` แล้วหน้าเว็บทำงานกับ API จริงได้ทันที
+- **ค่าเริ่มต้นคือปิด** ถ้าไม่ใส่ตัวแปรนี้จะยิง API จริงเสมอ (บน Vercel ไม่ต้องตั้งค่าอะไร)
+
+### เรื่องที่ฝาก BE / ทีม
+
+1. `GET /products/:id/contact` ยังไม่มี (AGENTS.md §11 เขียนว่า out of scope) — หน้ารายละเอียดเรียก endpoint นี้ไว้แล้วและทำงานได้ในโหมด mock
+   ขอให้ @wz บอกว่าจะทำใน task ไหน รูปแบบที่หน้าเว็บรออยู่คือ
+   `{ seller: { full_name, faculty }, channels: [{ type: 'line'|'phone', value, deep_link, is_primary }], pickup_location, safety_note }`
+   (ถ้าส่ง `phone_number` / `line_id` มาตรง ๆ หน้าเว็บก็สร้างลิงก์ LINE/โทรเองได้ รองรับไว้แล้ว)
+2. `GET /categories` ส่ง `name` เป็นภาษาอังกฤษ (Textbooks, Apparel, …) หน้าเว็บแปลงเป็นภาษาไทยจาก `category_id`
+   ที่ `lib/client/format.js` → `CATEGORY_LABELS_TH` ถ้าอยากให้ API ส่งชื่อไทยมาเลยค่อยคุยกัน
+3. ตอนนี้รูปสินค้าใช้ `<img>` ธรรมดา ถ้าจะเปลี่ยนไปใช้ `next/image` ต้องเพิ่ม `images.remotePatterns` ของโดเมน Supabase ใน `next.config.mjs` — ขอ @wz ก่อน
+
+---
+
 ## ลบข้อมูลทดสอบ
 
 Bruno สมัครบัญชีใหม่ทุกครั้งที่รัน ด้วยอีเมล `bruno.<ตัวเลข>@student.chula.ac.th` ลบได้ใน Supabase SQL Editor:
 
 ```sql
+-- log ของ admin ที่เกี่ยวกับประกาศทดสอบ (TASK-19) ต้องลบก่อนบรรทัดลบ users
+delete from public.moderation_logs
+where seller_id in (select user_id from public.users where email like 'bruno.%@student.chula.ac.th');
 delete from public.users where email like 'bruno.%@student.chula.ac.th';
 ```
 
