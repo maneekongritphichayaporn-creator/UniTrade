@@ -1,0 +1,19 @@
+meta {
+  name: Products - unknown pickup location
+  type: http
+  seq: 58
+}
+
+get {
+  url: {{baseUrl}}/products?pickup_location=Siam%20Paragon
+  body: none
+  auth: none
+}
+
+tests {
+  test("422 INVALID_PICKUP_LOCATION on field pickup_location", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("INVALID_PICKUP_LOCATION");
+    expect(res.getBody().error.field).to.equal("pickup_location");
+  });
+}

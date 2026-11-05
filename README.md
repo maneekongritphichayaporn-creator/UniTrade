@@ -25,7 +25,7 @@ Next.js 15 (App Router, JavaScript) · API อยู่ใต้ `/api/v1` · �
 | **TASK-12** | Backend: API สร้าง/แก้ไข/ลบสินค้า + อัปโหลดรูป | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #2) ดู [`docs/TASK-12-CHANGELOG.md`](docs/TASK-12-CHANGELOG.md) |
 | TASK-13 | Frontend: ฟอร์มลงประกาศ + แก้ไขสินค้า | @warixm | 🔜 **เริ่มได้เลย** — TASK-12 merge แล้ว |
 | TASK-14 | Frontend: เปลี่ยนสถานะสินค้า + ประกาศของฉัน | @warixm | 🔜 **เริ่มได้เลย** — `PATCH /products/:id/status` พร้อมแล้ว |
-| TASK-15 | Backend: Search & Filter | @SArunPoB | ✅ รวมอยู่ใน TASK-09 แล้ว (`GET /products`) |
+| **TASK-15** | Backend: Search & Filter | @wz | ✅ **เสร็จ** — สร้างไว้ใน TASK-09 (`GET /products`) · ตัวอย่าง Bruno 53–63 · ดู [`docs/TASK-15-CHANGELOG.md`](docs/TASK-15-CHANGELOG.md) |
 | TASK-17 | Wishlist (FE + BE) | @warixm | 🔜 ยังไม่เริ่ม — endpoint ยังไม่มี |
 | TASK-19 | Backend: Report + Admin | @SArunPoB | 🔜 กำลังทำ |
 | TASK-20 | Frontend: หน้าจัดการรายงาน (Admin) | @warixm | 🔜 รอ TASK-19 |
