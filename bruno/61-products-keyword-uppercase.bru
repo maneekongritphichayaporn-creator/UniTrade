@@ -1,0 +1,18 @@
+meta {
+  name: Products - keyword uppercase
+  type: http
+  seq: 61
+}
+
+get {
+  url: {{baseUrl}}/products?status=all&keyword=CALCULUS
+  body: none
+  auth: none
+}
+
+tests {
+  test("case-insensitive: same total as the lowercase search in 60", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().pagination.total).to.equal(bru.getVar("keyword_lower_total"));
+  });
+}

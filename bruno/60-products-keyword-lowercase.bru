@@ -1,0 +1,23 @@
+meta {
+  name: Products - keyword lowercase
+  type: http
+  seq: 60
+}
+
+get {
+  url: {{baseUrl}}/products?status=all&keyword=calculus
+  body: none
+  auth: none
+}
+
+script:post-response {
+  // 61 ค้นคำเดียวกันแบบตัวพิมพ์ใหญ่ ต้องได้จำนวนเท่ากัน
+  bru.setVar("keyword_lower_total", res.getBody().pagination.total);
+}
+
+tests {
+  test("200 with pagination", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().pagination.total).to.be.a("number");
+  });
+}

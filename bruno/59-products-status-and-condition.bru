@@ -1,0 +1,21 @@
+meta {
+  name: Products - sold and like_new
+  type: http
+  seq: 59
+}
+
+get {
+  url: {{baseUrl}}/products?status=sold&item_condition=like_new
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 and every item is sold and like_new", function () {
+    expect(res.getStatus()).to.equal(200);
+    for (const card of res.getBody().data) {
+      expect(card.status).to.equal("sold");
+      expect(card.item_condition).to.equal("like_new");
+    }
+  });
+}
