@@ -1,0 +1,28 @@
+meta {
+  name: Report target - cleanup
+  type: http
+  seq: 99
+}
+
+delete {
+  url: {{baseUrl}}/products/{{report_product_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+script:pre-request {
+  // ถ้า admin ลบประกาศนี้ไปแล้วใน 76 ไม่ต้องลบซ้ำ
+  if (bru.getVar("admin_deleted") === "yes") {
+    bru.runner.skipRequest();
+  }
+}
+
+tests {
+  test("204 product and its Storage files removed", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

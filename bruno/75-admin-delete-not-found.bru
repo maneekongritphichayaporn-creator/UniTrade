@@ -1,0 +1,30 @@
+meta {
+  name: Admin delete product - not found
+  type: http
+  seq: 75
+}
+
+delete {
+  url: {{baseUrl}}/admin/products/00000000-0000-4000-8000-0000000000ff
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
+}
+
+script:pre-request {
+  // ข้ามเมื่อยังไม่มีบัญชี admin ใน bruno/.env (ไม่มี admin_token)
+  if (!bru.getVar("admin_token")) {
+    bru.runner.skipRequest();
+  }
+}
+
+
+tests {
+  test("404 PRODUCT_NOT_FOUND", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error.code).to.equal("PRODUCT_NOT_FOUND");
+  });
+}

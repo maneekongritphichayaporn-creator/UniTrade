@@ -1,0 +1,41 @@
+meta {
+  name: Report - create
+  type: http
+  seq: 47
+}
+
+post {
+  url: {{baseUrl}}/products/{{report_product_id}}/reports
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+body:json {
+  {
+    "reason": "scam",
+    "status": "actioned"
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.report_id) {
+    bru.setVar("report_id", body.report_id);
+  }
+}
+
+tests {
+  test("201 pending report with a confirmation message", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(201);
+    expect(body.report_id).to.be.a("string");
+    expect(body.product_id).to.equal(bru.getVar("report_product_id"));
+    expect(body.reason).to.equal("scam");
+    expect(body.status).to.equal("pending");
+    expect(body.message).to.equal("ส่งรายงานเรียบร้อยแล้ว ผู้ดูแลระบบจะตรวจสอบโดยเร็ว");
+  });
+}

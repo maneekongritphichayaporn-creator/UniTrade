@@ -1,0 +1,28 @@
+meta {
+  name: Report - duplicate
+  type: http
+  seq: 48
+}
+
+post {
+  url: {{baseUrl}}/products/{{report_product_id}}/reports
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+body:json {
+  {
+    "reason": "spam"
+  }
+}
+
+tests {
+  test("409 DUPLICATE_REPORT", function () {
+    expect(res.getStatus()).to.equal(409);
+    expect(res.getBody().error.code).to.equal("DUPLICATE_REPORT");
+  });
+}

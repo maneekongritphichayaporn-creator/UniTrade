@@ -1,0 +1,33 @@
+meta {
+  name: Admin dismiss - already resolved
+  type: http
+  seq: 74
+}
+
+patch {
+  url: {{baseUrl}}/admin/reports/{{report_id3}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
+}
+
+script:pre-request {
+  // ข้ามเมื่อยังไม่มีบัญชี admin ใน bruno/.env (ไม่มี admin_token)
+  if (!bru.getVar("admin_token")) {
+    bru.runner.skipRequest();
+  }
+}
+
+body:json {
+  { "status": "dismissed" }
+}
+
+tests {
+  test("409 REPORT_ALREADY_RESOLVED", function () {
+    expect(res.getStatus()).to.equal(409);
+    expect(res.getBody().error.code).to.equal("REPORT_ALREADY_RESOLVED");
+  });
+}

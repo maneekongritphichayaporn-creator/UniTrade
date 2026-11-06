@@ -1,0 +1,18 @@
+meta {
+  name: Admin reports - not logged in
+  type: http
+  seq: 50
+}
+
+get {
+  url: {{baseUrl}}/admin/reports
+  body: none
+  auth: none
+}
+
+tests {
+  test("401 UNAUTHORIZED", function () {
+    expect(res.getStatus()).to.equal(401);
+    expect(res.getBody().error.code).to.equal("UNAUTHORIZED");
+  });
+}

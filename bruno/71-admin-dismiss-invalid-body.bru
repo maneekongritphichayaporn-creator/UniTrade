@@ -1,0 +1,34 @@
+meta {
+  name: Admin dismiss - status other than dismissed
+  type: http
+  seq: 71
+}
+
+patch {
+  url: {{baseUrl}}/admin/reports/{{report_id3}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
+}
+
+script:pre-request {
+  // ข้ามเมื่อยังไม่มีบัญชี admin ใน bruno/.env (ไม่มี admin_token)
+  if (!bru.getVar("admin_token")) {
+    bru.runner.skipRequest();
+  }
+}
+
+body:json {
+  { "status": "actioned" }
+}
+
+tests {
+  test("422 VALIDATION_ERROR on field status", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("VALIDATION_ERROR");
+    expect(res.getBody().error.field).to.equal("status");
+  });
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Third user - login
+  type: http
+  seq: 65
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{email3}}",
+    "password": "UniTrade2026!"
+  }
+}
+
+script:post-response {
+  bru.setVar("token3", res.getBody().token);
+}
+
+tests {
+  test("200 with a token for the third user", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().token).to.be.a("string");
+  });
+}

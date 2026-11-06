@@ -1,0 +1,24 @@
+meta {
+  name: Report - not logged in
+  type: http
+  seq: 46
+}
+
+post {
+  url: {{baseUrl}}/products/{{report_product_id}}/reports
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "reason": "spam"
+  }
+}
+
+tests {
+  test("401 UNAUTHORIZED", function () {
+    expect(res.getStatus()).to.equal(401);
+    expect(res.getBody().error.code).to.equal("UNAUTHORIZED");
+  });
+}
