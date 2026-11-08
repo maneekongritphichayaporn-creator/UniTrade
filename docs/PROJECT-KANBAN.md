@@ -19,20 +19,23 @@
 - **TASK-07 — Core Layout:** Frontend layout, Navbar, routing และ theme · Sprint 1 · 14–27 ก.ย. · FE Lead · Medium
 - **TASK-09 — Product Read:** Backend GET products และ product detail · Sprint 1 · 27 ก.ย.–01 ต.ค. · BE Dev · High
 - **TASK-10 — Product Read:** หน้า Home และ Product Card Grid · Sprint 1 · 28 ก.ย.–02 ต.ค. · FE Lead · High
-- **TASK-11 — Testing:** Test cases ระบบ Login และการแสดงสินค้า · Sprint 1 · 29 ก.ย.–02 ต.ค. · QA/Doc · Medium
 - **TASK-12 — Product CRUD:** Backend create/edit/delete และ upload รูป · Sprint 2 · 03–08 ต.ค. · BE Dev · High
+- **TASK-15 — Search & Filter:** Backend query search และ category filter · Sprint 2 · 10–14 ต.ค. · BE Lead · Medium
 - **TASK-16 — Search & Filter:** Frontend Search Bar และ Filter · Sprint 2 · 11–15 ต.ค. · FE Lead · Medium
 - **TASK-18 — Contact:** หน้า Product Detail และ UI ติดต่อผู้ขาย · Sprint 2 · 15–17 ต.ค. · FE Lead · Medium
 - **TASK-19 — Admin:** Backend Report และ Admin moderation · Sprint 3 · 18–22 ต.ค. · BE Dev · Medium
 
-### In Progress — 6 งาน
+### In Progress — 5 งาน
 
 - **TASK-08 — Auth:** Frontend Login, Register และ Profile Form · Sprint 1 · 15–28 ก.ย. · FE Dev · High
 - **TASK-13 — Product CRUD:** ฟอร์มลงประกาศและแก้ไขสินค้า · Sprint 2 · 04–09 ต.ค. · FE Dev · High
 - **TASK-14 — Product Status:** เปลี่ยนสถานะและหน้ารายการของฉัน · Sprint 2 · 09–11 ต.ค. · FE Dev · Medium
-- **TASK-15 — Search & Filter:** Backend query search และ category filter · Sprint 2 · 10–14 ต.ค. · BE Lead · Medium
 - **TASK-17 — Wishlist:** Wishlist FE และ BE · Sprint 2 · 14–17 ต.ค. · FE Dev · Low
 - **TASK-20 — Admin:** Frontend Admin Dashboard · Sprint 3 · 20–25 ต.ค. · FE Dev · Medium
+
+### ยังไม่เริ่ม — 1 งาน
+
+- **TASK-11 — Testing:** Test cases ระบบ Login และการแสดงสินค้า · Sprint 1 · 29 ก.ย.–02 ต.ค. · QA/Doc · Medium. **หมายเหตุ:** ยังไม่พบเอกสาร test case แยกหรือหลักฐานส่งมอบใน repository
 
 ### รอ — 5 งาน
 
@@ -63,11 +66,11 @@
 | TASK-08 | 1 | FE Dev | High | 15–28 ก.ย. | In Progress | In Progress |
 | TASK-09 | 1 | BE Dev | High | 27 ก.ย.–01 ต.ค. | Done | Done |
 | TASK-10 | 1 | FE Lead | High | 28 ก.ย.–02 ต.ค. | Done | Done |
-| TASK-11 | 1 | QA/Doc | Medium | 29 ก.ย.–02 ต.ค. | Done (ตาม tracker) | Done |
+| TASK-11 | 1 | QA/Doc | Medium | 29 ก.ย.–02 ต.ค. | Not started — ยังไม่พบหลักฐานส่งมอบ | Done |
 | TASK-12 | 2 | BE Dev | High | 03–08 ต.ค. | Done | Done |
 | TASK-13 | 2 | FE Dev | High | 04–09 ต.ค. | In Progress | In Progress |
 | TASK-14 | 2 | FE Dev | Medium | 09–11 ต.ค. | In Progress | In Progress |
-| TASK-15 | 2 | BE Lead | Medium | 10–14 ต.ค. | In Progress | In Progress |
+| TASK-15 | 2 | BE Lead | Medium | 10–14 ต.ค. | Done (PR #8 merged; tests and changelog present) | In Progress |
 | TASK-16 | 2 | FE Lead | Medium | 11–15 ต.ค. | Done | Done |
 | TASK-17 | 2 | FE Dev | Low | 14–17 ต.ค. | In Progress | In Progress |
 | TASK-18 | 2 | FE Lead | Medium | 15–17 ต.ค. | Done (UI; Contact API pending) | Done |
