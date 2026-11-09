@@ -3,6 +3,7 @@ import { MapPinIcon } from '@/components/ui/icons.js';
 import { categoryLabel, conditionLabel, formatPrice, formatRelativeTime } from '@/lib/client/format.js';
 import { routes } from '@/lib/client/routes.js';
 import { StatusBadge } from './StatusBadge.js';
+import { WishlistButton } from './WishlistButton.js';
 import styles from './ProductCard.module.css';
 
 const PLACEHOLDER = '/placeholder-product.svg';
@@ -47,6 +48,7 @@ export function ProductCard({ product }) {
           <p className={styles.time}>{formatRelativeTime(product.created_at)}</p>
         </div>
       </Link>
+      <WishlistButton productId={id} initialSaved={product.is_wishlisted} compact className={styles.heart} />
     </article>
   );
 }

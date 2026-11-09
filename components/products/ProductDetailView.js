@@ -13,6 +13,7 @@ import { getProduct } from '@/lib/client/products.js';
 import { routes } from '@/lib/client/routes.js';
 import { ContactSellerButton } from './ContactSellerButton.js';
 import { StatusBadge } from './StatusBadge.js';
+import { WishlistButton } from './WishlistButton.js';
 import styles from './ProductDetailView.module.css';
 
 const PLACEHOLDER = '/placeholder-product.svg';
@@ -139,6 +140,7 @@ export function ProductDetailView({ productId }) {
 
           <div className={styles.contact}>
             <ContactSellerButton productId={product.product_id} />
+            <WishlistButton productId={product.product_id} initialSaved={product.is_wishlisted} />
           </div>
 
           <section className={styles.section}>
