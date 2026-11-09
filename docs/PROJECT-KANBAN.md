@@ -4,7 +4,7 @@
 **ฐานเวลา:** คงวัน TASK ตามแผนต้นฉบับ และปรับกรอบ Sprint 4 ให้ครอบคลุมวันนำเสนอ 17 พ.ย. 2569  
 **สถานะงาน:** อ้างอิง tracker ต้นฉบับและคำยืนยันของทีม; ไม่ใช่การรับรองผลตรวจรับหรือผลทดสอบซ้ำ
 
-> **กติกาสถานะปัจจุบัน:** TASK-21–25 ให้พักไว้ก่อน ห้ามเดินหน้าจนกว่า TASK-01–20 จะเสร็จครบ การ์ดเหล่านี้จึงอยู่ในคอลัมน์ “รอ / Blocked” แม้ Excel ต้นฉบับระบุ TASK-23 และ TASK-25 ว่า In Progress; มีบันทึกสถานะเดิมไว้ในตารางงานด้านล่าง  
+> **กติกาสถานะปัจจุบัน:** TASK-21 เริ่มทดสอบได้ทันที ไม่ต้องรอให้ TASK-01–20 ปิดครบ; หากพบ defect ที่ยืนยันได้ระหว่างทดสอบ ให้แจ้งและส่งต่อ TASK-22 ได้ทันที ไม่ต้องรอ TASK-21 จบทั้งหมด ส่วน TASK-23–25 ยังคงรอตาม dependency ด้านล่าง สถานะใน Excel เป็นข้อมูลตาม tracker ต้นฉบับ ไม่ใช่สถานะปัจจุบัน
 
 ## Kanban board
 
@@ -31,17 +31,20 @@
 
 ### ยังไม่ครบ — 2 งาน
 
-- **TASK-18 — Contact:** หน้า Product Detail และ UI ติดต่อผู้ขาย · Sprint 2 · 15–17 ต.ค. · FE Lead · Medium — **ค้าง:** UI ทำแล้วและ `GET /products/:id` สำหรับรายละเอียดสินค้ามีแล้ว; ยังไม่มี `GET /products/:id/contact` สำหรับข้อมูลติดต่อผู้ขาย ต้องรออนุมัติ path, response schema และกติกาจาก @wz
+- **TASK-18 — Contact:** หน้า Product Detail และ UI ติดต่อผู้ขาย · Sprint 2 · 15–17 ต.ค. · FE Lead · Medium — **ค้าง:** UI ทำแล้วและ `GET /products/:id` สำหรับรายละเอียดสินค้ามีแล้ว; `GET /products/:id/contact` สำหรับข้อมูลติดต่อผู้ขายยังไม่มี ต้องรออนุมัติ path, response schema และกติกาจาก @wz เมื่อ endpoint พร้อมใช้งาน ให้แจ้งทีมและ QA เพื่อทดสอบเพิ่ม; ไม่เป็น blocker ของ TASK-21
 - **TASK-11 — Testing:** Test cases ระบบ Login และการแสดงสินค้า · Sprint 1 · 29 ก.ย.–02 ต.ค. · QA/Doc · Medium — **ค้าง:** เป็นงานทดสอบแยกจากงานพัฒนา; ยังไม่พบเอกสาร test case หรือหลักฐานส่งมอบใน repository
 
-### รอ — 5 งาน
+### พร้อมดำเนินการ — 2 งาน
 
 - **TASK-21 — Integration & System Testing:** QA/Doc · Sprint 3 · 24–30 ต.ค. · High  
-  **Blocker:** เริ่มได้หลัง TASK-01–20 เสร็จครบ
+  **เริ่มได้ทันที:** ทดสอบฟังก์ชันที่พร้อมใช้งาน; บันทึก contact flow ที่ยังไม่มี API เป็น pending แล้วเพิ่มเข้ารอบทดสอบเมื่อ endpoint พร้อม
 - **TASK-22 — Bug Fixing:** Developers ทั้งหมด · Sprint 3 · 27 ต.ค.–01 พ.ย. · High  
-  **Blocker:** รอผลทดสอบและรายการ defect จาก TASK-21
+  **พร้อมรับ defect ระหว่าง TASK-21:** QA แจ้งรายการที่ทำซ้ำได้พร้อมขั้นตอนและหลักฐาน; ทีมพัฒนาเริ่มแก้ได้โดยไม่ต้องรอ TASK-21 จบทั้งหมด
+
+### รอ — 3 งาน
+
 - **TASK-23 — Deployment:** Deploy Frontend ไป Vercel และเชื่อม Domain/DB · Sprint 4 · 02–05 พ.ย. · FE Lead · High  
-  **Blocker:** รอ TASK-22 และ regression test; Excel ต้นฉบับระบุ In Progress/มีคู่มือเตรียม deploy แต่ยังไม่ถือว่า deploy production แล้ว
+  **รอ:** การแก้ defect ที่ตกลงจัดการและ regression test; คู่มือหรือการเตรียมค่าระบบไม่เท่ากับ production deployment
 - **TASK-24 — Final Polish:** รวบรวมรายงานโครงการ 5 บทฉบับสมบูรณ์ · Sprint 4 · 03–10 พ.ย. · QA/Doc · High  
   **Blocker:** รอผล TASK-21–23 เพื่อใส่หลักฐานจริงในรายงาน
 - **TASK-25 — Presentation:** สไลด์และบททดสอบ Demo · Sprint 4 · 09–17 พ.ย. · PM/BA · High  
@@ -73,8 +76,8 @@
 | TASK-18 | 2 | FE Lead | Medium | 15–17 ต.ค. | Partial — Product Detail/UI done; `GET /products/:id/contact` pending contract approval and implementation | Done |
 | TASK-19 | 3 | BE Dev | Medium | 18–22 ต.ค. | Done (Backend) | Done |
 | TASK-20 | 3 | FE Dev | Medium | 20–25 ต.ค. | Done — มีหน้า Admin แล้ว | In Progress |
-| TASK-21 | 3 | QA/Doc | High | 24–30 ต.ค. | Blocked — รอ TASK-01–20 | ว่าง |
-| TASK-22 | 3 | Devs ทั้งหมด | High | 27 ต.ค.–01 พ.ย. | Blocked — รอ TASK-21 | ว่าง |
+| TASK-21 | 3 | QA/Doc | High | 24–30 ต.ค. | Ready — เริ่มทดสอบฟังก์ชันที่พร้อมได้ทันที; เพิ่ม contact test เมื่อ API พร้อม | ว่าง |
+| TASK-22 | 3 | Devs ทั้งหมด | High | 27 ต.ค.–01 พ.ย. | Ready — รับ defect ที่ยืนยันได้ระหว่าง TASK-21; ส่งกลับ QA เพื่อ regression test | ว่าง |
 | TASK-23 | 4 | FE Lead | High | 02–05 พ.ย. | Blocked — พักตาม gate; มีงานเตรียม deploy | In Progress |
 | TASK-24 | 4 | QA/Doc | High | 03–10 พ.ย. | Blocked — รอ TASK-21–23 | ว่าง |
 | TASK-25 | 4 | PM/BA | High | 09–17 พ.ย. | Blocked — พักตาม gate | In Progress |
@@ -93,11 +96,13 @@
 
 ## Dependencies and workflow
 
-1. TASK-21 เริ่มได้เมื่อ TASK-01–20 เสร็จครบตาม gate ที่ทีมกำหนด
-2. TASK-22 รับงานจาก defect ที่ยืนยันได้ใน TASK-21 และต้องมี regression test
-3. TASK-23 ทำหลัง bug fix/regression; คู่มือหรือการเตรียมค่าระบบไม่เท่ากับ production deployment
-4. TASK-24 สรุปผลจากการทดสอบ การแก้ไข และการ deploy ที่เกิดขึ้นจริง
-5. TASK-25 เตรียม Demo หลังระบบและรายงานพร้อม
+1. TASK-21 เริ่มทดสอบฟังก์ชันที่พร้อมได้ทันที ไม่ต้องรอ TASK-01–20 ปิดครบ; รายการที่ยังไม่มี API/ข้อกำหนดให้บันทึกเป็น pending และทดสอบเพิ่มเมื่อพร้อม
+2. TASK-22 รับ defect ที่ QA ยืนยันได้ตั้งแต่ระหว่าง TASK-21; แต่ละรายการให้บันทึกขั้นตอนทำซ้ำ ผลที่คาดหวัง/ผลที่เกิดขึ้นจริง หลักฐาน และสถานะการแก้ไข
+3. QA ทำ regression test หลังได้รับการแก้ไข; TASK-21 และ TASK-22 ดำเนินงานคู่ขนานกันได้
+4. เมื่อ `GET /products/:id/contact` พร้อมใช้งานและมีสัญญา API ที่อนุมัติ ให้ผู้รับผิดชอบแจ้งทีมและ QA เพื่อเพิ่มกรณีทดสอบ API/UI ใน TASK-21
+5. TASK-23 ทำหลัง defect ที่ตกลงจัดการได้รับการแก้ไขและผ่าน regression test; คู่มือหรือการเตรียมค่าระบบไม่เท่ากับ production deployment
+6. TASK-24 สรุปผลจากการทดสอบ การแก้ไข และการ deploy ที่เกิดขึ้นจริง
+7. TASK-25 เตรียม Demo หลังระบบและรายงานพร้อม
 
 ## Definition of Done
 
