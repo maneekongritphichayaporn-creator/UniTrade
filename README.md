@@ -19,16 +19,21 @@ Next.js 15 (App Router, JavaScript) · API อยู่ใต้ `/api/v1` · �
 | **TASK-08** | Frontend: หน้า Login, Register, Profile | @warixm | ✅ **มีหน้า Login, Register และ Profile แล้ว** |
 | **TASK-09** | Backend: API ดึงสินค้า, หมวดหมู่, จุดนัดรับ | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #1) ดู [`docs/TASK-09-CHANGELOG.md`](docs/TASK-09-CHANGELOG.md) |
 | **TASK-10** | Frontend: หน้า Home + Product Grid | @yat | ✅ **เสร็จ** — ต่อ `GET /products` และ `GET /categories` แล้ว |
-| TASK-11 | Testing: Test Cases ระบบ Login และการแสดงสินค้า | @Aud | 🧪 **งานทดสอบที่ยังต้องทำ/ส่งมอบ** — ยังไม่พบเอกสาร test case แยก |
+| TASK-11 | Testing: Test Cases ระบบ Login และการแสดงสินค้า | @Aud | 🧪 **ยังต้องส่งมอบหลักฐาน test cases แยก** — QA เริ่มทดสอบฟังก์ชันที่พร้อมได้ |
 | **TASK-12** | Backend: API สร้าง/แก้ไข/ลบสินค้า + อัปโหลดรูป | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #2) ดู [`docs/TASK-12-CHANGELOG.md`](docs/TASK-12-CHANGELOG.md) |
 | **TASK-13** | Frontend: ฟอร์มลงประกาศ + แก้ไขสินค้า | @warixm | ✅ **มีฟอร์มลงประกาศและแก้ไขแล้ว** |
 | **TASK-14** | Frontend: เปลี่ยนสถานะสินค้า + ประกาศของฉัน | @warixm | ✅ **มีหน้าประกาศของฉันและเปลี่ยนสถานะแล้ว** |
 | **TASK-15** | Backend: Search & Filter | @wz | ✅ **เสร็จ** — สร้างไว้ใน TASK-09 (`GET /products`) · ตัวอย่าง Bruno 53–63 · ดู [`docs/TASK-15-CHANGELOG.md`](docs/TASK-15-CHANGELOG.md) |
 | **TASK-16** | Frontend: Search Bar + Filter Sidebar | @yat | ✅ **เสร็จ** — ตัวกรองทั้งหมด sync กับ URL |
 | **TASK-17** | Wishlist (FE + BE) | @warixm | ✅ **มีหน้าและ API Wishlist แล้ว** |
-| TASK-18 | Frontend: หน้ารายละเอียด + ข้อมูลติดต่อผู้ขาย | @yat | 🟡 **หน้า Product Detail และ UI ติดต่อผู้ขายมีแล้ว** — รอ API จริง `GET /products/:id/contact` และการยืนยันสัญญา API |
+| TASK-18 | Frontend: หน้ารายละเอียด + ข้อมูลติดต่อผู้ขาย | @yat | 🟡 **หน้า Product Detail และ `GET /products/:id` มีแล้ว** — `GET /products/:id/contact` ยังไม่มี; รออนุมัติสัญญา API และแจ้งทีม/QA เมื่อพร้อมทดสอบ |
 | **TASK-19** | Backend: Report + Admin | @SArunPoB | ✅ **มี API Report และ Admin แล้ว** |
 | **TASK-20** | Frontend: หน้าจัดการรายงาน (Admin) | @warixm | ✅ **มีหน้า Admin แล้ว** |
+| TASK-21 | Integration & System Testing | QA/Doc | 🟢 **พร้อมเริ่มทดสอบฟังก์ชันที่มีได้ทันที** — contact flow ที่ยังไม่มี API ให้บันทึกเป็น pending และทดสอบเพิ่มเมื่อพร้อม |
+| TASK-22 | Bug Fixing | Developers ทั้งหมด | 🟢 **พร้อมรับ defect ที่ QA ยืนยันได้ระหว่าง TASK-21** — ส่งขั้นตอนทำซ้ำและหลักฐาน แล้วให้ QA regression test หลังแก้ |
+| TASK-23 | Deployment | FE Lead | ⏳ รอแก้ defect ที่ตกลงจัดการและผ่าน regression test |
+| TASK-24 | Final Polish: รายงานโครงการ 5 บท | QA/Doc | ⏳ สรุปผลจากการทดสอบ การแก้ไข และการ deploy ที่เกิดขึ้นจริง |
+| TASK-25 | Presentation: สไลด์และ Demo | PM/BA | ⏳ เตรียม Demo หลังระบบและรายงานพร้อม |
 
 ฐานข้อมูลบน Supabase รัน migration ครบแล้ว (0001–0005 · 0005 ของ TASK-19 รันแล้ว 5 พ.ย. ไฟล์จะเข้า `main` พร้อม TASK-19) ไม่ต้องรันซ้ำ
 
