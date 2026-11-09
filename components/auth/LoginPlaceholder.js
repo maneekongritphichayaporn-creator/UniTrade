@@ -1,100 +1,59 @@
 'use client';
 
-/**
- * หน้าเข้าสู่ระบบตัวชั่วคราว
- *
- * ของจริงเป็น TASK-08 ของ @warixm — ไฟล์นี้วางไว้เพื่อให้ปุ่ม "เข้าสู่ระบบ" และ
- * ปุ่มติดต่อผู้ขาย (TASK-18) มีปลายทางให้ไปตั้งแต่ตอนนี้ แทนที่ได้ทั้งไฟล์เลย
- * สิ่งที่ TASK-08 ต้องทำต่อ: ฟอร์มอีเมล/รหัสผ่านจริง ยิง POST /auth/login
- * แล้วเก็บ session ด้วย login() จาก lib/client/auth.js (ตัวนี้จัดการ token ให้แล้ว)
- *
- * ตอนเปิดโหมดข้อมูลจำลองจะมีปุ่มล็อกอินด้วยบัญชีทดสอบให้กดเพื่อเดโมหน้าอื่น ๆ
- */
-
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ErrorState } from '@/components/ui/ErrorState.js';
 import { login } from '@/lib/client/auth.js';
-import { USE_MOCK_API } from '@/lib/client/config.js';
 import { routes, safeNextPath } from '@/lib/client/routes.js';
-
-const TEST_ACCOUNTS = [
-  { label: 'นิสิต (member)', email: 'nisit.k@student.chula.ac.th', password: 'UniTrade2026!' },
-  { label: 'ผู้ดูแลระบบ (admin)', email: 'admin@chula.ac.th', password: 'Admin2026!' },
-];
 
 export function LoginPlaceholder() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [error, setError] = useState(null);
-  const [pending, setPending] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [pending, setPending] = useState(false);
 
-  const next = safeNextPath(searchParams.get('next')) ?? routes.home;
-
-  async function signIn(account) {
-    setPending(account.email);
-    setError(null);
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError('');
+    setPending(true);
     try {
-      await login(account.email, account.password);
-      router.replace(next);
+      await login(email, password);
+      router.replace(safeNextPath(searchParams.get('next')) ?? routes.home);
+      router.refresh();
     } catch (loginError) {
-      setError(loginError);
+      setError(loginError?.message || 'เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
     } finally {
-      setPending('');
+      setPending(false);
     }
   }
 
   return (
-    <div className="container" style={{ maxWidth: 480, padding: '48px 16px' }}>
+    <div className="container" style={{ maxWidth: 480, paddingBlock: 48 }}>
       <div className="card" style={{ padding: 24 }}>
-        <h1 style={{ fontSize: 20 }}>เข้าสู่ระบบ</h1>
-        <p className="muted" style={{ marginTop: 8, fontSize: 14 }}>
-          ใช้อีเมลจุฬาฯ (@student.chula.ac.th หรือ @chula.ac.th) เพื่อดูข้อมูลติดต่อผู้ขายและลงขายสินค้า
-        </p>
+        <h1>เข้าสู่ระบบ</h1>
+        <p className="muted" style={{ marginTop: 8 }}>ใช้อีเมลจุฬาฯ เพื่อเข้าสู่ UniTrade</p>
 
-        <p
-          style={{
-            marginTop: 20,
-            padding: '12px 14px',
-            borderRadius: 'var(--radius-sm)',
-            background: 'var(--brand-50)',
-            color: 'var(--brand-700)',
-            fontSize: 13,
-          }}
-        >
-          หน้านี้ยังเป็นตัวชั่วคราว ฟอร์มจริงอยู่ใน TASK-08 (ผู้รับผิดชอบ: @warixm)
-        </p>
+        <form onSubmit={handleSubmit} style={{ marginTop: 24 }}>
+          <label className="label" htmlFor="login-email">อีเมล</label>
+          <input className="input" id="login-email" type="email" autoComplete="email" required
+            value={email} onChange={(event) => setEmail(event.target.value)}
+            placeholder="name@student.chula.ac.th" />
 
-        {USE_MOCK_API && (
-          <div style={{ marginTop: 20 }}>
-            <p className="label">เข้าสู่ระบบด้วยบัญชีทดสอบ (โหมดข้อมูลจำลอง)</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {TEST_ACCOUNTS.map((account) => (
-                <button
-                  key={account.email}
-                  type="button"
-                  className="btn btn--outline btn--block"
-                  disabled={Boolean(pending)}
-                  onClick={() => signIn(account)}
-                >
-                  {pending === account.email ? 'กำลังเข้าสู่ระบบ…' : account.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+          <label className="label" htmlFor="login-password" style={{ marginTop: 16 }}>รหัสผ่าน</label>
+          <input className="input" id="login-password" type="password" autoComplete="current-password" required
+            value={password} onChange={(event) => setPassword(event.target.value)} />
 
-        {error && (
-          <div style={{ marginTop: 16 }}>
-            <ErrorState error={error} />
-          </div>
-        )}
+          {error && <p role="alert" style={{ color: '#b42318', marginTop: 12 }}>{error}</p>}
 
-        <p style={{ marginTop: 20, fontSize: 13 }}>
-          <Link href={routes.home} style={{ color: 'var(--brand-600)' }}>
-            กลับไปหน้าแรก
-          </Link>
+          <button className="btn btn--primary btn--block" type="submit" disabled={pending} style={{ marginTop: 24 }}>
+            {pending ? 'กำลังเข้าสู่ระบบ…' : 'เข้าสู่ระบบ'}
+          </button>
+        </form>
+
+        <p style={{ marginTop: 20, textAlign: 'center' }}>
+          ยังไม่มีบัญชี? <Link href={routes.register} style={{ color: 'var(--brand-600)' }}>สมัครสมาชิก</Link>
         </p>
       </div>
     </div>
