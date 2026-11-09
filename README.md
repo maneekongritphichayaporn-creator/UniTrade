@@ -5,7 +5,7 @@
 Next.js 15 (App Router, JavaScript) · API อยู่ใต้ `/api/v1` · ฐานข้อมูลและรูปภาพอยู่บน Supabase
 สัญญา API ฉบับเต็มคือ **API Specification v2.2** (ลิงก์อยู่ในตารางงาน TASK-05) — ถ้าโค้ดกับ spec ไม่ตรงกัน ให้ถือ spec แล้วแจ้งในกลุ่ม
 
-> อัปเดตล่าสุด 24 ต.ค. 2569 โดย @wz (BE Lead)
+> ปรับสถานะล่าสุด 9 พ.ย. 2569
 
 ---
 
@@ -16,19 +16,19 @@ Next.js 15 (App Router, JavaScript) · API อยู่ใต้ `/api/v1` · �
 | TASK-01–05 | SRS, UI, ER/Sequence Diagram, Database, API Spec | ทุกคน | ✅ เสร็จ |
 | **TASK-06** | Backend: Register, Login, Profile, JWT | @wz | ✅ **เสร็จ** — ทดสอบกับ Supabase จริงผ่าน 13/13 |
 | **TASK-07** | Frontend: Layout, Navbar, Routing, Theme | @yat | ✅ **เสร็จ** — ดูหัวข้อ "หน้าเว็บ (Frontend)" |
-| TASK-08 | Frontend: หน้า Login, Register, Profile | @warixm | ⏳ ยังไม่มีโค้ดใน repo — **ต่อ API ได้แล้ว** |
+| **TASK-08** | Frontend: หน้า Login, Register, Profile | @warixm | ✅ **มีหน้า Login, Register และ Profile แล้ว** |
 | **TASK-09** | Backend: API ดึงสินค้า, หมวดหมู่, จุดนัดรับ | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #1) ดู [`docs/TASK-09-CHANGELOG.md`](docs/TASK-09-CHANGELOG.md) |
 | **TASK-10** | Frontend: หน้า Home + Product Grid | @yat | ✅ **เสร็จ** — ต่อ `GET /products` และ `GET /categories` แล้ว |
-| **TASK-16** | Frontend: Search Bar + Filter Sidebar | @yat | ✅ **เสร็จ** — ตัวกรองทั้งหมด sync กับ URL |
-| **TASK-18** | Frontend: หน้ารายละเอียด + ข้อมูลติดต่อผู้ขาย | @yat | ✅ **เสร็จ** — รอ `GET /products/:id/contact` จากฝั่ง BE (ดู "เรื่องที่ฝาก BE / ทีม") |
-| TASK-11 | Testing: Test Cases ระบบ Login และการแสดงสินค้า | @Aud | 🔜 ส่วน Login เริ่มได้เลย ใช้ `bruno/` เป็นตัวอย่าง |
+| TASK-11 | Testing: Test Cases ระบบ Login และการแสดงสินค้า | @Aud | 🧪 **งานทดสอบที่ยังต้องทำ/ส่งมอบ** — ยังไม่พบเอกสาร test case แยก |
 | **TASK-12** | Backend: API สร้าง/แก้ไข/ลบสินค้า + อัปโหลดรูป | @SArunPoB | ✅ **เสร็จ** — merge แล้ว (PR #2) ดู [`docs/TASK-12-CHANGELOG.md`](docs/TASK-12-CHANGELOG.md) |
-| TASK-13 | Frontend: ฟอร์มลงประกาศ + แก้ไขสินค้า | @warixm | 🔜 **เริ่มได้เลย** — TASK-12 merge แล้ว |
-| TASK-14 | Frontend: เปลี่ยนสถานะสินค้า + ประกาศของฉัน | @warixm | 🔜 **เริ่มได้เลย** — `PATCH /products/:id/status` พร้อมแล้ว |
+| **TASK-13** | Frontend: ฟอร์มลงประกาศ + แก้ไขสินค้า | @warixm | ✅ **มีฟอร์มลงประกาศและแก้ไขแล้ว** |
+| **TASK-14** | Frontend: เปลี่ยนสถานะสินค้า + ประกาศของฉัน | @warixm | ✅ **มีหน้าประกาศของฉันและเปลี่ยนสถานะแล้ว** |
 | **TASK-15** | Backend: Search & Filter | @wz | ✅ **เสร็จ** — สร้างไว้ใน TASK-09 (`GET /products`) · ตัวอย่าง Bruno 53–63 · ดู [`docs/TASK-15-CHANGELOG.md`](docs/TASK-15-CHANGELOG.md) |
-| TASK-17 | Wishlist (FE + BE) | @warixm | 🔜 ยังไม่เริ่ม — endpoint ยังไม่มี |
-| TASK-19 | Backend: Report + Admin | @SArunPoB | 🔜 กำลังทำ |
-| TASK-20 | Frontend: หน้าจัดการรายงาน (Admin) | @warixm | 🔜 รอ TASK-19 |
+| **TASK-16** | Frontend: Search Bar + Filter Sidebar | @yat | ✅ **เสร็จ** — ตัวกรองทั้งหมด sync กับ URL |
+| **TASK-17** | Wishlist (FE + BE) | @warixm | ✅ **มีหน้าและ API Wishlist แล้ว** |
+| TASK-18 | Frontend: หน้ารายละเอียด + ข้อมูลติดต่อผู้ขาย | @yat | 🟡 **หน้า Product Detail และ UI ติดต่อผู้ขายมีแล้ว** — รอ API จริง `GET /products/:id/contact` และการยืนยันสัญญา API |
+| **TASK-19** | Backend: Report + Admin | @SArunPoB | ✅ **มี API Report และ Admin แล้ว** |
+| **TASK-20** | Frontend: หน้าจัดการรายงาน (Admin) | @warixm | ✅ **มีหน้า Admin แล้ว** |
 
 ฐานข้อมูลบน Supabase รัน migration ครบแล้ว (0001–0005 · 0005 ของ TASK-19 รันแล้ว 5 พ.ย. ไฟล์จะเข้า `main` พร้อม TASK-19) ไม่ต้องรันซ้ำ
 
