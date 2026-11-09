@@ -8,7 +8,7 @@
 
 ## Kanban board
 
-### Done — 17 งาน
+### Done — 18 งาน
 
 - **TASK-01 — Planning:** กำหนดการ, UI details และ SRS v1.0 · Sprint 0 · 01–05 ก.ย. · PM/BA · High
 - **TASK-02 — UI/UX:** Wireframe และ High-Fidelity UI · Sprint 0 · 06–10 ก.ย. · SA/UI · High
@@ -17,6 +17,7 @@
 - **TASK-05 — Setup:** API Specification และ request/response mock · Sprint 0 · 09–12 ก.ย. · BE Lead · High
 - **TASK-06 — Auth:** Backend Register, Login, Profile และ JWT · Sprint 1 · 13–26 ก.ย. · BE Lead · High
 - **TASK-07 — Core Layout:** Frontend layout, Navbar, routing และ theme · Sprint 1 · 14–27 ก.ย. · FE Lead · Medium
+- **TASK-08 — Auth:** Frontend Login, Register และ Profile Form · Sprint 1 · 15–28 ก.ย. · FE Dev · High
 - **TASK-09 — Product Read:** Backend GET products และ product detail · Sprint 1 · 27 ก.ย.–01 ต.ค. · BE Dev · High
 - **TASK-10 — Product Read:** หน้า Home และ Product Card Grid · Sprint 1 · 28 ก.ย.–02 ต.ค. · FE Lead · High
 - **TASK-12 — Product CRUD:** Backend create/edit/delete และ upload รูป · Sprint 2 · 03–08 ต.ค. · BE Dev · High
@@ -28,18 +29,10 @@
 - **TASK-19 — Admin:** Backend Report และ Admin moderation · Sprint 3 · 18–22 ต.ค. · BE Dev · Medium
 - **TASK-20 — Admin:** Frontend Admin Dashboard · Sprint 3 · 20–25 ต.ค. · FE Dev · Medium
 
-### In Progress — 1 งาน
+### ยังไม่ครบ — 2 งาน
 
-- **TASK-08 — Auth:** Frontend Login, Register และ Profile Form · Sprint 1 · 15–28 ก.ย. · FE Dev · High
-
-### ยังไม่ครบ — 1 งาน
-
-- **TASK-18 — Contact:** หน้า Product Detail และ UI ติดต่อผู้ขาย · Sprint 2 · 15–17 ต.ค. · FE Lead · Medium  
-  **ค้าง:** Contact API ยังไม่มี; ต้องให้ @wz อนุมัติ path, response schema และกติกาที่เกี่ยวข้องก่อนเริ่มทำ
-
-### ยังไม่เริ่ม — 1 งาน
-
-- **TASK-11 — Testing:** Test cases ระบบ Login และการแสดงสินค้า · Sprint 1 · 29 ก.ย.–02 ต.ค. · QA/Doc · Medium. **หมายเหตุ:** ยังไม่พบเอกสาร test case แยกหรือหลักฐานส่งมอบใน repository
+- **TASK-18 — Contact:** หน้า Product Detail และ UI ติดต่อผู้ขาย · Sprint 2 · 15–17 ต.ค. · FE Lead · Medium — **ค้าง:** UI ทำแล้วและ `GET /products/:id` สำหรับรายละเอียดสินค้ามีแล้ว; ยังไม่มี `GET /products/:id/contact` สำหรับข้อมูลติดต่อผู้ขาย ต้องรออนุมัติ path, response schema และกติกาจาก @wz
+- **TASK-11 — Testing:** Test cases ระบบ Login และการแสดงสินค้า · Sprint 1 · 29 ก.ย.–02 ต.ค. · QA/Doc · Medium — **ค้าง:** เป็นงานทดสอบแยกจากงานพัฒนา; ยังไม่พบเอกสาร test case หรือหลักฐานส่งมอบใน repository
 
 ### รอ — 5 งาน
 
@@ -67,19 +60,19 @@
 | TASK-05 | 0 | BE Lead | High | 09–12 ก.ย. | Done (ทีมยืนยัน) | Done |
 | TASK-06 | 1 | BE Lead | High | 13–26 ก.ย. | Done | Done |
 | TASK-07 | 1 | FE Lead | Medium | 14–27 ก.ย. | Done | Done |
-| TASK-08 | 1 | FE Dev | High | 15–28 ก.ย. | In Progress | In Progress |
+| TASK-08 | 1 | FE Dev | High | 15–28 ก.ย. | Done — หน้า Login, Register และ Profile มีแล้ว | In Progress |
 | TASK-09 | 1 | BE Dev | High | 27 ก.ย.–01 ต.ค. | Done | Done |
 | TASK-10 | 1 | FE Lead | High | 28 ก.ย.–02 ต.ค. | Done | Done |
-| TASK-11 | 1 | QA/Doc | Medium | 29 ก.ย.–02 ต.ค. | Not started — ยังไม่พบหลักฐานส่งมอบ | Done |
+| TASK-11 | 1 | QA/Doc | Medium | 29 ก.ย.–02 ต.ค. | ยังไม่ครบ — งาน test cases; ยังไม่พบหลักฐานส่งมอบ | Done |
 | TASK-12 | 2 | BE Dev | High | 03–08 ต.ค. | Done | Done |
-| TASK-13 | 2 | FE Dev | High | 04–09 ต.ค. | Done (merge เข้า origin/main) | In Progress |
-| TASK-14 | 2 | FE Dev | Medium | 09–11 ต.ค. | Done (merge เข้า origin/main) | In Progress |
+| TASK-13 | 2 | FE Dev | High | 04–09 ต.ค. | Done — มีฟอร์มลงประกาศและแก้ไขแล้ว | In Progress |
+| TASK-14 | 2 | FE Dev | Medium | 09–11 ต.ค. | Done — มีหน้าประกาศของฉันและเปลี่ยนสถานะแล้ว | In Progress |
 | TASK-15 | 2 | BE Lead | Medium | 10–14 ต.ค. | Done (PR #8 merged; tests and changelog present) | In Progress |
 | TASK-16 | 2 | FE Lead | Medium | 11–15 ต.ค. | Done | Done |
-| TASK-17 | 2 | FE Dev | Low | 14–17 ต.ค. | Done (merge เข้า origin/main) | In Progress |
-| TASK-18 | 2 | FE Lead | Medium | 15–17 ต.ค. | Partial — UI done; Contact API pending approval and implementation | Done |
+| TASK-17 | 2 | FE Dev | Low | 14–17 ต.ค. | Done — มีหน้าและ API Wishlist แล้ว | In Progress |
+| TASK-18 | 2 | FE Lead | Medium | 15–17 ต.ค. | Partial — Product Detail/UI done; `GET /products/:id/contact` pending contract approval and implementation | Done |
 | TASK-19 | 3 | BE Dev | Medium | 18–22 ต.ค. | Done (Backend) | Done |
-| TASK-20 | 3 | FE Dev | Medium | 20–25 ต.ค. | Done (merge เข้า origin/main) | In Progress |
+| TASK-20 | 3 | FE Dev | Medium | 20–25 ต.ค. | Done — มีหน้า Admin แล้ว | In Progress |
 | TASK-21 | 3 | QA/Doc | High | 24–30 ต.ค. | Blocked — รอ TASK-01–20 | ว่าง |
 | TASK-22 | 3 | Devs ทั้งหมด | High | 27 ต.ค.–01 พ.ย. | Blocked — รอ TASK-21 | ว่าง |
 | TASK-23 | 4 | FE Lead | High | 02–05 พ.ย. | Blocked — พักตาม gate; มีงานเตรียม deploy | In Progress |
