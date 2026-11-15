@@ -8,10 +8,7 @@
 | Status | Submission draft; formal approval and open decisions are not recorded as closed in this repository |
 | Date | 15 November 2026 |
 | Product | UniTrade |
-| Project team | VISIT CMU |
-| Requirements basis | Source SRS v2.0; API Specification v2.2; team confirmation for TASK-01–05; repository and project tracker reviewed on 15 November 2026 |
-
-> This revision keeps the product intent of the supplied SRS, aligns requirements with the current API and repository, and distinguishes requirements from implementation status. TASK-01–05 are recorded as complete based on the project owner’s confirmation; their source artifacts are not present in this repository. This document is organized in the style of IEEE 830 / ISO/IEC/IEEE 29148 SRS documents; it is not a claim of formal certification against either standard. The supplied file is named “SRS Document v1.0” but its contents identify it as version 2.0. This document resolves that version ambiguity by using version 2.2.
+| Project team | VISIT CMU | 
 
 ## Revision history
 
@@ -351,7 +348,7 @@ The project is organized into sprint-based tasks. Planning, UI/UX, system design
 2. The system shall require an authenticated member before disclosing seller contact channels.
 3. The system shall return only contact channels that the seller has supplied, along with the product’s pickup location and any approved safety notice.
 4. The system shall not provide in-app messaging; members contact one another through the returned phone or LINE channel.
-5. The contact API path, response schema, seller-self-contact behavior, and product-status eligibility require approval by the backend lead and incorporation into the API specification before this requirement is considered implementation-ready.
+5. The contact API is implemented at `GET /products/:id/contact` following API Specification v2.2 §8.1. It is available to authenticated members for listings in any status, including the seller's own listing; implementation details and verification evidence are recorded in [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md).
 
 ### 3.10 Product reports
 
@@ -398,7 +395,7 @@ The stakeholder-provided user stories and their full acceptance criteria are rec
 | US-02 | Create a product listing with details and images | Must Have | FR-03 | Backend validation and image upload are present; create/edit listing UI routes are present. End-to-end acceptance evidence remains part of system testing. |
 | US-03 | Manage own listings and status | Must Have | FR-04, FR-10 | Owner checks, status API, and my-listings UI are present. Verify edit/delete behavior and any status-dependent contact behavior during system testing. |
 | US-04 | Search and filter products | Must Have | FR-05, FR-10 | Search/filter UI and API are present. Verify the acceptance wording and empty-state behavior during system testing. |
-| US-05 | Save favorites and contact sellers | Should Have | FR-06, FR-07, FR-10 | Wishlist routes and UI are present. Contact UI exists, but the contact API and its approved contract are still pending; the complete acceptance flow is not met. |
+| US-05 | Save favorites and contact sellers | Should Have | FR-06, FR-07, FR-10 | Wishlist routes and UI, and the seller-contact UI/API, are implemented. The contact endpoint is verified by Bruno requests 81–87 and 94; verify the Sold-button UI acceptance behavior during system testing. |
 | US-06 | Report inappropriate listings and moderate as Admin | Should Have | FR-08, FR-10 | Report/moderation API and Admin UI are present. Verify the full flow and confirm the intended reporting access policy during system testing. |
 
 These are stakeholder acceptance targets, not claims that every criterion has passed. TASK-21 execution and UAT summaries are now available in [`TEST_REPORT.md`](TEST_REPORT.md) and [`UAT-UNITRADE.md`](UAT-UNITRADE.md); QA totals require reconciliation, and formal acceptance sign-off is not recorded in this repository. The detailed criteria and evidence notes are maintained in the project report.
@@ -442,7 +439,7 @@ The API base path is `/api/v1`. Existing endpoint contracts are governed by API 
 | Dismiss report | `PATCH /admin/reports/:id` | Bearer token; `{ "status": "dismissed" }` | `200`, operation result | Admin |
 | Moderation delete | `DELETE /admin/products/:id` | Bearer token | `204`, report actioning/logging and storage cleanup | Admin |
 
-The table summarizes behavior documented in API Specification v2.2 and repository implementation notes; it is not a replacement for the complete approved API specification. The approved specification file itself is not present in the repository. Wishlist endpoints are implemented and summarized above; the seller-contact endpoint contract remains pending and shall not be inferred from frontend route names.
+The table summarizes behavior documented in API Specification v2.2 and repository implementation notes; it is not a replacement for the complete approved API specification. The approved specification file itself is not present in the repository. Wishlist endpoints are implemented and summarized above; the seller-contact endpoint is implemented following the response shape described in API Specification v2.2 §8.1, with details in [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md).
 
 ### 4.2.1 Shared response and error format
 
@@ -502,7 +499,7 @@ The `field` member is optional and appears when the error is associated with a s
 | Edit/change status/delete a listing | No | No, unless owner | Yes | Moderation delete only |
 | Submit product report | No | Yes, subject to report rules | Cannot self-report | Yes as member unless otherwise specified |
 | Read/write own wishlist | No | Yes | Yes | Yes |
-| Request seller contact | No | Yes, contract pending | Self-contact behavior TBD | Yes, contract pending |
+| Request seller contact | No | Yes | Yes | Yes |
 | List/dismiss reports | No | No | No | Yes |
 
 ## 5. Data requirements
@@ -757,7 +754,7 @@ Status below reflects the repository and project Kanban reviewed on **15 Novembe
 | TASK-15 — Search/filter API | FR-05 | Complete | Search and filtering are implemented with Bruno examples. |
 | TASK-16 — Search/filter UI | FR-05, FR-10 | Complete | Search and filter controls are present on the home page. |
 | TASK-17 — Wishlist | FR-07 | Complete (UI/API) | Wishlist page and API routes are present; verify contract and behavior in system testing. |
-| TASK-18 — Product detail/contact | FR-05, FR-06, FR-10 | Partial | Product detail UI and contact button exist; the contact API is absent and awaits ownership/contract approval. |
+| TASK-18 — Product detail/contact | FR-05, FR-06, FR-10 | Complete (implementation) | Product detail UI and contact API are implemented; Bruno 81–87 and 94 verify the endpoint. See [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md). Verify the Sold-button UI acceptance behavior during system testing. |
 | TASK-19 — Reports/admin API | FR-08 | Complete (backend) | Report, admin moderation routes, migration, tests, and Bruno examples are present. |
 | TASK-20 — Admin UI | FR-08, FR-10 | Complete (UI) | Admin dashboard route and UI component are present. |
 | TASK-21 — Integration and system testing | Section 8; FR-01–FR-10, NFR-01–NFR-16 | Done per Kanban (12 Nov) | [`TEST_REPORT.md`](TEST_REPORT.md) and [`UAT-UNITRADE.md`](UAT-UNITRADE.md) are present. Test totals conflict between report rows; TC-PROD-044 is recorded as FAIL and TC-AUTH-018 as Blocked. |
@@ -768,10 +765,10 @@ Status below reflects the repository and project Kanban reviewed on **15 Novembe
 
 ## 10. Open decisions
 
-The following items require explicit team approval. Existing code or mock behavior is recorded as implementation evidence and does not by itself establish an approved requirement:
+The following items require explicit team approval unless marked resolved. Existing code or mock behavior is recorded as implementation evidence and does not by itself establish an approved requirement:
 
 1. **Wishlist contract alignment:** confirm that the implemented routes, toggle behavior, and ability to save one’s own listing match API Specification v2.2.
-2. **Seller contact API:** ownership, exact endpoint path, response schema, seller-self-contact behavior, and whether sold listings still reveal contact information.
+2. **Seller contact API — resolved (15 Nov 2026):** implemented at `GET /products/:id/contact` per API Specification v2.2 §8.1. Backend decisions allow seller self-contact and contact for sold listings; implementation and test evidence are recorded in [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md). Verify the Sold-button UI acceptance behavior during system testing.
 3. **Account verification:** whether domain validation alone is sufficient or an email verification flow is required.
 4. **Performance targets:** test environment, percentile, measurement tools, and load profile for NFR-10 through NFR-12.
 5. **Data lifecycle:** retention/deletion policy for inactive accounts, images, reports, and moderation logs.
@@ -875,7 +872,7 @@ The project owner confirms TASK-01–05 are complete. Sprint/task information be
 | TASK-15 | Backend search and filter | Sprint 2 | Backend Lead | Complete |
 | TASK-16 | Search and filter UI | Sprint 2 | Frontend Lead | Complete |
 | TASK-17 | Wishlist frontend/backend | Sprint 2 | Frontend Developer | Complete per latest documented project status; system verification pending |
-| TASK-18 | Product detail and seller contact UI | Sprint 2 | Frontend Lead | Partial; Contact API pending |
+| TASK-18 | Product detail and seller contact UI | Sprint 2 | Frontend Lead | Implemented; contact API is complete and verified (Bruno 81–87, 94; 15 Nov 2026). See [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md). |
 | TASK-19 | Reports and admin API | Sprint 3 | Backend Developer | Complete (backend) |
 | TASK-20 | Admin dashboard UI | Sprint 3 | Frontend Developer | Complete per latest documented project status |
 | TASK-21 | Integration and system testing for the complete system | Sprint 3 | QA/Documentation | Done per Kanban (12 Nov); test/UAT summaries are present, but test totals need reconciliation and TC-PROD-044/TC-AUTH-018 remain recorded as FAIL/Blocked |
