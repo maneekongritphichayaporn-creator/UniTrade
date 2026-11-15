@@ -293,21 +293,15 @@ flowchart LR
 
 | รหัส | ข้อกำหนด | วิธีตรวจสอบ / สถานะ |
 |---|---|---|
-| NFR-01 | Route ที่ต้องป้องกันต้องตรวจ authentication/authorization ฝั่ง server | ตรวจ code และ negative API tests |
-| NFR-02 | Admin role ต้องตรวจจาก server-controlled data | ตรวจ `requireAdmin` และทดสอบบัญชี member |
-| NFR-03 | รหัสผ่านเก็บเป็น bcrypt hash เท่านั้น | ตรวจ implementation/schema |
-| NFR-04 | JWT ใช้ HS256 อายุ 24 ชั่วโมง และ secret อยู่ฝั่ง server | unit test auth |
-| NFR-05 | Production ใช้ HTTPS | ต้องตรวจ deployment จริง; deployment status ยังไม่ยืนยัน |
-| NFR-06 | ห้ามเปิดเผย service key/JWT secret | ตรวจ config, source control และ bundle ก่อน release |
-| NFR-07 | Public response ต้องไม่มีอีเมล/เบอร์/LINE/password hash | unit tests ของ product mappers และ API tests |
-| NFR-08 | ห้ามคืนข้อความ Supabase ดิบแก่ client | ตรวจ route error handling |
-| NFR-09 | หน้าแรกโหลดไม่เกิน 3 วินาที | วัดบน Production URL (Vercel) ด้วย Chrome DevTools ค่าเฉลี่ย ≤ 3.0 วินาที อ้างอิง TC-PROD-042|
-| NFR-10 | Product list/search API ≤500 ms ที่ 50 concurrent users | ใช้ bruno ยิง API  ค่าเฉลี่ยและ P95 ≤ 500 ms และ error = 0% อ้างอิง TC-PROD-043 |
-| NFR-11 | Availability ≥95% ในช่วงทดสอบ/นำเสนอ | ใช้ Uptime Monitor UptimeRobot เช็ก URL เว็บและ API ทุก 5 นาที Availability ≥95% |
-| NFR-12 | Responsive อย่างน้อย 375px และ desktop 1024px ขึ้นไป | ทดสอบ UI บน browser/device matrix; รายงานผลรอเติม |
-| NFR-13 | รองรับ current stable Chrome และ Safari | Chrome 157.0.8103.52 ต้องเข้าใช้งานได้ |
-| NFR-14 | รองรับ Node.js 22+ | package manifest กำหนด `>=22` |
-| NFR-15 | Frontend และ API deploy ใน Next.js application เดียว | ตรวจ architecture/build |
+| NFR-01 | API Routes ที่ต้องป้องกันต้องตรวจสอบ Authentication และ Authorization ฝั่ง Server | ตรวจสอบ Code และทดสอบ API โดยไม่เข้าสู่ระบบหรือใช้สิทธิ์ไม่ถูกต้อง |
+| NFR-02 | การดำเนินการของ Admin ต้องตรวจสอบสิทธิ์จากข้อมูลผู้ใช้ที่ควบคุมโดย Server ทุกครั้ง | ตรวจสอบ `requireAdmin` และทดสอบด้วยบัญชี Member |
+| NFR-03 | รหัสผ่านต้องจัดเก็บในรูปแบบ bcrypt Hash เท่านั้น ห้ามจัดเก็บเป็น Plaintext | ตรวจสอบ Password Hashing Implementation และ Database Schema |
+| NFR-04 | JWT ต้องใช้ HS256 มีอายุการใช้งาน 24 ชั่วโมง และลงลายเซ็นด้วย Secret ที่จัดเก็บฝั่ง Server เท่านั้น | ตรวจสอบ JWT Configuration และทดสอบ Algorithm, Expiration และ Secret |
+| NFR-05 | การสื่อสารระหว่าง Browser และ API ใน Production ต้องใช้ HTTPS โดยใช้การตั้งค่า TLS ที่ Hosting Platform รองรับ | ตรวจสอบ HTTPS บน Production URL และตรวจสอบ TLS Configuration ของ Hosting Platform |
+| NFR-06 | Supabase Service-role Key และ JWT Secret ต้องไม่ถูกเปิดเผยใน Browser Code, Source Control หรือ Client Responses | ตรวจสอบ Environment Variables, Source Control, Client Bundle และ API Responses |
+| NFR-07 | Public Endpoints ต้องไม่เปิดเผย Email, Phone Number, LINE ID, Password Hash หรือข้อมูลบัญชีอื่นที่ไม่ใช่ข้อมูลสาธารณะ | ตรวจสอบ Product Mappers และทดสอบ API Responses |
+| NFR-08 | ข้อผิดพลาดจาก Infrastructure ที่ไม่คาดคิดต้องไม่ส่งข้อความ Error ดิบกลับไปยัง Client | ตรวจสอบ API Error Handling และทดสอบกรณี Infrastructure Error |
+| NFR-09 | User Input ที่นำไปใช้ใน Database Filters ต้องผ่านการตรวจสอบความถูกต้องและใช้การ Escape หรือ Parameterized Queries ตามรูปแบบ Data Access ที่ได้รับอนุมัติ | ตรวจสอบ Input Validation และ Data Access Implementation พร้อมทดสอบ Invalid Input และ SQL Injection |
 
 ## 3.5 ความต้องการด้านส่วนต่อประสานภายนอก (External Interface Requirements)
 
