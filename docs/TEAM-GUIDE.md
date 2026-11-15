@@ -27,8 +27,8 @@ cp .env.example .env.local
 | คำสั่ง | ใช้ทำอะไร |
 |---|---|
 | `npm run dev` | เปิดเซิร์ฟเวอร์ที่ http://localhost:3000 (API อยู่ที่ `/api/v1`) |
-| `npm test` | unit test (ไม่ต้องต่อฐานข้อมูล) — ต้องผ่าน 17/17 |
-| `npm run test:api` | รัน Bruno collection กับ `npm run dev` ที่เปิดอยู่ — ต้องผ่าน 13/13 |
+| `npm test` | unit test (ไม่ต้องต่อฐานข้อมูล) — ต้องผ่านทุกข้อ |
+| `npm run test:api` | รัน Bruno collection (80 requests) กับ `npm run dev` ที่เปิดอยู่ — ต้องผ่านทุกข้อ · request ฝั่ง admin 13 ข้อ (67–79) ต้องมี `bruno/.env` (ดู `bruno/.env.example`) ไม่งั้นจะถูกข้าม |
 | `npm run build` | ตรวจว่า build ผ่าน — รันก่อนเปิด PR ทุกครั้ง |
 
 ถ้า `npm test` หรือ `npm run test:api` ไม่ผ่านตั้งแต่ยังไม่ได้แก้อะไร ทัก @wz ก่อนเริ่มงาน
