@@ -1,0 +1,22 @@
+meta {
+  name: Contact - id is not a UUID
+  type: http
+  seq: 85
+}
+
+get {
+  url: {{baseUrl}}/products/not-a-uuid/contact
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("404 PRODUCT_NOT_FOUND, not a 500", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error.code).to.equal("PRODUCT_NOT_FOUND");
+  });
+}

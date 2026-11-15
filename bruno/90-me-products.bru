@@ -1,0 +1,55 @@
+meta {
+  name: My products - owner
+  type: http
+  seq: 90
+}
+
+get {
+  url: {{baseUrl}}/me/products
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("200 with data, pagination and summary", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.data).to.be.an("array");
+    expect(body.pagination.page).to.equal(1);
+    expect(body.pagination.per_page).to.equal(20);
+    expect(body.summary).to.have.all.keys("available", "reserved", "sold");
+    const sum = body.summary.available + body.summary.reserved + body.summary.sold;
+    expect(sum).to.equal(body.pagination.total);
+    expect(body.summary.sold).to.be.at.least(1);
+  });
+
+  test("only the logged-in seller's listings", function () {
+    const sellerId = bru.getVar("contact_seller_id");
+    res.getBody().data.forEach(function (item) {
+      expect(item.seller.user_id).to.equal(sellerId);
+    });
+  });
+
+  test("the sold listing is there with wishlist_count 1 and card fields", function () {
+    const item = res.getBody().data.find(function (p) {
+      return p.product_id === bru.getVar("contact_product_id");
+    });
+    expect(item).to.be.an("object");
+    expect(item.status).to.equal("sold");
+    expect(item.wishlist_count).to.equal(1);
+    expect(item.is_free).to.equal(false);
+    expect(item.category.name).to.equal("Textbooks");
+    expect(item.primary_image_url).to.be.a("string");
+  });
+
+  test("no contact data or email in the list", function () {
+    const text = JSON.stringify(res.getBody());
+    expect(text).to.not.include("phone_number");
+    expect(text).to.not.include("line_id");
+    expect(text).to.not.include("email");
+  });
+}
