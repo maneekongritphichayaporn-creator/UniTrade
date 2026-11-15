@@ -24,12 +24,8 @@
 
 ## สถานะการพัฒนาเทียบกับ spec (ตรวจกับโค้ดบน `main` 15 พ.ย. 2569)
 
-พัฒนาแล้ว **20 จาก 22 endpoint** ในหัวข้อ 2 ส่วนที่ยังไม่มี API
-
-| # | Endpoint | สถานะ |
-|---|---|---|
-| 14 | `GET /me/products` (UC-03) | **ยังไม่มี** — หน้า "ประกาศของฉัน" ดึง `GET /products?status=all` ทีละหน้าแล้วกรองตามผู้ขายในเบราว์เซอร์แทน |
-| 15 | `GET /products/:id/contact` (FR-06) | **ยังไม่มี** — ปุ่มติดต่อผู้ขายทำงานได้เฉพาะโหมดข้อมูลจำลอง (mock) |
+พัฒนาแล้ว **ครบ 22 จาก 22 endpoint** ในหัวข้อ 2 (ข้อ 14 และ 15 เพิ่มเมื่อ 15 พ.ย. 2569 โดย @wz ดู [CONTACT-MY-PRODUCTS-CHANGELOG.md](CONTACT-MY-PRODUCTS-CHANGELOG.md))
+ที่ยังไม่ได้ทำมีเพียง rate limit (§1.6)
 
 ส่วนที่โค้ดต่างจาก spec ฉบับนี้
 
@@ -38,6 +34,8 @@
 | §1.5 รหัสข้อผิดพลาด | — | เพิ่ม `REPORT_NOT_FOUND` และ `REPORT_ALREADY_RESOLVED` ใน TASK-19 (อยู่ในตาราง §1.5 แล้ว) |
 | §1.6 Rate limit | `429 RATE_LIMITED` | ยังไม่ได้ทำ |
 | §5.2 `GET /products/:id` ไม่พบสินค้า | ไม่ได้ระบุ | `200` + `{ "data": [] }` (ตัดสินในรีวิว TASK-09) |
+| §7.1 `GET /me/products` | รายการที่มี `wishlist_count` แต่ไม่มี `is_free`/`category` | การ์ดแบบเดียวกับ `GET /products` + `wishlist_count` (หน้า My Listings ใช้ `is_free` และ `category`) · ทุกสถานะ ล่าสุดก่อน · query `page`, `per_page` (สูงสุด 50) · มี `pagination` และ `summary` ตาม spec |
+| §8.1 `GET /products/:id/contact` | ไม่ได้ระบุกรณีไม่พบ/สถานะ/เจ้าของ | ไม่พบหรือ id ไม่ใช่ UUID → `404 PRODUCT_NOT_FOUND` · ดูได้ทุกสถานะรวม Sold และเจ้าของดูของตัวเองได้ (ตัดสินโดย @wz) · `401` ใช้ข้อความกลางของ `requireAuth` ("กรุณาเข้าสู่ระบบด้วยอีเมลจุฬาฯ") · `deep_link` โทรเป็นรูปแบบ `tel:+66…` |
 | §9.1 `POST /products/:id/wishlist` | `{ product_id, action, is_wishlisted, message }` | `{ action }` |
 | §9.2 `GET /me/wishlist` | รายการพร้อม `wishlist_id`, `saved_at` และ `pagination` | การ์ดสินค้าแบบเดียวกับ `GET /products` ไม่มี `pagination` |
 | §11.1 `GET /admin/reports` | มี `summary`, `product.total_reports`, `product.pickup_location` และ email ของผู้รายงาน/ผู้ขาย | ยังไม่มีฟิลด์เหล่านี้ |
