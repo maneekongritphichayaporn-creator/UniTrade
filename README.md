@@ -65,7 +65,7 @@ Live Demo: [เว้นไว้รอข้อมูล]
    | `JWT_SECRET` | Secret used to sign API authentication tokens |
    | `NEXT_PUBLIC_USE_MOCK_API` | Set to `false` or leave blank to use the live API |
 
-   Generate a JWT secret, for example, with `openssl rand -base64 48`. Use your own Supabase project and ensure its schema and Storage bucket are configured before using the live API.
+   Generate a JWT secret, for example, with `openssl rand -base64 48`. Team members use the team's shared Supabase project: ask the Backend Lead for a server key by direct message, never in a group chat or in git. Anyone else can use their own Supabase project after applying the migrations in [`supabase/migrations/`](supabase/migrations/).
 
 4. Start the development server:
 
@@ -85,11 +85,15 @@ Live Demo: [เว้นไว้รอข้อมูล]
 | `npm test` | Run the Node.js unit tests |
 | `npm run test:api` | Run the Bruno API collection |
 
-The API tests require a running local server and a test database. They may create test records; use a dedicated test Supabase project and clean up test data after running them. Do not run API tests against a production or shared database.
+The API tests need `npm run dev` running. The team runs them against its shared Supabase project: each run registers `bruno.*` test users and creates test listings, and the collection deletes its own listings through the API at the end. After a run, delete the test users with the SQL in the "ลบข้อมูลทดสอบ" section of [`docs/TEAM-GUIDE.md`](docs/TEAM-GUIDE.md).
+
+The 13 admin requests (67–79) need `bruno/.env` with `ADMIN_EMAIL` and `ADMIN_PASSWORD`. Copy [`bruno/.env.example`](bruno/.env.example) and ask the Backend Lead for the test admin account by direct message. Without that file, those 13 requests are skipped and the other 67 still run. `bruno/.env` is ignored by git; never commit it.
 
 ## API
 
-API route handlers are under [`app/api/v1/`](app/api/v1/). The API covers authentication and profiles, faculties, product listings, categories, pickup locations, wishlists, reports, and administration. Route handlers and request/response behavior in the source are the implementation reference.
+API route handlers are under [`app/api/v1/`](app/api/v1/). The API covers authentication and profiles, faculties, product listings, categories, pickup locations, wishlists, reports, and administration.
+
+The API contract is [API Specification v2.2](docs/API-SPEC-UNITRADE-v2.2.md). Its "สถานะการพัฒนาเทียบกับ spec" section lists the two endpoints that are not built yet (`GET /me/products` and `GET /products/:id/contact`) and where the code differs from the spec.
 
 ## Repository layout
 
@@ -108,9 +112,19 @@ docs/                Project specifications and supporting documents
 
 - Never commit `.env.local` or share Supabase secret/service-role keys.
 - Keep `SUPABASE_SERVICE_ROLE_KEY` and `JWT_SECRET` server-side; do not prefix them with `NEXT_PUBLIC_`.
-- Use a dedicated test database for API tests.
+- The Supabase project is shared by the team. Only create and delete your own test data, and clean up after test runs.
 
 ## Project documents
 
+- [Project report](docs/REPORT-SE-UNITRADE.md)
 - [System requirements (SRS)](docs/SRS-UNITRADE-v2.2.md)
+- [API Specification v2.2](docs/API-SPEC-UNITRADE-v2.2.md)
 - [System context diagram](docs/CONTEXT-DIAGRAM.md)
+- [Project Kanban](docs/PROJECT-KANBAN.md)
+- [Test report](docs/TEST_REPORT.md) and [test cases (TASK-11)](docs/UniTrade_TASK-11_Test_Cases.xlsx)
+- [User acceptance testing (UAT)](docs/UAT-UNITRADE.md)
+- [Team guide](docs/TEAM-GUIDE.md)
+- [Deploy guide (TASK-23)](docs/TASK-23-DEPLOY.md)
+- Change notes: [TASK-07/10/16/18 (frontend)](docs/TASK-07-10-16-18-CHANGELOG.md), [TASK-09](docs/TASK-09-CHANGELOG.md), [TASK-12](docs/TASK-12-CHANGELOG.md), [TASK-15](docs/TASK-15-CHANGELOG.md), [TASK-19](docs/TASK-19-CHANGELOG.md)
+- [Frontend design notes](docs/REPORT-FRONTEND.md)
+- [Postman collection for reports and admin](docs/postman/)
