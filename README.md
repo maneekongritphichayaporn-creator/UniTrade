@@ -87,13 +87,13 @@ Live Demo: [เว้นไว้รอข้อมูล]
 
 The API tests need `npm run dev` running. The team runs them against its shared Supabase project: each run registers `bruno.*` test users and creates test listings, and the collection deletes its own listings through the API at the end. After a run, delete the test users with the SQL in the "ลบข้อมูลทดสอบ" section of [`docs/TEAM-GUIDE.md`](docs/TEAM-GUIDE.md).
 
-The 13 admin requests (67–79) need `bruno/.env` with `ADMIN_EMAIL` and `ADMIN_PASSWORD`. Copy [`bruno/.env.example`](bruno/.env.example) and ask the Backend Lead for the test admin account by direct message. Without that file, those 13 requests are skipped and the other 67 still run. `bruno/.env` is ignored by git; never commit it.
+The 13 admin requests (67–79) need `bruno/.env` with `ADMIN_EMAIL` and `ADMIN_PASSWORD`. Copy [`bruno/.env.example`](bruno/.env.example) and ask the Backend Lead for the test admin account by direct message. Without that file, those 13 requests are skipped and the other 82 still run. `bruno/.env` is ignored by git; never commit it.
 
 ## API
 
 API route handlers are under [`app/api/v1/`](app/api/v1/). The API covers authentication and profiles, faculties, product listings, categories, pickup locations, wishlists, reports, and administration.
 
-The API contract is [API Specification v2.2](docs/API-SPEC-UNITRADE-v2.2.md). Its "สถานะการพัฒนาเทียบกับ spec" section lists the two endpoints that are not built yet (`GET /me/products` and `GET /products/:id/contact`) and where the code differs from the spec.
+The API contract is [API Specification v2.2](docs/API-SPEC-UNITRADE-v2.2.md). All 22 endpoints in the spec are built, including seller contact (`GET /products/:id/contact`) and My Listings (`GET /me/products`). Rate limiting (spec §1.6) is not built. The spec's "สถานะการพัฒนาเทียบกับ spec" section lists where the code differs from the spec.
 
 ## Repository layout
 
@@ -125,6 +125,6 @@ docs/                Project specifications and supporting documents
 - [User acceptance testing (UAT)](docs/UAT-UNITRADE.md)
 - [Team guide](docs/TEAM-GUIDE.md)
 - [Deploy guide (TASK-23)](docs/TASK-23-DEPLOY.md)
-- Change notes: [TASK-07/10/16/18 (frontend)](docs/TASK-07-10-16-18-CHANGELOG.md), [TASK-09](docs/TASK-09-CHANGELOG.md), [TASK-12](docs/TASK-12-CHANGELOG.md), [TASK-15](docs/TASK-15-CHANGELOG.md), [TASK-19](docs/TASK-19-CHANGELOG.md)
+- Change notes: [TASK-07/10/16/18 (frontend)](docs/TASK-07-10-16-18-CHANGELOG.md), [TASK-09](docs/TASK-09-CHANGELOG.md), [TASK-12](docs/TASK-12-CHANGELOG.md), [TASK-15](docs/TASK-15-CHANGELOG.md), [TASK-19](docs/TASK-19-CHANGELOG.md), [contact and My Listings API](docs/CONTACT-MY-PRODUCTS-CHANGELOG.md)
 - [Frontend design notes](docs/REPORT-FRONTEND.md)
 - [Postman collection for reports and admin](docs/postman/)

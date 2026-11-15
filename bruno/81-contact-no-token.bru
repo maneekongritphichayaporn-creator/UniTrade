@@ -1,0 +1,19 @@
+meta {
+  name: Contact - not logged in
+  type: http
+  seq: 81
+}
+
+get {
+  url: {{baseUrl}}/products/{{contact_product_id}}/contact
+  body: none
+  auth: none
+}
+
+tests {
+  test("401 UNAUTHORIZED and no contact data", function () {
+    expect(res.getStatus()).to.equal(401);
+    expect(res.getBody().error.code).to.equal("UNAUTHORIZED");
+    expect(JSON.stringify(res.getBody())).to.not.include("bruno_new");
+  });
+}

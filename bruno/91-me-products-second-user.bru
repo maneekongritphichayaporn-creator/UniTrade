@@ -1,0 +1,27 @@
+meta {
+  name: My products - another user
+  type: http
+  seq: 91
+}
+
+get {
+  url: {{baseUrl}}/me/products
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("200 without the first user's listings", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    const ids = body.data.map(function (p) { return p.product_id; });
+    expect(ids).to.not.include(bru.getVar("contact_product_id"));
+    body.data.forEach(function (item) {
+      expect(item.seller.user_id).to.not.equal(bru.getVar("contact_seller_id"));
+    });
+  });
+}

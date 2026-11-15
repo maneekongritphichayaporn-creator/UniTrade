@@ -327,7 +327,7 @@ flowchart LR
 | Database | Supabase PostgreSQL ผ่าน server-side service role |
 | Image storage | Supabase Storage bucket `product-images`; server เป็นผู้ upload/remove |
 | Auth | Bearer JWT อายุ 24 ชั่วโมง |
-| Seller contact | LINE/โทรศัพท์ภายนอก; Contact API ยังรอการกำหนด owner/contract |
+| Seller contact | LINE/โทรศัพท์ภายนอก ผ่าน `GET /products/:id/contact` (ต้องล็อกอิน) |
 
 ## 3.6 สภาพแวดล้อมการทำงานของระบบ (System Environment)
 
@@ -543,7 +543,7 @@ flowchart LR
 
 ### 4.3.11 Use Case สนับสนุน: ขอข้อมูลติดต่อผู้ขาย (FR-06)
 
-Use case diagram แสดงการขอข้อมูลติดต่อผู้ขายเป็นกรณีใช้งาน แต่ชุด UC-01–UC-07 ที่ทีมกำหนดยังไม่ได้ระบุรหัสให้กรณีนี้ จึงยังไม่กำหนด UC ID เพิ่มในเอกสารฉบับนี้ ตามข้อกำหนด ผู้ใช้ต้องเข้าสู่ระบบก่อนจึงขอข้อมูลติดต่อได้ และข้อมูลติดต่อห้ามปรากฏในหน้ารายละเอียดสาธารณะ อย่างไรก็ตาม Contact API และสัญญา API ยังรอการกำหนด/อนุมัติ จึงยังระบุขั้นตอนตอบกลับและเงื่อนไขสถานะสินค้าเป็นข้อสรุปไม่ได้ ปุ่มและ modal ในหน้าเว็บยังไม่เทียบเท่ากับการส่งมอบ flow นี้ครบถ้วน
+Use case diagram แสดงการขอข้อมูลติดต่อผู้ขายเป็นกรณีใช้งาน แต่ชุด UC-01–UC-07 ที่ทีมกำหนดยังไม่ได้ระบุรหัสให้กรณีนี้ จึงยังไม่กำหนด UC ID เพิ่มในเอกสารฉบับนี้ ตามข้อกำหนด ผู้ใช้ต้องเข้าสู่ระบบก่อนจึงขอข้อมูลติดต่อได้ และข้อมูลติดต่อห้ามปรากฏในหน้ารายละเอียดสาธารณะ Contact API พัฒนาแล้วตาม API Specification §8.1 (`GET /products/:id/contact`) ผู้ใช้กดปุ่ม "ติดต่อผู้ขาย" ในหน้าสินค้า ระบบตรวจ token แล้วคืนชื่อผู้ขาย ช่องทางติดต่อเฉพาะที่ผู้ขายกรอกไว้ (LINE/โทร พร้อมลิงก์เปิดแอป) จุดนัดรับ และข้อความแนะนำความปลอดภัยใน modal ไม่ส่ง email ของผู้ขาย ผู้ที่ไม่ได้ล็อกอินได้ 401 และสินค้าที่ไม่มีอยู่ได้ 404 Backend Lead กำหนดให้ดูข้อมูลติดต่อได้ทุกสถานะสินค้า และเจ้าของประกาศดูของตัวเองได้
 
 > **ขอบเขตเอกสาร:** รายละเอียด UC ข้างต้นเป็นฉบับสรุปที่จัดทำจาก SRS, API ที่มีใน repository และข้อมูลโครงการที่ระบุไว้ในเอกสาร ไม่ใช่ไฟล์ Use Case ต้นฉบับที่อนุมัติใน TASK-03
 
@@ -755,7 +755,7 @@ flowchart LR
 | บทบาท | สิทธิ์ |
 |---|---|
 | Guest | อ่านหมวดหมู่ จุดนัดรับ รายการสินค้า และรายละเอียดสาธารณะ |
-| Member | สิทธิ์ Guest + profile, สร้าง/จัดการสินค้าตนเอง, report; Wishlist/contact ตาม API ที่จะกำหนด |
+| Member | สิทธิ์ Guest + profile, สร้าง/จัดการสินค้าตนเอง, report, Wishlist และดูข้อมูลติดต่อผู้ขาย |
 | Admin | สิทธิ์ moderation ตาม route ที่ป้องกันด้วย admin role |
 
 มาตรการที่พบในระบบออกแบบ/โค้ด:
@@ -810,7 +810,7 @@ flowchart LR
 |---|---|---|
 | `npm.cmd test` | ผ่านทั้งหมด | ผ่านทั้งหมด(63/63); [test report](docs/TEST_REPORT.md) |
 | `npm.cmd run build` | สามารถทำงานได้ | ระบบผ่านทั้งหมด; [test report](docs/TEST_REPORT.md) |
-| `npm run test:api` | ผ่านเฉพาะเคสที่รัน: Requests 80 (ผ่าน 67, ข้าม 13), Tests 69/69, Assertions 0/0, ใช้เวลา 42.89 วินาที  | [test report](docs/TEST_REPORT.md); 13 เคสที่ข้ามคือ request ฝั่ง admin (67–79) ซึ่งจะข้ามเองเมื่อไม่มีบัญชี admin ใน `bruno/.env`; การรันแบบมีบัญชี admin เมื่อ 5 พ.ย. 2569: Requests 80 (ผ่าน 79, ข้าม 1), Tests 81/81 ([TASK-19-CHANGELOG](TASK-19-CHANGELOG.md)) |
+| `npm run test:api` | ผ่านเฉพาะเคสที่รัน (15 พ.ย. 2569): Requests 95 (ผ่าน 82, ข้าม 13), Tests 89/89, Assertions 0/0, ใช้เวลา 51.92 วินาที  | [test report](docs/TEST_REPORT.md); 13 เคสที่ข้ามคือ request ฝั่ง admin (67–79) ซึ่งจะข้ามเองเมื่อไม่มีบัญชี admin ใน `bruno/.env`; การรันแบบมีบัญชี admin เมื่อ 5 พ.ย. 2569: Requests 80 (ผ่าน 79, ข้าม 1), Tests 81/81 ([TASK-19-CHANGELOG](TASK-19-CHANGELOG.md)) |
 | Integration กับ Supabase จริง | ยังไม่ยืนยัน | test:api ผ่าน Tests 69/69 และเคสลบสินค้าพร้อมไฟล์ใน Storage ตอบ 204 สำเร็จ แต่ยังไม่ได้ตรวจข้อมูลใน Supabase Dashboard; ส่วน Report/Admin (TASK-19) ตรวจด้วย SQL บน Supabase แล้วเมื่อ 5 พ.ย. 2569: `moderation_logs` บันทึก 2 แถวต่อรอบ (`dismiss_report`, `delete_product`) และไม่มีไฟล์ค้างใน bucket `product-images` |
 | UAT (US-01–US-06) | ผ่านทั้งหมดตามคำยืนยันจากทีม (6/6) | ไม่มีแบบประเมินรายบุคคล วันทดสอบ จำนวน/บทบาทผู้ทดสอบ หรือ environment ประกอบ; ดู [แบบฟอร์มและผลสรุป UAT](UAT-UNITRADE.md) |
 | คะแนนความพึงพอใจ | [ไม่มีข้อมูลคะแนน] | การยืนยันว่าผ่าน UAT ไม่ใช่คะแนนความพึงพอใจ |
@@ -834,7 +834,8 @@ flowchart LR
 | TC-REPORT-01 | สมาชิกรายงานประกาศของตนเอง | 422 `SELF_REPORT` |
 | TC-REPORT-02 | สมาชิกรายงานประกาศเดิมซ้ำ | 409 `DUPLICATE_REPORT` |
 | TC-WISH-01 | กดบันทึกรายการโปรด (`POST /products/:id/wishlist`) ครั้งแรกและครั้งที่สอง | ครั้งแรก 200 `action: added`, ครั้งที่สอง 200 `action: removed`; สินค้าที่ไม่มีอยู่ได้ 404 `PRODUCT_NOT_FOUND` |
-| TC-CONTACT-01 | สมาชิกที่ล็อกอินแล้วขอข้อมูลติดต่อผู้ขาย (`GET /products/:id/contact`) | ตาม API Spec §8.1: 200 พร้อม `channels` (LINE/โทร) และ `safety_note`, ผู้ที่ไม่ได้ล็อกอินได้ 401 — **ยังทดสอบกับระบบจริงไม่ได้ เพราะยังไม่มี endpoint นี้** (หน้าเว็บทดสอบผ่านในโหมดข้อมูลจำลองเท่านั้น ดูหัวข้อ 6.2) |
+| TC-CONTACT-01 | สมาชิกที่ล็อกอินแล้วขอข้อมูลติดต่อผู้ขาย (`GET /products/:id/contact`) | ตาม API Spec §8.1: 200 พร้อม `seller`, `channels` เฉพาะช่องทางที่ผู้ขายกรอก (LINE/โทร), `pickup_location` และ `safety_note` โดยไม่มี email; ผู้ที่ไม่ได้ล็อกอินได้ 401; สินค้าที่ไม่มีอยู่ได้ 404 `PRODUCT_NOT_FOUND` — ผ่านกับระบบจริง (Bruno 80–88, 93–94) |
+| TC-MYPROD-01 | ผู้ขายเปิดหน้าประกาศของฉัน (`GET /me/products`) | 200 เฉพาะประกาศของตนเองทุกสถานะ พร้อม `wishlist_count`, `pagination` และ `summary` ของแต่ละสถานะ; ผู้ใช้อื่นไม่เห็นประกาศนี้; ไม่ได้ล็อกอินได้ 401; `page=0` ได้ 422 — ผ่าน (Bruno 89–92) |
 
 ## 5.3 การตรวจสอบความสอดคล้องกับข้อกำหนด (Requirements Verification)
 
@@ -845,10 +846,10 @@ flowchart LR
 | Product create/edit/delete/status API | มี | Unit tests; Bruno requests มี | พัฒนาแล้ว; API tests ล่าสุดรอยืนยัน |
 | Layout / Home / Search UI | มี | Build ผ่าน; บันทึก manual test ใน frontend notes | พัฒนาแล้ว |
 | Product detail UI | มี | Build ผ่าน; manual test ตาม notes | พัฒนาแล้ว |
-| Seller contact | UI มี | ยังทดสอบ API จริงไม่ได้ | บางส่วน; backend endpoint ขาด |
+| Seller contact | มี (UI + API) | Unit tests; Bruno 80–88, 93–94 ผ่าน (15 พ.ย. 2569) | พัฒนาแล้ว |
 | Register/Profile UI | ไม่ครบ | — | ยังไม่ครบ |
 | Listing create/edit UI | ยังไม่พบ | — | ยังไม่พัฒนา |
-| My listings/status UI | Status API มี; UI ยังไม่พบ | — | ยังไม่ครบ |
+| My listings/status | มี (UI, `GET /me/products`, status API) | Unit tests; Bruno 34–35, 89–92 ผ่าน (15 พ.ย. 2569) | พัฒนาแล้ว |
 | Wishlist | Schema มี; API/UI ยังไม่พบ | — | ยังไม่พัฒนา |
 | Report/Admin API | มี | Unit tests; Bruno collection มี; ผลล่าสุดรอยืนยัน | พัฒนาแล้ว |
 | Admin Dashboard UI | ยังไม่พบ | — | ยังไม่พัฒนา |
@@ -890,7 +891,7 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 
 3. **ระบบจัดการสถานะสินค้าที่ชัดเจน:** ผู้ขายเปลี่ยนสถานะสินค้าเป็นพร้อมขาย ติดจอง หรือขายแล้วได้ และผู้ใช้คนอื่นเห็นสถานะใหม่เมื่อเปิดหรือโหลดหน้าใหม่ ซึ่งช่วยลดปัญหาความสับสนและการตามหาสินค้าที่ถูกจำหน่ายไปแล้ว
 
-4. **ลดต้นทุนและความเสี่ยงในการจัดส่ง:** สนับสนุนรูปแบบการซื้อขายแบบนัดรับภายในพื้นที่มหาวิทยาลัย พร้อมระบบระบุจุดนัดรับ ซึ่งช่วยลดค่าใช้จ่ายในการจัดส่งพัสดุระยะไกลและความเสี่ยงที่สินค้าจะเสียหาย ส่วนการแสดงช่องทางติดต่อผู้ขาย หน้าเว็บทำเสร็จและทดสอบในโหมดข้อมูลจำลองแล้ว แต่ยังไม่มี API จริง (ดูหัวข้อ "ฟีเจอร์ที่ยังไม่มี API")
+4. **ลดต้นทุนและความเสี่ยงในการจัดส่ง:** สนับสนุนรูปแบบการซื้อขายแบบนัดรับภายในพื้นที่มหาวิทยาลัย พร้อมระบบระบุจุดนัดรับ ซึ่งช่วยลดค่าใช้จ่ายในการจัดส่งพัสดุระยะไกลและความเสี่ยงที่สินค้าจะเสียหาย และสมาชิกที่ล็อกอินแล้วดูช่องทางติดต่อผู้ขาย (LINE/โทร) ได้จากปุ่ม "ติดต่อผู้ขาย" เพื่อนัดรับกันเอง
 
 5. **ระบบกลั่นกรองและควบคุมความปลอดภัย:** มีฟังก์ชันการรายงานประกาศ (Report) ที่ไม่เหมาะสม พร้อมระบบหลังบ้านสำหรับผู้ดูแลระบบ (Admin) ในการตรวจสอบและจัดการประกาศ เพื่อรักษาความปลอดภัยและความเรียบร้อยของแพลตฟอร์ม
 
@@ -915,27 +916,25 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 
 ### ฟีเจอร์ที่ยังไม่มี API
 
-เมื่อเทียบกับ [API Specification v2.2](API-SPEC-UNITRADE-v2.2.md) หัวข้อ 2 ระบบพัฒนา API แล้ว 20 จาก 22 endpoint (ตรวจกับโค้ดบน `main` วันที่ 15 พ.ย. 2569) ส่วนที่ยังไม่มีมีดังนี้
+เมื่อเทียบกับ [API Specification v2.2](API-SPEC-UNITRADE-v2.2.md) หัวข้อ 2 ระบบพัฒนา API ครบ 22 จาก 22 endpoint แล้ว โดย `GET /products/:id/contact` (ข้อมูลติดต่อผู้ขาย) และ `GET /me/products` (ประกาศของฉัน) เพิ่มเมื่อ 15 พ.ย. 2569 ([บันทึกการเปลี่ยนแปลง](CONTACT-MY-PRODUCTS-CHANGELOG.md)) ส่วนที่ spec กำหนดแต่ยังไม่ได้พัฒนามีดังนี้
 
 | ฟีเจอร์ | API ที่ spec กำหนด | ผลต่อการใช้งานตอนนี้ | แนวทางต่อ |
 |---|---|---|---|
-| ข้อมูลติดต่อผู้ขาย (FR-06, US-05) | `GET /products/:id/contact` (§8.1) | หน้าเว็บและปุ่ม "ติดต่อผู้ขาย" ทำเสร็จและทดสอบในโหมดข้อมูลจำลองแล้ว แต่บนระบบจริงกดแล้วขึ้นข้อผิดพลาด ผู้ซื้อจึงยังไม่เห็น LINE ID หรือเบอร์โทรของผู้ขาย | พัฒนา endpoint ตาม §8.1 (ต้องล็อกอิน คืน `channels` และ `safety_note`) หน้าเว็บไม่ต้องแก้ |
-| ประกาศของฉัน (UC-03) | `GET /me/products` (§7.1) | หน้าใช้งานได้ โดยดึงรายการสินค้าทั้งหมดทีละหน้าแล้วกรองตามผู้ขายในเบราว์เซอร์ ยิ่งมีประกาศในระบบมากยิ่งช้าลง | พัฒนา endpoint แล้วเปลี่ยน `listMyProducts()` ใน `lib/client/products.js` ให้เรียกเส้นนี้ |
-| จำกัดความถี่การเรียกใช้ (NFR) | `429 RATE_LIMITED` (§1.6) | ยังไม่จำกัดจำนวนครั้งการสมัคร ล็อกอิน ลงประกาศ และรายงาน | เพิ่มการจำกัดที่ฝั่ง server หรือที่ระบบ hosting |
+| จำกัดความถี่การเรียกใช้ (NFR) | `429 RATE_LIMITED` (§1.6) | ยังไม่จำกัดจำนวนครั้งการสมัคร ล็อกอิน ลงประกาศ และรายงาน | เพิ่มการจำกัดที่ฝั่ง server หรือที่ระบบ hosting โดยต้องเก็บตัวนับในที่ที่ใช้ร่วมกันได้บน Vercel และไม่บล็อกผู้ใช้หลายคนที่ออกอินเทอร์เน็ตผ่าน IP เดียวกันใน Wi-Fi มหาวิทยาลัย |
 
 นอกจากนี้ มีบาง endpoint ที่รูปแบบ response ต่างจาก spec เช่น `DELETE /admin/products/:id` ตอบ 204 แทน 200 พร้อม body และ `GET /admin/reports` ยังไม่มี `summary` ทุกจุดสรุปไว้ในหัวข้อ "สถานะการพัฒนาเทียบกับ spec" ของ API Specification
 
 ### ข้อจำกัดของระบบ
 
 - ไม่มี online payment, shipment, หรือ in-app chat
-- ปุ่มติดต่อผู้ขายยังใช้กับระบบจริงไม่ได้ เพราะยังไม่มี contact API (ดูหัวข้อ "ฟีเจอร์ที่ยังไม่มี API")
+- ยังไม่จำกัดความถี่การเรียก API (rate limit) ดูหัวข้อ "ฟีเจอร์ที่ยังไม่มี API"
 - ไม่ยืนยันคุณภาพหรือความถูกต้องของประกาศและการซื้อขาย
 - การ login ใช้ JWT อายุ 24 ชั่วโมงและไม่มี refresh token
 - ผล UAT รวม 6/6 user stories แต่ยังไม่มีแบบฟอร์มรายบุคคล
 
 ### ข้อเสนอแนะและแนวทางพัฒนาต่อยอด
 
-1. พัฒนา API ที่ยังขาด ได้แก่ `GET /products/:id/contact`, `GET /me/products` และ rate limit (ดูหัวข้อ "ฟีเจอร์ที่ยังไม่มี API")
+1. พัฒนา rate limit ตาม API Specification §1.6 (ดูหัวข้อ "ฟีเจอร์ที่ยังไม่มี API")
 2. ทำแบบฟอร์ม UAT รายบุคคลที่ใช้จริง กลุ่มผู้ทดสอบ environment และผลประเมิน
 3. วัด performance ด้วย workload, dataset, percentile และ environment ที่กำหนดล่วงหน้า
 4. กำหนดนโยบาย retention, backup/recovery, accessibility target และ browser support
@@ -949,7 +948,7 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 | **พิชญาภร มณีคงฤทธิ์** | Project Manager / Business Analyst | • ควบคุมและวางแผนโครงงานภาพรวมทั้งหมดให้เป็นไปตามกำหนดเวลา (Timeline & Milestone Tracking)<br>• ประสานงานและติดตามความคืบหน้าของสมาชิกในทีม<br>• วิเคราะห์และรวบรวมความต้องการเชิงธุรกิจ (Business Requirements) และกำหนดขอบเขตระบบ | **ยืนยัน** |
 | **[เว้นไว้รอข้อมูล: @film_]** | System Analyst / UI-UX Designer | • ดำเนินการศึกษาและรวบรวมข้อมูลผู้ใช้งาน (User Research & Interviews)<br>• ออกแบบสถาปัตยกรรมระบบจำลองและแผนภาพเชิงกระบวนการ (Use Case Diagram, DFD)<br>• ออกแบบโครงสร้างหน้าจอ (UI Wireframe / Navigation Flow) และต้นแบบหน้าตาเว็บ (Figma) | [เว้นไว้รอข้อมูล] |
 | **วัชรินทร์ คงเซ็น** | QA / Software Tester | • กำหนดกลยุทธ์การทดสอบระบบ (Testing Strategy) และจัดทำแผนการทดสอบ (Test Plan)<br>• เขียนชุดกรณีทดสอบ (Test Cases) สำหรับตรวจสอบความถูกต้องของฟังก์ชันต่างๆ<br>• ดำเนินการทดสอบระบบผ่าน Bruno API Collection และทดสอบการใช้งานหน้าจอจริง (Manual Testing) พร้อมบันทึกผล | [เว้นไว้รอข้อมูล] |
-| **กันตภณ ชัยรุ่งปัญญา** | Backend Lead | • ออกแบบและดูแลสถาปัตยกรรมโครงสร้างหลังบ้าน (Backend Architecture & Core Libraries)<br>• ตั้งค่าและจัดการฐานข้อมูล Supabase (Migrations & Database Setup)<br>• พัฒนาระบบความปลอดภัยและการยืนยันตัวตน (Authentication & JWT / Route Guards) พร้อมทั้งรีวิวโค้ด (PR Review)<br>• จัดทำ API Specification v2.2 (TASK-05) และงาน Search & Filter (TASK-15) | [เว้นไว้รอข้อมูล] |
+| **กันตภณ ชัยรุ่งปัญญา** | Backend Lead | • ออกแบบและดูแลสถาปัตยกรรมโครงสร้างหลังบ้าน (Backend Architecture & Core Libraries)<br>• ตั้งค่าและจัดการฐานข้อมูล Supabase (Migrations & Database Setup)<br>• พัฒนาระบบความปลอดภัยและการยืนยันตัวตน (Authentication & JWT / Route Guards) พร้อมทั้งรีวิวโค้ด (PR Review)<br>• จัดทำ API Specification v2.2 (TASK-05) และงาน Search & Filter (TASK-15)<br>• พัฒนา API ข้อมูลติดต่อผู้ขาย (`GET /products/:id/contact`) และประกาศของฉัน (`GET /me/products`) | [เว้นไว้รอข้อมูล] |
 | **[เว้นไว้รอข้อมูล: @yat]** | Frontend Lead | • ออกแบบและกำหนดโครงสร้างโค้ดฝั่งหน้าบ้านด้วย Next.js 15 App Router<br>• พัฒนาหน้าจอหลักของแพลตฟอร์ม เช่น หน้าแรก (Home Page), ระบบแสดงผลตารางรายการสินค้า (Product Card Grid), และระบบค้นหา<br>• ควบคุมมาตรฐานการเขียนโค้ดและเชื่อมต่อ API ฝั่ง Frontend | [เว้นไว้รอข้อมูล] |
 | **ศรัณย์ภพ พิบูลธนาวนิช** | Backend Developer | • พัฒนา API เรียกดูสินค้า หมวดหมู่ และจุดนัดรับ พร้อมการค้นหา กรอง เรียงลำดับ และแบ่งหน้า (Product Read API - TASK-09) ซึ่งโค้ดค้นหา/กรองถูกนำไปใช้ต่อใน TASK-15<br>• พัฒนาระบบจัดการข้อมูลสินค้าแบบครบวงจร (CRUD) เปลี่ยนสถานะ และตรวจ/อัปโหลดไฟล์รูปภาพขึ้น Supabase Storage (TASK-12)<br>• พัฒนา API รายงานสินค้าและการจัดการของผู้ดูแลระบบ (Report & Admin Moderation) พร้อมตัวตรวจสิทธิ์ `requireAdmin` และ migration `0005` (ตาราง `moderation_logs` และ function แบบ atomic) (TASK-19)<br>• เขียน unit test ชุดทดสอบ API (Bruno Requests) และ Postman Collection สำหรับหน้า Admin Dashboard | **ยืนยัน** |
 | **[เว้นไว้รอข้อมูล: @warixm]** | Frontend Developer | • พัฒนาหน้าจอระบบสมาชิก (Login / Register / Profile)<br>• พัฒนาระบบฟอร์มสำหรับลงประกาศขายสินค้าและแก้ไขข้อมูล (Listing Create & Edit Forms)<br>• พัฒนาหน้าแดชบอร์ดสำหรับผู้ดูแลระบบ (Admin Dashboard) และหน้าจัดการสถานะสินค้า | [เว้นไว้รอข้อมูล] |
@@ -977,7 +976,7 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 - Context Diagram: [`CONTEXT-DIAGRAM.md`](CONTEXT-DIAGRAM.md)
 - Frontend design/testing notes: [`REPORT-FRONTEND.md`](REPORT-FRONTEND.md)
 - API Specification v2.2: [`API-SPEC-UNITRADE-v2.2.md`](API-SPEC-UNITRADE-v2.2.md) (รวมตารางสถานะการพัฒนาเทียบกับ spec)
-- Backend change notes: [`TASK-09`](TASK-09-CHANGELOG.md), [`TASK-12`](TASK-12-CHANGELOG.md), [`TASK-15`](TASK-15-CHANGELOG.md), [`TASK-19`](TASK-19-CHANGELOG.md)
+- Backend change notes: [`TASK-09`](TASK-09-CHANGELOG.md), [`TASK-12`](TASK-12-CHANGELOG.md), [`TASK-15`](TASK-15-CHANGELOG.md), [`TASK-19`](TASK-19-CHANGELOG.md), [`Contact และ My Listings API`](CONTACT-MY-PRODUCTS-CHANGELOG.md)
 - Postman collection (Admin/Report): [`docs/postman/`](postman/)
 - Test Report: [`Test Report.mp`](TEST_REPORT.md)
 - Screenshot/production deployment evidence: [เว้นไว้รอข้อมูล]

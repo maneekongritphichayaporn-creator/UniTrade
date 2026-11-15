@@ -1,0 +1,22 @@
+meta {
+  name: Contact - unknown product
+  type: http
+  seq: 84
+}
+
+get {
+  url: {{baseUrl}}/products/00000000-0000-4000-8000-0000000000ff/contact
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("404 PRODUCT_NOT_FOUND", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error.code).to.equal("PRODUCT_NOT_FOUND");
+  });
+}

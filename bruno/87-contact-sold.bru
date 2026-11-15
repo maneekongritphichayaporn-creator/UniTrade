@@ -1,0 +1,22 @@
+meta {
+  name: Contact - sold listing
+  type: http
+  seq: 87
+}
+
+get {
+  url: {{baseUrl}}/products/{{contact_product_id}}/contact
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("200, contact is available for every status", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().channels.length).to.equal(1);
+  });
+}

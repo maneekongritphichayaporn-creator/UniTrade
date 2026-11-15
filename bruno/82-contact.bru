@@ -1,0 +1,42 @@
+meta {
+  name: Contact - another member
+  type: http
+  seq: 82
+}
+
+get {
+  url: {{baseUrl}}/products/{{contact_product_id}}/contact
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("200 in the Spec 8.1 shape", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.seller).to.deep.equal({
+      user_id: bru.getVar("contact_seller_id"),
+      full_name: "ผู้ทดสอบ บรูโน",
+      faculty: "สำนักงานมหาวิทยาลัย",
+    });
+    expect(body.pickup_location).to.equal("ศาลาพระเกี้ยว");
+    expect(body.safety_note).to.be.a("string");
+  });
+
+  test("only the channels the seller supplied (12 cleared the phone)", function () {
+    expect(res.getBody().channels).to.deep.equal([
+      { type: "line", value: "bruno_new", deep_link: "https://line.me/ti/p/~bruno_new", is_primary: true },
+    ]);
+  });
+
+  test("no email or password hash anywhere", function () {
+    const text = JSON.stringify(res.getBody());
+    expect(text).to.not.include("email");
+    expect(text).to.not.include("password_hash");
+    expect(text).to.not.include(bru.getVar("email"));
+  });
+}

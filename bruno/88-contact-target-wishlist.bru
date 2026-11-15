@@ -1,0 +1,22 @@
+meta {
+  name: Contact target - second user saves it
+  type: http
+  seq: 88
+}
+
+post {
+  url: {{baseUrl}}/products/{{contact_product_id}}/wishlist
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("200 added (checked as wishlist_count in 90)", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().action).to.equal("added");
+  });
+}

@@ -1,0 +1,40 @@
+meta {
+  name: Contact target - create product
+  type: http
+  seq: 80
+}
+
+post {
+  url: {{baseUrl}}/products
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  title: ประกาศสำหรับทดสอบข้อมูลติดต่อ
+  category_id: 00000000-0000-4000-8000-000000000001
+  item_condition: good
+  price: 50
+  pickup_location: ศาลาพระเกี้ยว
+  images: @file(fixtures/book.jpg)
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.product_id) {
+    bru.setVar("contact_product_id", body.product_id);
+    bru.setVar("contact_seller_id", body.seller.user_id);
+  }
+}
+
+tests {
+  test("201 product owned by the first user", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().product_id).to.be.a("string");
+    expect(res.getBody().seller.user_id).to.be.a("string");
+  });
+}
