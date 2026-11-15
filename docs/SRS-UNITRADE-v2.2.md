@@ -802,6 +802,11 @@ The API shall use the project’s approved error catalog. The following cases ar
 | Invalid pickup location | `422 INVALID_PICKUP_LOCATION` |
 | Invalid product status | `422 INVALID_STATUS` |
 | Invalid report reason | `422 INVALID_REPORT_REASON` |
+| Member reports own listing | `422 SELF_REPORT` |
+| Same member reports the same product again | `409 DUPLICATE_REPORT` |
+| Missing or invalid report for an admin action | `404 REPORT_NOT_FOUND` |
+| Report is no longer pending (already dismissed or actioned) | `409 REPORT_ALREADY_RESOLVED` |
+| Invalid admin report status body or report-list query (`status`, `page`, `per_page`) | `422 VALIDATION_ERROR` with a field |
 | Unexpected server/database/storage failure | Generic logged `500 INTERNAL_ERROR`; no raw Supabase error is returned |
 
 ### Appendix B — Product constraints
@@ -823,6 +828,9 @@ The API shall use the project’s approved error catalog. The following cases ar
 - An administrator may dismiss a report without deleting its product; the dismissed action is recorded.
 - Deleting a reported product through moderation preserves report records and records the moderation action.
 - The canonical list of report reasons and any additional allowed transitions are governed by the database and API specification.
+- Dismiss and moderation delete run inside database functions `admin_dismiss_report` and `admin_delete_product` (migration `0005_moderation_logs.sql`), so the report status change, product deletion, and moderation-log insert succeed or fail together. Image files are removed from Storage only after the function succeeds.
+- Because `(product_id, reporter_id)` is unique, a member whose report was dismissed cannot report the same product again.
+- When an owner deletes their own listing (`DELETE /products/:id`), its pending reports are not actioned automatically; they remain `pending` with `product_id = NULL` until an administrator dismisses them.
 
 ### Appendix D — Account input constraints
 
