@@ -63,17 +63,17 @@
 | TASK-06 | 1 | BE Lead | High | 13–26 ก.ย. | Done | On time |
 | TASK-07 | 1 | FE Lead | Medium | 14–27 ก.ย. | Done | 03/09/2026 |
 | TASK-08 | 1 | FE Dev | High | 15–28 ก.ย. | Done | 09/11/2026 |
-| TASK-09 | 1 | BE Dev | High | 27 ก.ย.–01 ต.ค. | Done | 25/10/2026 |
+| TASK-09 | 1 | BE Dev | High | 27 ก.ย.–01 ต.ค. | Done | 27/10/2026 |
 | TASK-10 | 1 | FE Lead | High | 28 ก.ย.–02 ต.ค. | Done | 03/09/2026 |
 | TASK-11 | 1 | QA | Medium | 29 ก.ย.–02 ต.ค. | Done | 12/11/2026 |
-| TASK-12 | 2 | BE Dev | High | 03–08 ต.ค. | Done | 30/10/2026 |
+| TASK-12 | 2 | BE Dev | High | 03–08 ต.ค. | Done | 01/11/2026 |
 | TASK-13 | 2 | FE Dev | High | 04–09 ต.ค. | Done | 09/11/2026 |
 | TASK-14 | 2 | FE Dev | Medium | 09–11 ต.ค. | Done | 09/11/2026 |
 | TASK-15 | 2 | BE Lead | Medium | 10–14 ต.ค. | Done | 05/11/2026 |
 | TASK-16 | 2 | FE Lead | Medium | 11–15 ต.ค. | Done | 03/09/2026 |
 | TASK-17 | 2 | FE Dev | Low | 14–17 ต.ค. | Done | 09/11/2026 |
 | TASK-18 | 2 | FE Lead | Medium | 15–17 ต.ค. | Done | 11/11/2026 |
-| TASK-19 | 3 | BE Dev | Medium | 18–22 ต.ค. | Done | 02/11/2026 |
+| TASK-19 | 3 | BE Dev | Medium | 18–22 ต.ค. | Done | 06/11/2026 |
 | TASK-20 | 3 | FE Dev | Medium | 20–25 ต.ค. | Done | 09/11/2026 |
 | TASK-21 | 3 | QA | High | 24–30 ต.ค. | Done | 12/11/2026 |
 | TASK-22 | 3 | Devs ทั้งหมด | High | 27 ต.ค.–01 พ.ย. | Done | No Bug Fixing |

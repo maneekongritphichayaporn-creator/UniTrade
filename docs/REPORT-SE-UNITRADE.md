@@ -431,7 +431,7 @@ flowchart LR
 | สร้างประกาศ | parse multipart → validate fields/images → insert product → upload files → insert image rows → map detail | ถ้าขั้น upload/insert image ล้มเหลว พยายาม cleanup files และ product |
 | จัดการประกาศ | หาและตรวจเจ้าของ → validate body → update/delete | non-owner ได้ 403; image edit ไม่รองรับ |
 | รายงานสินค้า | ตรวจ token → ตรวจสินค้า → กัน self-report/duplicate → insert pending report | ใช้เหตุผลจาก enum ที่กำหนด |
-| Admin moderation | ตรวจ token/role → ทำรายการ/ยกเลิกรายงาน/ลบสินค้าแบบ atomic → บันทึก log → cleanup รูป | เฉพาะ admin; ลบ report/product ใน transaction ตาม migration function |
+| Admin moderation | ตรวจ token/role → ทำรายการ/ยกเลิกรายงาน/ลบสินค้าแบบ atomic → บันทึก log → cleanup รูป | เฉพาะ admin; เปลี่ยนรายงาน pending เป็น `actioned` + ลบสินค้า + บันทึก log ใน transaction เดียว (function ใน migration `0005`) โดยไม่ลบรายงาน |
 
 ### 4.3.3 Use Case Diagram
 
@@ -814,8 +814,8 @@ flowchart LR
 |---|---|---|
 | `npm.cmd test` | ผ่านทั้งหมด | ผ่านทั้งหมด(63/63); [test report](docs/TEST_REPORT.md) |
 | `npm.cmd run build` | สามารถทำงานได้ | ระบบผ่านทั้งหมด; [test report](docs/TEST_REPORT.md) |
-| `npm run test:api` | ผ่านเฉพาะเคสที่รัน: Requests 80 (ผ่าน 67, ข้าม 13), Tests 69/69, Assertions 0/0, ใช้เวลา 42.89 วินาที  | [test report](docs/TEST_REPORT.md)|
-| Integration กับ Supabase จริง | ยังไม่ยืนยัน | test:api ผ่าน Tests 69/69 และเคสลบสินค้าพร้อมไฟล์ใน Storage ตอบ 204 สำเร็จ แต่ยังไม่ได้ตรวจข้อมูลใน Supabase Dashboard |
+| `npm run test:api` | ผ่านเฉพาะเคสที่รัน: Requests 80 (ผ่าน 67, ข้าม 13), Tests 69/69, Assertions 0/0, ใช้เวลา 42.89 วินาที  | [test report](docs/TEST_REPORT.md); 13 เคสที่ข้ามคือ request ฝั่ง admin (67–79) ซึ่งจะข้ามเองเมื่อไม่มีบัญชี admin ใน `bruno/.env`; การรันแบบมีบัญชี admin เมื่อ 5 พ.ย. 2569: Requests 80 (ผ่าน 79, ข้าม 1), Tests 81/81 ([TASK-19-CHANGELOG](TASK-19-CHANGELOG.md)) |
+| Integration กับ Supabase จริง | ยังไม่ยืนยัน | test:api ผ่าน Tests 69/69 และเคสลบสินค้าพร้อมไฟล์ใน Storage ตอบ 204 สำเร็จ แต่ยังไม่ได้ตรวจข้อมูลใน Supabase Dashboard; ส่วน Report/Admin (TASK-19) ตรวจด้วย SQL บน Supabase แล้วเมื่อ 5 พ.ย. 2569: `moderation_logs` บันทึก 2 แถวต่อรอบ (`dismiss_report`, `delete_product`) และไม่มีไฟล์ค้างใน bucket `product-images` |
 | UAT (US-01–US-06) | ผ่านทั้งหมดตามคำยืนยันจากทีม (6/6) | ไม่มีแบบประเมินรายบุคคล วันทดสอบ จำนวน/บทบาทผู้ทดสอบ หรือ environment ประกอบ; ดู [แบบฟอร์มและผลสรุป UAT](UAT-UNITRADE.md) |
 | คะแนนความพึงพอใจ | [ไม่มีข้อมูลคะแนน] | การยืนยันว่าผ่าน UAT ไม่ใช่คะแนนความพึงพอใจ |
 | Performance / 50 concurrent users | ระบบสามารถตอบสนองการเรียกใช้งานพร้อมกัน 50 concurrent โดยไม่มี Server Crash | ทั้งหมดทดสอบ local ใช้ bruno; [test report](docs/TEST_REPORT.md) |
@@ -933,7 +933,7 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 | **วัชรินทร์ คงเซ็น** | QA / Software Tester | • กำหนดกลยุทธ์การทดสอบระบบ (Testing Strategy) และจัดทำแผนการทดสอบ (Test Plan)<br>• เขียนชุดกรณีทดสอบ (Test Cases) สำหรับตรวจสอบความถูกต้องของฟังก์ชันต่างๆ<br>• ดำเนินการทดสอบระบบผ่าน Bruno API Collection และทดสอบการใช้งานหน้าจอจริง (Manual Testing) พร้อมบันทึกผล | [เว้นไว้รอข้อมูล] |
 | **[เว้นไว้รอข้อมูล: @wz]** | Backend Lead | • ออกแบบและดูแลสถาปัตยกรรมโครงสร้างหลังบ้าน (Backend Architecture & Core Libraries)<br>• ตั้งค่าและจัดการฐานข้อมูล Supabase (Migrations & Database Setup)<br>• พัฒนาระบบความปลอดภัยและการยืนยันตัวตน (Authentication & JWT / Route Guards) พร้อมทั้งรีวิวโค้ด (PR Review) | [เว้นไว้รอข้อมูล] |
 | **[เว้นไว้รอข้อมูล: @yat]** | Frontend Lead | • ออกแบบและกำหนดโครงสร้างโค้ดฝั่งหน้าบ้านด้วย Next.js 15 App Router<br>• พัฒนาหน้าจอหลักของแพลตฟอร์ม เช่น หน้าแรก (Home Page), ระบบแสดงผลตารางรายการสินค้า (Product Card Grid), และระบบค้นหา<br>• ควบคุมมาตรฐานการเขียนโค้ดและเชื่อมต่อ API ฝั่ง Frontend | [เว้นไว้รอข้อมูล] |
-| **[เว้นไว้รอข้อมูล: @SArunPoB]** | Backend Developer | • พัฒนา API สำหรับการเรียกดูข้อมูลสินค้า (Product Read API - TASK-09)<br>• พัฒนาระบบจัดการข้อมูลสินค้าแบบครบวงจร (CRUD) และระบบอัปโหลดไฟล์รูปภาพขึ้น Supabase Storage (TASK-12)<br>• เขียนชุดทดสอบ API (Bruno Requests) และร่วมแก้ไขข้อผิดพลาดทางเทคนิค | [เว้นไว้รอข้อมูล] |
+| **ศรัณย์ภพ พิบูลธนาวนิช** | Backend Developer | • พัฒนา API เรียกดูสินค้า หมวดหมู่ และจุดนัดรับ พร้อมการค้นหา กรอง เรียงลำดับ และแบ่งหน้า (Product Read API - TASK-09) ซึ่งโค้ดค้นหา/กรองถูกนำไปใช้ต่อใน TASK-15<br>• พัฒนาระบบจัดการข้อมูลสินค้าแบบครบวงจร (CRUD) เปลี่ยนสถานะ และตรวจ/อัปโหลดไฟล์รูปภาพขึ้น Supabase Storage (TASK-12)<br>• พัฒนา API รายงานสินค้าและการจัดการของผู้ดูแลระบบ (Report & Admin Moderation) พร้อมตัวตรวจสิทธิ์ `requireAdmin` และ migration `0005` (ตาราง `moderation_logs` และ function แบบ atomic) (TASK-19)<br>• เขียน unit test ชุดทดสอบ API (Bruno Requests) และ Postman Collection สำหรับหน้า Admin Dashboard | **ยืนยัน** |
 | **[เว้นไว้รอข้อมูล: @warixm]** | Frontend Developer | • พัฒนาหน้าจอระบบสมาชิก (Login / Register / Profile)<br>• พัฒนาระบบฟอร์มสำหรับลงประกาศขายสินค้าและแก้ไขข้อมูล (Listing Create & Edit Forms)<br>• พัฒนาหน้าแดชบอร์ดสำหรับผู้ดูแลระบบ (Admin Dashboard) และหน้าจัดการสถานะสินค้า | [เว้นไว้รอข้อมูล] |
 
 **เมื่อยืนยันครบให้นำคอลัมม์ยืนยันออก**
