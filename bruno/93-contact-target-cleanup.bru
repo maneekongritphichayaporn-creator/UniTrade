@@ -1,0 +1,21 @@
+meta {
+  name: Contact target - cleanup
+  type: http
+  seq: 93
+}
+
+delete {
+  url: {{baseUrl}}/products/{{contact_product_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("204 product and its Storage files removed", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

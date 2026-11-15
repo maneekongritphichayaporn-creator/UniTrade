@@ -1,0 +1,22 @@
+meta {
+  name: Contact - owner views own listing
+  type: http
+  seq: 83
+}
+
+get {
+  url: {{baseUrl}}/products/{{contact_product_id}}/contact
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("200, the owner may see their own contact", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().seller.user_id).to.equal(bru.getVar("contact_seller_id"));
+  });
+}

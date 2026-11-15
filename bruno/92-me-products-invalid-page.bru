@@ -1,0 +1,23 @@
+meta {
+  name: My products - invalid page
+  type: http
+  seq: 92
+}
+
+get {
+  url: {{baseUrl}}/me/products?page=0
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("422 VALIDATION_ERROR on page", function () {
+    expect(res.getStatus()).to.equal(422);
+    expect(res.getBody().error.code).to.equal("VALIDATION_ERROR");
+    expect(res.getBody().error.field).to.equal("page");
+  });
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Contact - after delete
+  type: http
+  seq: 94
+}
+
+get {
+  url: {{baseUrl}}/products/{{contact_product_id}}/contact
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("404 PRODUCT_NOT_FOUND", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error.code).to.equal("PRODUCT_NOT_FOUND");
+  });
+}
