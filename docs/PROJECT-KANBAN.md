@@ -1,13 +1,14 @@
 # UniTrade Project Kanban & Task Tracker
 
-**วันที่จัดทำ/ปรับสถานะ:** 13 พฤศจิกายน 2569
-**ฐานเวลา:** 1 ก.ย. - 17 พ.ย. 2569  
-**สถานะงาน:** TASK 01-23 are Done, 24-25 On Time.
+**วันที่จัดทำ/ปรับสถานะ:** 15 พฤศจิกายน 2569 <br>
+**ฐานเวลา:** 1 ก.ย. - 17 พ.ย. 2569  <br>
+**สถานะงาน:** TASK-01–24 Done; TASK-25 In Process (ตามกำหนด) <br>
+**Sheet:** [`Sheet Task Tracker`](https://docs.google.com/spreadsheets/d/1Zd48QRtN8vJbLhxd-7AXXygIyoLGOJxakk_m_XJarhU/edit?usp=sharing)
 
 
 ## Kanban board
 
-### Done — 25 งาน
+### Done — 24 งาน
 
 - **TASK-01 — Planning:** กำหนดการ, UI details และ SRS v1.0 · Sprint 0 · 01–05 ก.ย. · PM/BA · High
 - **TASK-02 — UI/UX:** Wireframe และ High-Fidelity UI · Sprint 0 · 06–10 ก.ย. · SA/UI · High
@@ -38,16 +39,19 @@
 - **TASK-21 — Integration & System Testing:** QA · Sprint 3 · 24–30 ต.ค. · High  
   **Done: 12/11/2026**
 - **TASK-22 — Bug Fixing:** Developers ทั้งหมด · Sprint 3 · 27 ต.ค.–01 พ.ย. · High  
-  **Done: ไม่มี bug ที่ต้องแก้**
+  **Done per tracker: ไม่มี bug ที่ต้องแก้; QA report ยังระบุ TC-PROD-044 เป็น FAIL และต้องยืนยัน disposition/retest**
 
-### Done — Deployment, Final Polish และ Presentation
+### Done — Deployment และ Final Polish
 
 - **TASK-23 — Deployment:** Deploy Frontend ไป Vercel และเชื่อม Domain/DB · Sprint 4 · 02–05 พ.ย. · FE Lead · High  
   **Done: 14/11/2026**
 - **TASK-24 — Final Polish:** รวบรวมรายงานโครงการ 5 บทฉบับสมบูรณ์ · Sprint 4 · 03–10 พ.ย. · QA · High  
   **Done: 15/11/2026**
+
+### In Process — 1 งาน
+
 - **TASK-25 — Presentation:** สไลด์และบททดสอบ Demo · Sprint 4 · 09–17 พ.ย. · PM/BA · High  
-  **Done: On time**
+  **สถานะ ณ 15/11/2026: In Process · ยังอยู่ในกำหนดส่ง 17/11/2026**
 
 ## Master task register
 
@@ -61,25 +65,25 @@
 | TASK-04 | 0 | BE Lead | High | 08–10 ก.ย. | Done | On time |
 | TASK-05 | 0 | BE Lead | High | 09–12 ก.ย. | Done | On time |
 | TASK-06 | 1 | BE Lead | High | 13–26 ก.ย. | Done | On time |
-| TASK-07 | 1 | FE Lead | Medium | 14–27 ก.ย. | Done | 03/09/2026 |
+| TASK-07 | 1 | FE Lead | Medium | 14–27 ก.ย. | Done | 04/11/2026 |
 | TASK-08 | 1 | FE Dev | High | 15–28 ก.ย. | Done | 09/11/2026 |
 | TASK-09 | 1 | BE Dev | High | 27 ก.ย.–01 ต.ค. | Done | 27/10/2026 |
-| TASK-10 | 1 | FE Lead | High | 28 ก.ย.–02 ต.ค. | Done | 03/09/2026 |
+| TASK-10 | 1 | FE Lead | High | 28 ก.ย.–02 ต.ค. | Done | 04/11/2026 |
 | TASK-11 | 1 | QA | Medium | 29 ก.ย.–02 ต.ค. | Done | 12/11/2026 |
 | TASK-12 | 2 | BE Dev | High | 03–08 ต.ค. | Done | 01/11/2026 |
 | TASK-13 | 2 | FE Dev | High | 04–09 ต.ค. | Done | 09/11/2026 |
 | TASK-14 | 2 | FE Dev | Medium | 09–11 ต.ค. | Done | 09/11/2026 |
 | TASK-15 | 2 | BE Lead | Medium | 10–14 ต.ค. | Done | 05/11/2026 |
-| TASK-16 | 2 | FE Lead | Medium | 11–15 ต.ค. | Done | 03/09/2026 |
+| TASK-16 | 2 | FE Lead | Medium | 11–15 ต.ค. | Done | 04/11/2026 |
 | TASK-17 | 2 | FE Dev | Low | 14–17 ต.ค. | Done | 09/11/2026 |
 | TASK-18 | 2 | FE Lead | Medium | 15–17 ต.ค. | Done | 11/11/2026 |
 | TASK-19 | 3 | BE Dev | Medium | 18–22 ต.ค. | Done | 06/11/2026 |
 | TASK-20 | 3 | FE Dev | Medium | 20–25 ต.ค. | Done | 09/11/2026 |
 | TASK-21 | 3 | QA | High | 24–30 ต.ค. | Done | 12/11/2026 |
-| TASK-22 | 3 | Devs ทั้งหมด | High | 27 ต.ค.–01 พ.ย. | Done | No Bug Fixing |
-| TASK-23 | 4 | FE Lead | High | 02–05 พ.ย. | Done | 14/11/2026 |
-| TASK-24 | 4 | QA | High | 03–10 พ.ย. | In Process | 15/11/2026 |
-| TASK-25 | 4 | PM/BA | High | 09–17 พ.ย. | In Process | On time |
+| TASK-22 | 3 | Devs ทั้งหมด | High | 27 ต.ค.–01 พ.ย. | Done (tracker; follow-up open) | TC-PROD-044 disposition/retest needed |
+| TASK-23 | 4 | FE Lead | High | 02–05 พ.ย. | Done (tracker) | 14/11/2026; production URL/smoke-test evidence not recorded here |
+| TASK-24 | 4 | QA | High | 03–10 พ.ย. | Done | 15/11/2026 |
+| TASK-25 | 4 | PM/BA | High | 09–17 พ.ย. | In Process | Due 17/11/2026 |
 
 ## Sprint timeline: baseline
 
@@ -119,7 +123,7 @@
 
 - การทำงานร่วมกันแบบยืดหยุ่น (Agile Mindset): ทีมตระหนักว่าความสำเร็จไม่ได้มาจากการทำตามแผนกระดาษอย่างเคร่งครัด แต่มาจากการที่ทีมพร้อมปรับตัว (Adaptability) ยืดหยุ่นตามสถานการณ์จริง และช่วยเหลือกันข้ามตำแหน่งงานเมื่อเกิดปัญหา
 
-1. **บทเรียนในระดับบุคคล (Individual-Level Lessons)**
+2. **บทเรียนในระดับบุคคล (Individual-Level Lessons)**
 - การบริหารเวลาส่วนตัวและการจัดการงาน (Personal Time Management & Prioritization): สมาชิกแต่ละคนได้พัฒนาทักษะการจัดลำดับความสำคัญระหว่างภาระกิจส่วนตัวและการทำงานเป็นทีม และประเมินกำลังของตนตามความเป็นจริง (Realistic Estimation) และบริหารคาดการณ์การทำงานของผู้อื่นอย่างมีประสิทธิภาพ
 
 - ความรับผิดชอบร่วมกัน (Collective Accountability & Empathy): การเผชิญอุปสรรคร่วมกันทำให้สมาชิกเข้าใจปัญหาของเพื่อนร่วมทีมมากขึ้น เกิดความเห็นอกเห็นใจ (Empathy) และความรับผิดชอบที่ไม่ได้มองแค่งานของตนเอง แต่มองภาพรวมของความสำเร็จในทีม
