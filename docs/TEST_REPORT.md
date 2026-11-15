@@ -5,7 +5,7 @@
 |---|---|
 | โครงการ | UniTrade (Campus Marketplace Platform) |
 | เอกสารอ้างอิง |[SRS-UNITRADE-v2.2.md](docs/SRS-UNITRADE-v2.2.md)|
-| ชีตทดสอบ | [UniTrand_TASK-21](docs/UniTrade_TASK-11_Test_Cases.xlsx) (135 เคส: Authentication 31, Product Read 44, Self 20, Admin and Report 11) |
+| ชีตทดสอบ | [https://docs.google.com/spreadsheets/d/1KSRb8gmezWg_BF_ALDlOLOqiiTT72ipHCiIDPhfskDI/edit?gid=1287960581#gid=1287960581] (135 เคส: Authentication 31, Product Read 44, Self 20, Admin and Report 11) |
 | ขอบเขตที่ทดสอบ | ทดสอบทุก FR- 1-10 และ NFR ยกเว้น FR-8  |
 | สภาพแวดล้อมที่ทดสอบ | localhost dev server, Chrome 157.0.8103.52 |
 | เครื่องมือ | Chrome DevTools, VS code, Bruno |
