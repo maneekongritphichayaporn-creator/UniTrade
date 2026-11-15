@@ -846,10 +846,10 @@ flowchart LR
 | Product create/edit/delete/status API | มี | Unit tests; Bruno requests มี | พัฒนาแล้ว; API tests ล่าสุดรอยืนยัน |
 | Layout / Home / Search UI | มี | Build ผ่าน; บันทึก manual test ใน frontend notes | พัฒนาแล้ว |
 | Product detail UI | มี | Build ผ่าน; manual test ตาม notes | พัฒนาแล้ว |
-| Seller contact | มี (UI + API) | Unit tests; Bruno 80–88, 93–94 ผ่าน (15 พ.ย. 2569) | พัฒนาแล้ว |
+| Seller contact | มี (UI + `GET /products/:id/contact`) | Unit tests; Bruno 81–87, 94 ผ่าน (15 พ.ย. 2569) | พัฒนาแล้ว |
 | Register/Profile UI | ไม่ครบ | — | ยังไม่ครบ |
 | Listing create/edit UI | ยังไม่พบ | — | ยังไม่พัฒนา |
-| My listings/status | มี (UI, `GET /me/products`, status API) | Unit tests; Bruno 34–35, 89–92 ผ่าน (15 พ.ย. 2569) | พัฒนาแล้ว |
+| My listings/status | มี (UI, `GET /me/products`, status API) | Unit tests; Bruno 34–35 และ 89–92 ผ่าน (15 พ.ย. 2569) | พัฒนาแล้ว |
 | Wishlist | Schema มี; API/UI ยังไม่พบ | — | ยังไม่พัฒนา |
 | Report/Admin API | มี | Unit tests; Bruno collection มี; ผลล่าสุดรอยืนยัน | พัฒนาแล้ว |
 | Admin Dashboard UI | ยังไม่พบ | — | ยังไม่พัฒนา |
