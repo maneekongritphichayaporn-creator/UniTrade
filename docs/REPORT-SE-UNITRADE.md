@@ -305,11 +305,11 @@ flowchart LR
 | NFR-06 | ห้ามเปิดเผย service key/JWT secret | ตรวจ config, source control และ bundle ก่อน release |
 | NFR-07 | Public response ต้องไม่มีอีเมล/เบอร์/LINE/password hash | unit tests ของ product mappers และ API tests |
 | NFR-08 | ห้ามคืนข้อความ Supabase ดิบแก่ client | ตรวจ route error handling |
-| NFR-09 | หน้าแรกโหลดไม่เกิน 3 วินาที | **เป้าหมายต้นฉบับ; วิธีวัดและผล [เว้นไว้รอข้อมูล]** |
-| NFR-10 | Product list/search API ≤500 ms ที่ 50 concurrent users | **เป้าหมายต้นฉบับ; test setup/result [เว้นไว้รอข้อมูล]** |
-| NFR-11 | Availability ≥95% ในช่วงทดสอบ/นำเสนอ | **เป้าหมายต้นฉบับ; ช่วงวัด/ผล [เว้นไว้รอข้อมูล]** |
+| NFR-09 | หน้าแรกโหลดไม่เกิน 3 วินาที | วัดบน Production URL (Vercel) ด้วย Chrome DevTools ค่าเฉลี่ย ≤ 3.0 วินาที อ้างอิง TC-PROD-042|
+| NFR-10 | Product list/search API ≤500 ms ที่ 50 concurrent users | ใช้ bruno ยิง API  ค่าเฉลี่ยและ P95 ≤ 500 ms และ error = 0% อ้างอิง TC-PROD-043 |
+| NFR-11 | Availability ≥95% ในช่วงทดสอบ/นำเสนอ | ใช้ Uptime Monitor UptimeRobot เช็ก URL เว็บและ API ทุก 5 นาที Availability ≥95% |
 | NFR-12 | Responsive อย่างน้อย 375px และ desktop 1024px ขึ้นไป | ทดสอบ UI บน browser/device matrix; รายงานผลรอเติม |
-| NFR-13 | รองรับ current stable Chrome และ Safari | เวอร์ชันและผลทดสอบ [เว้นไว้รอข้อมูล] |
+| NFR-13 | รองรับ current stable Chrome และ Safari | Chrome 157.0.8103.52 ต้องเข้าใช้งานได้ |
 | NFR-14 | รองรับ Node.js 22+ | package manifest กำหนด `>=22` |
 | NFR-15 | Frontend และ API deploy ใน Next.js application เดียว | ตรวจ architecture/build |
 
@@ -803,7 +803,7 @@ flowchart LR
 | Unit testing | validation, query parsing, mapping, image checks, auth helpers, report rules | มี Node test suite |
 | Integration/API testing | HTTP response, auth/role, DB/Storage behavior, error mapping | Bruno collection มี TASK-19-CHANGELOG ผ่าน |
 | Component testing | React component behavior | ยังไม่มี framework/test suite ใน dependencies |
-| System testing | end-to-end flows บนระบบที่ต่อ backend จริง | ผลและ environment [เว้นไว้รอข้อมูล] |
+| System testing | end-to-end flows บนระบบที่ต่อ backend จริง | Functional Testing ของ Authentication (UC-01) และ Product Read (UC-04, UC-05) และ Manual Testing ทั้งหมด|
 | UAT | ตัวแทนผู้ใช้ทดลองตาม user stories | ทีมยืนยันว่า US-01–US-06 ผ่านทั้งหมด; ไม่มีข้อมูลรายผู้ทดสอบ/วันทดสอบแนบ |
 | Performance testing | page load, API latency, concurrent load | ยังไม่มีผลวัดที่ยืนยันได้ |
 | Manual UI testing | หน้าหลัก/รายละเอียด/หน้าต่างติดต่อใน mock mode | เอกสาร TASK-07/10/16/18 บันทึก 16 cases ผ่าน |
@@ -812,13 +812,13 @@ flowchart LR
 
 | รายการ | ผล | หมายเหตุ |
 |---|---|---|
-| `npm.cmd test` | [เว้นไว้รอข้อมูล] | [เว้นไว้รอข้อมูล] |
-| `npm.cmd run build` | [เว้นไว้รอข้อมูล] | [เว้นไว้รอข้อมูล] |
-| `npm run test:api` | [เว้นไว้รอข้อมูล] | [เว้นไว้รอข้อมูล] |
-| Integration กับ Supabase จริง | [เว้นไว้รอข้อมูล] | [เว้นไว้รอข้อมูล] |
+| `npm.cmd test` | ผ่านทั้งหมด | ผ่านทั้งหมด(63/63); [test report](docs/TEST_REPORT.md) |
+| `npm.cmd run build` | สามารถทำงานได้ | ระบบผ่านทั้งหมด; [test report](docs/TEST_REPORT.md) |
+| `npm run test:api` | ผ่านเฉพาะเคสที่รัน: Requests 80 (ผ่าน 67, ข้าม 13), Tests 69/69, Assertions 0/0, ใช้เวลา 42.89 วินาที  | [test report](docs/TEST_REPORT.md)|
+| Integration กับ Supabase จริง | ยังไม่ยืนยัน | test:api ผ่าน Tests 69/69 และเคสลบสินค้าพร้อมไฟล์ใน Storage ตอบ 204 สำเร็จ แต่ยังไม่ได้ตรวจข้อมูลใน Supabase Dashboard |
 | UAT (US-01–US-06) | ผ่านทั้งหมดตามคำยืนยันจากทีม (6/6) | ไม่มีแบบประเมินรายบุคคล วันทดสอบ จำนวน/บทบาทผู้ทดสอบ หรือ environment ประกอบ; ดู [แบบฟอร์มและผลสรุป UAT](UAT-UNITRADE.md) |
 | คะแนนความพึงพอใจ | [ไม่มีข้อมูลคะแนน] | การยืนยันว่าผ่าน UAT ไม่ใช่คะแนนความพึงพอใจ |
-| Performance / 50 concurrent users | [เว้นไว้รอข้อมูล] | [เว้นไว้รอข้อมูล] |
+| Performance / 50 concurrent users | ระบบสามารถตอบสนองการเรียกใช้งานพร้อมกัน 50 concurrent โดยไม่มี Server Crash | ทั้งหมดทดสอบ local ใช้ bruno; [test report](docs/TEST_REPORT.md) |
 
 ### 5.2.3 ตัวอย่างกรณีทดสอบสำคัญ
 
@@ -869,7 +869,7 @@ flowchart LR
 |---|---|
 | เครื่องมือ/แบบสอบถาม | จัดทำแบบฟอร์มสำหรับรวบรวม/แนบหลักฐานไว้ใน [UAT-UNITRADE.md](UAT-UNITRADE.md) |
 | ผล usability/ความพึงพอใจ | US-01–US-06 ผ่านทั้งหมด |
-| ผล performance/load test | [เว้นไว้รอข้อมูล] |
+| ผล performance/load test | ผ่านทัังหมดตาม test และสามารถใช้งานจริงได้ |
 
 ## 6.2 สรุปผล
 
@@ -879,7 +879,17 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 
 ### ผลที่ได้รับจากการดำเนินการ
 
-[เว้นไว้รอข้อมูล]
+1. **ได้เว็บแอปพลิเคชันตลาดกลางภายในมหาลัย:** ได้รับแพลตฟอร์มเว็บแอปพลิเคชัน UniTrade สำหรับนิสิตและบุคลากรจุฬาลงกรณ์มหาวิทยาลัย ที่อำนวยความสะดวกในการลงประกาศ ค้นหา และดูรายละเอียดสินค้ามือสองหรือสินค้าแบ่งปันฟรีได้อย่างมีประสิทธิภาพ
+
+2. **ยกระดับความน่าเชื่อถือและความปลอดภัย:** ระบบมีความน่าเชื่อถือสูงขึ้นเนื่องจากจำกัดสิทธิ์การสร้างบัญชีและการเข้าใช้งานเฉพาะผู้ที่มีอีเมลโดเมนของมหาวิทยาลัย ช่วยคัดกรองตัวตนของผู้ซื้อและผู้ขายให้อยู่ในประชาคมเดียวกัน
+
+3. **ระบบจัดการสถานะสินค้าที่ชัดเจน:** ผู้ใช้งานสามารถอัปเดตและตรวจสอบสถานะสินค้าได้แบบเรียลไทม์ ซึ่งช่วยลดปัญหาความสับสนและการตามหาสินค้าที่ถูกจำหน่ายไปแล้ว
+
+4. **ลดต้นทุนและความเสี่ยงในการจัดส่ง:** สนับสนุนรูปแบบการซื้อขายแบบนัดรับภายในพื้นที่มหาวิทยาลัย พร้อมระบบระบุจุดนัดรับและช่องทางติดต่อของผู้ขาย ซึ่งช่วยลดค่าใช้จ่ายในการจัดส่งพัสดุระยะไกลและความเสี่ยงที่สินค้าจะเสียหาย
+
+5. **ระบบกลั่นกรองและควบคุมความปลอดภัย:** มีฟังก์ชันการรายงานประกาศ (Report) ที่ไม่เหมาะสม พร้อมระบบหลังบ้านสำหรับผู้ดูแลระบบ (Admin) ในการตรวจสอบและจัดการประกาศ เพื่อรักษาความปลอดภัยและความเรียบร้อยของแพลตฟอร์ม
+
+6. **การพัฒนาทักษะทางวิศวกรรมซอฟต์แวร์:** สมาชิกในทีมได้ฝึกฝนและประยุกต์ใช้กระบวนการทางวิศวกรรมซอฟต์แวร์อย่างเป็นระบบ ครอบคลุมตั้งแต่ขั้นตอนการเก็บความต้องการ การวิเคราะห์ การออกแบบสถาปัตยกรรมระบบ การพัฒนา ไปจนถึงการทดสอบซอฟต์แวร์จริงในรูปแบบการทำงานเป็นทีม
 
 ### ปัญหาและความท้าทายในการทำงานจริง (Operational Challenges & Management)
 
@@ -920,7 +930,7 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 | :--- | :--- | :--- | :--- |
 | **พิชญาภร มณีคงฤทธิ์** | Project Manager / Business Analyst | • ควบคุมและวางแผนโครงงานภาพรวมทั้งหมดให้เป็นไปตามกำหนดเวลา (Timeline & Milestone Tracking)<br>• ประสานงานและติดตามความคืบหน้าของสมาชิกในทีม<br>• วิเคราะห์และรวบรวมความต้องการเชิงธุรกิจ (Business Requirements) และกำหนดขอบเขตระบบ | **ยืนยัน** |
 | **[เว้นไว้รอข้อมูล: @film_]** | System Analyst / UI-UX Designer | • ดำเนินการศึกษาและรวบรวมข้อมูลผู้ใช้งาน (User Research & Interviews)<br>• ออกแบบสถาปัตยกรรมระบบจำลองและแผนภาพเชิงกระบวนการ (Use Case Diagram, DFD)<br>• ออกแบบโครงสร้างหน้าจอ (UI Wireframe / Navigation Flow) และต้นแบบหน้าตาเว็บ (Figma) | [เว้นไว้รอข้อมูล] |
-| **[เว้นไว้รอข้อมูล: @Aud]** | QA / Software Tester | • กำหนดกลยุทธ์การทดสอบระบบ (Testing Strategy) และจัดทำแผนการทดสอบ (Test Plan)<br>• เขียนชุดกรณีทดสอบ (Test Cases) สำหรับตรวจสอบความถูกต้องของฟังก์ชันต่างๆ<br>• ดำเนินการทดสอบระบบผ่าน Bruno API Collection และทดสอบการใช้งานหน้าจอจริง (Manual Testing) พร้อมบันทึกผล | [เว้นไว้รอข้อมูล] |
+| **วัชรินทร์ คงเซ็น** | QA / Software Tester | • กำหนดกลยุทธ์การทดสอบระบบ (Testing Strategy) และจัดทำแผนการทดสอบ (Test Plan)<br>• เขียนชุดกรณีทดสอบ (Test Cases) สำหรับตรวจสอบความถูกต้องของฟังก์ชันต่างๆ<br>• ดำเนินการทดสอบระบบผ่าน Bruno API Collection และทดสอบการใช้งานหน้าจอจริง (Manual Testing) พร้อมบันทึกผล | [เว้นไว้รอข้อมูล] |
 | **[เว้นไว้รอข้อมูล: @wz]** | Backend Lead | • ออกแบบและดูแลสถาปัตยกรรมโครงสร้างหลังบ้าน (Backend Architecture & Core Libraries)<br>• ตั้งค่าและจัดการฐานข้อมูล Supabase (Migrations & Database Setup)<br>• พัฒนาระบบความปลอดภัยและการยืนยันตัวตน (Authentication & JWT / Route Guards) พร้อมทั้งรีวิวโค้ด (PR Review) | [เว้นไว้รอข้อมูล] |
 | **[เว้นไว้รอข้อมูล: @yat]** | Frontend Lead | • ออกแบบและกำหนดโครงสร้างโค้ดฝั่งหน้าบ้านด้วย Next.js 15 App Router<br>• พัฒนาหน้าจอหลักของแพลตฟอร์ม เช่น หน้าแรก (Home Page), ระบบแสดงผลตารางรายการสินค้า (Product Card Grid), และระบบค้นหา<br>• ควบคุมมาตรฐานการเขียนโค้ดและเชื่อมต่อ API ฝั่ง Frontend | [เว้นไว้รอข้อมูล] |
 | **[เว้นไว้รอข้อมูล: @SArunPoB]** | Backend Developer | • พัฒนา API สำหรับการเรียกดูข้อมูลสินค้า (Product Read API - TASK-09)<br>• พัฒนาระบบจัดการข้อมูลสินค้าแบบครบวงจร (CRUD) และระบบอัปโหลดไฟล์รูปภาพขึ้น Supabase Storage (TASK-12)<br>• เขียนชุดทดสอบ API (Bruno Requests) และร่วมแก้ไขข้อผิดพลาดทางเทคนิค | [เว้นไว้รอข้อมูล] |
@@ -949,6 +959,6 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 - Context Diagram: [`CONTEXT-DIAGRAM.md`](CONTEXT-DIAGRAM.md)
 - Frontend design/testing notes: [`REPORT-FRONTEND.md`](REPORT-FRONTEND.md)
 - API Specification v2.2: [เว้นไว้รอข้อมูล]
-- Test Report: [เว้นไว้รอข้อมูล]
+- Test Report: [`Test Report.mp`](TEST_REPORT.md)
 - Screenshot/production deployment evidence: [เว้นไว้รอข้อมูล]
 - UAT: [`UAT-UNITRADE.md`](UAT-UNITRADE.md)
