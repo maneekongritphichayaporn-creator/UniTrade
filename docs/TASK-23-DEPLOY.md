@@ -206,5 +206,6 @@ Vercel → **Deployments** → เลือกตัวที่เคยใช�
 
 ### 7.4 ครั้งต่อไปที่ต้อง redeploy
 
-- หลัง PR #18 (ปิดปุ่มติดต่อผู้ขายเมื่อสินค้า Sold) merge เข้า `main` — ยัตจะ redeploy ตามหัวข้อ 3.2
+- ✅ redeploy แล้ว 16 พ.ย. 2569 หลัง PR #18 (ปิดปุ่มติดต่อผู้ขายเมื่อสินค้า Sold) merge — production อยู่ที่ commit `7371663` ของ `main`
+- ทุกครั้งที่มีโค้ด merge เข้า `main` ต้อง redeploy ตามหัวข้อ 3.2 (ยังไม่ได้ผูก GitHub)
 - ถ้า @wz เปลี่ยน `SUPABASE_SERVICE_ROLE_KEY` หรือ `JWT_SECRET` ต้องแก้ใน Vercel แล้ว redeploy (เปลี่ยน `JWT_SECRET` จะทำให้ทุกคนต้องล็อกอินใหม่)
