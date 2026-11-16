@@ -83,7 +83,7 @@ They focus on the arrangement of interface elements, content sections, and user 
 
 Illustrates the main product browsing page, where users can explore available listings and navigate through product categories.
 
-![Home / Catalog Wireframe](images/uiwireframe/Home-Catalog.png)
+![Home / Catalog Wireframe](images/uiwireframe/Home.png)
 
 ## 3.3 Product Detail
 
@@ -133,7 +133,7 @@ It demonstrates how the wireframe concepts are translated into the actual applic
 
 ## 4.2 Home / Catalog
 
-![Home / Catalog UI](images/uiguideline/Home-Catalog.png)
+![Home / Catalog UI](images/uiguideline/Home.png)
 
 ## 4.3 Product Detail
 
