@@ -10,6 +10,7 @@
 | คณะ / มหาวิทยาลัย | จุฬาลงกรณ์มหาวิทยาลัย |
 | ทีม | VISIT CMU |
 | วันที่จัดทำเอกสาร | 16 พฤศจิกายน 2569 |
+| .md version | [`REPORT-SE-UNITRADE.md`](https://github.com/maneekongritphichayaporn-creator/UniTrade/edit/main/docs/REPORT-SE-UNITRADE.md) |
 | สถานะ | ฉบับสมบูรณ์ |
 
 ## สารบัญ
