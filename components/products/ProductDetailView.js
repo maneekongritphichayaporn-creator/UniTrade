@@ -139,7 +139,7 @@ export function ProductDetailView({ productId }) {
           <p className={styles.posted}>ลงประกาศ {formatRelativeTime(product.created_at)}</p>
 
           <div className={styles.contact}>
-            <ContactSellerButton productId={product.product_id} />
+            <ContactSellerButton productId={product.product_id} sold={product.status === 'sold'} />
             <WishlistButton productId={product.product_id} initialSaved={product.is_wishlisted} />
           </div>
 
