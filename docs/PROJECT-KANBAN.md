@@ -83,7 +83,7 @@
 | TASK-21 | 3 | QA | High | 24–30 ต.ค. | Done | 12/11/2026 |
 | TASK-22 | 3 | Devs ทั้งหมด | High | 27 ต.ค.–01 พ.ย. | Done (tracker; follow-up open) | TC-PROD-044 disposition/retest needed |
 | TASK-23 | 4 | FE Lead | High | 02–05 พ.ย. | Done | 16/11/2026 · unitrade-rouge.vercel.app · smoke test ใน TASK-23-DEPLOY.md §7 |
-| TASK-24 | 4 | QA | High | 03–10 พ.ย. | Done | 15/11/2026 |
+| TASK-24 | 4 | QA | High | 03–10 พ.ย. | Done | 16/11/2026 |
 | TASK-25 | 4 | PM/BA | High | 09–17 พ.ย. | In Process | Due 17/11/2026 |
 
 ## Sprint timeline: baseline
