@@ -45,7 +45,7 @@
 ### Done — Deployment และ Final Polish
 
 - **TASK-23 — Deployment:** Deploy Frontend ไป Vercel และเชื่อม Domain/DB · Sprint 4 · 02–05 พ.ย. · FE Lead · High  
-  **Done: 16/11/2026** — Live Demo unitrade-rouge.vercel.app · ผลตรวจหลัง deploy ใน [`TASK-23-DEPLOY.md`](TASK-23-DEPLOY.md)
+  **Done: 16/11/2026** — Live Demo [https://unitrade-rouge.vercel.app](https://unitrade-rouge.vercel.app) · ผลตรวจหลัง deploy ใน [`TASK-23-DEPLOY.md`](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569)
 - **TASK-24 — Final Polish:** รวบรวมรายงานโครงการ 5 บทฉบับสมบูรณ์ · Sprint 4 · 03–10 พ.ย. · QA · High  
   **Done: 15/11/2026**
 
@@ -82,7 +82,7 @@
 | TASK-20 | 3 | FE Dev | Medium | 20–25 ต.ค. | Done | 09/11/2026 |
 | TASK-21 | 3 | QA | High | 24–30 ต.ค. | Done | 12/11/2026 |
 | TASK-22 | 3 | Devs ทั้งหมด | High | 27 ต.ค.–01 พ.ย. | Done (tracker; follow-up open) | TC-PROD-044 disposition/retest needed |
-| TASK-23 | 4 | FE Lead | High | 02–05 พ.ย. | Done | 16/11/2026 · unitrade-rouge.vercel.app · smoke test ใน TASK-23-DEPLOY.md §7 |
+| TASK-23 | 4 | FE Lead | High | 02–05 พ.ย. | Done | 16/11/2026 · [production site](https://unitrade-rouge.vercel.app) · smoke test ใน [`TASK-23-DEPLOY.md`](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569) |
 | TASK-24 | 4 | QA | High | 03–10 พ.ย. | Done | 16/11/2026 |
 | TASK-25 | 4 | PM/BA | High | 09–17 พ.ย. | In Process | Due 17/11/2026 |
 
