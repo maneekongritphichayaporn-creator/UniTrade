@@ -26,13 +26,13 @@
 
 ## 2. ตัวแปรสภาพแวดล้อมที่ต้องใส่ใน Vercel
 
-ใส่ที่ **Project → Settings → Environment Variables** ติ๊กครบทั้ง 3 สภาพแวดล้อม (Production / Preview / Development) ยกเว้นที่ระบุไว้เป็นอย่างอื่น
+ใส่ที่ **Project → Settings → Environment Variables** ติ๊ก **Production** และ **Preview** (ที่ตั้งจริง 16 พ.ย.) — Development ไม่ต้อง เพราะตอนพัฒนาบนเครื่องใช้ `.env.local`
 
 | ตัวแปร | ค่า | สภาพแวดล้อม | หมายเหตุ |
 |---|---|---|---|
-| `SUPABASE_URL` | `https://kwvefqgipqagfqhibnjv.supabase.co` | ทั้ง 3 | ค่าเดียวกับใน `.env.example` ไม่ใช่ความลับ |
-| `SUPABASE_SERVICE_ROLE_KEY` | secret key จาก Supabase (`sb_secret_…`) | ทั้ง 3 | **ความลับสูงสุด** ขอจาก @wz · ติ๊ก **Sensitive** ตอนใส่ จะได้ไม่ถูกแสดงซ้ำในหน้าเว็บ Vercel |
-| `JWT_SECRET` | ค่าเดียวกับที่ทีมใช้อยู่ | ทั้ง 3 | **ต้องเป็นค่าเดียวกันทุกสภาพแวดล้อม** ไม่งั้น token ที่ออกจาก preview จะใช้กับ production ไม่ได้ · ถ้ายังไม่มี สุ่มด้วย `openssl rand -base64 48` |
+| `SUPABASE_URL` | `https://kwvefqgipqagfqhibnjv.supabase.co` | Production + Preview | ค่าเดียวกับใน `.env.example` ไม่ใช่ความลับ |
+| `SUPABASE_SERVICE_ROLE_KEY` | secret key จาก Supabase (`sb_secret_…`) | Production + Preview | **ความลับสูงสุด** ขอจาก @wz · ติ๊ก **Sensitive** ตอนใส่ จะได้ไม่ถูกแสดงซ้ำในหน้าเว็บ Vercel |
+| `JWT_SECRET` | ค่าเดียวกับที่ทีมใช้อยู่ | Production + Preview | **ต้องเป็นค่าเดียวกันทุกสภาพแวดล้อม** ไม่งั้น token ที่ออกจาก preview จะใช้กับ production ไม่ได้ · ถ้ายังไม่มี สุ่มด้วย `openssl rand -base64 48` |
 | `NEXT_PUBLIC_USE_MOCK_API` | **ไม่ต้องใส่เลย** | — | ถ้าเผลอใส่ `true` บน production เว็บจะแสดงสินค้าปลอม 22 ชิ้นแทนของจริง ปลอดภัยที่สุดคือไม่สร้างตัวแปรนี้บน Vercel |
 
 **ห้ามเด็ดขาด** — อย่าเปลี่ยนชื่อตัวแปรใดให้ขึ้นต้นด้วย `NEXT_PUBLIC_` Next.js จะฝังค่าลงไฟล์ JavaScript ที่ส่งให้เบราว์เซอร์ ซึ่งแปลว่าคีย์ `service_role` ที่ข้ามสิทธิ์ทุกชั้นของฐานข้อมูลจะหลุดให้ใครก็ได้อ่าน (`AGENTS.md` หัวข้อ 4.2 ข้อ 5)
@@ -147,7 +147,7 @@ Vercel → **Deployments** → เลือกตัวที่เคยใช�
 |---|---|---|
 | หน้าเว็บขึ้นแต่สินค้าว่างเปล่า ทั้งที่ฐานข้อมูลมีของ | ตัวแปร Supabase ยังไม่ได้ใส่ หรือใส่แล้วไม่ได้ redeploy | ใส่ให้ครบแล้ว Deployments → Redeploy |
 | เห็นสินค้า 22 ชิ้นเหมือนตอนพัฒนา | `NEXT_PUBLIC_USE_MOCK_API=true` ติดไปบน Vercel | ลบตัวแปรทิ้งแล้ว redeploy |
-| ล็อกอินแล้วเด้งออกทันที หรือ token ใช้ไม่ได้ข้าม preview/production | `JWT_SECRET` คนละค่ากันระหว่างสภาพแวดล้อม | ตั้งให้เป็นค่าเดียวกันทั้ง 3 สภาพแวดล้อม |
+| ล็อกอินแล้วเด้งออกทันที หรือ token ใช้ไม่ได้ข้าม preview/production | `JWT_SECRET` คนละค่ากันระหว่างสภาพแวดล้อม | ตั้งให้เป็นค่าเดียวกันทุกสภาพแวดล้อม |
 | อัปโหลดรูปตอนลงประกาศแล้วได้ 413 | Vercel ปฏิเสธ request body เกิน 4.5 MB ทุกแพ็กเกจ | **ต้องย่อรูปฝั่งเบราว์เซอร์ก่อนส่ง** เป็นงานของ TASK-13 (@warixm) ดู `AGENTS.md` หัวข้อ 8.1 — จะไม่เจอตอนทดสอบบนเครื่องตัวเอง แต่เจอแน่บน production |
 | รูปสินค้าไม่ขึ้น ขึ้นแต่รูปแทน | bucket `product-images` ไม่ได้เป็น public | ตรวจว่า migration `0003_storage.sql` รันแล้ว |
 | หน้าแรกช้าผิดปกติ | Region ของ Vercel อยู่คนละทวีปกับ Supabase | Settings → Functions → เปลี่ยนเป็น Singapore แล้ว redeploy |
