@@ -27,8 +27,8 @@ cp .env.example .env.local
 | คำสั่ง | ใช้ทำอะไร |
 |---|---|
 | `npm run dev` | เปิดเซิร์ฟเวอร์ที่ http://localhost:3000 (API อยู่ที่ `/api/v1`) |
-| `npm test` | unit test (ไม่ต้องต่อฐานข้อมูล) — ต้องผ่าน 17/17 |
-| `npm run test:api` | รัน Bruno collection กับ `npm run dev` ที่เปิดอยู่ — ต้องผ่าน 13/13 |
+| `npm test` | unit test (ไม่ต้องต่อฐานข้อมูล) — ต้องผ่านทุกข้อ |
+| `npm run test:api` | รัน Bruno collection (95 requests) กับ `npm run dev` ที่เปิดอยู่ — ต้องผ่านทุกข้อ · request ฝั่ง admin 13 ข้อ (67–79) ต้องมี `bruno/.env` (ดู `bruno/.env.example`) ไม่งั้นจะถูกข้าม |
 | `npm run build` | ตรวจว่า build ผ่าน — รันก่อนเปิด PR ทุกครั้ง |
 
 ถ้า `npm test` หรือ `npm run test:api` ไม่ผ่านตั้งแต่ยังไม่ได้แก้อะไร ทัก @wz ก่อนเริ่มงาน
@@ -196,10 +196,10 @@ try {
 
 ### เรื่องที่ฝาก BE / ทีม
 
-1. `GET /products/:id/contact` ยังไม่มี (AGENTS.md §11 เขียนว่า out of scope) — หน้ารายละเอียดเรียก endpoint นี้ไว้แล้วและทำงานได้ในโหมด mock
-   ขอให้ @wz บอกว่าจะทำใน task ไหน รูปแบบที่หน้าเว็บรออยู่คือ
-   `{ seller: { full_name, faculty }, channels: [{ type: 'line'|'phone', value, deep_link, is_primary }], pickup_location, safety_note }`
-   (ถ้าส่ง `phone_number` / `line_id` มาตรง ๆ หน้าเว็บก็สร้างลิงก์ LINE/โทรเองได้ รองรับไว้แล้ว)
+1. ~~`GET /products/:id/contact` ยังไม่มี~~ — **ทำแล้ว** (15 พ.ย. โดย @wz) ตอบรูปแบบที่หน้าเว็บรออยู่
+   `{ seller: { user_id, full_name, faculty }, channels: [{ type: 'line'|'phone', value, deep_link, is_primary }], pickup_location, safety_note }`
+   ปุ่มติดต่อผู้ขายจึงใช้กับระบบจริงได้แล้ว และ `GET /me/products` ก็มีแล้ว (`listMyProducts()` เรียกตัวนี้เมื่อไม่ใช่โหมด mock)
+   ดู [CONTACT-MY-PRODUCTS-CHANGELOG.md](CONTACT-MY-PRODUCTS-CHANGELOG.md)
 2. `GET /categories` ส่ง `name` เป็นภาษาอังกฤษ (Textbooks, Apparel, …) หน้าเว็บแปลงเป็นภาษาไทยจาก `category_id`
    ที่ `lib/client/format.js` → `CATEGORY_LABELS_TH` ถ้าอยากให้ API ส่งชื่อไทยมาเลยค่อยคุยกัน
 3. ตอนนี้รูปสินค้าใช้ `<img>` ธรรมดา ถ้าจะเปลี่ยนไปใช้ `next/image` ต้องเพิ่ม `images.remotePatterns` ของโดเมน Supabase ใน `next.config.mjs` — ขอ @wz ก่อน

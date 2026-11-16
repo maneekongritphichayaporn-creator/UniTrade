@@ -2,9 +2,9 @@
 
 Instructions for an AI coding agent working in this repo, on a backend or a frontend task. Read the whole file before writing code.
 Sections 1–6 and 9–11 apply to every task. Sections 7 and 8 are the contracts of the finished backend tasks (TASK-09, TASK-12), kept as reference.
-For any other endpoint, the **API Specification v2.2** (linked from TASK-05 in the team sheet) is the contract. If this file and the spec disagree, follow the spec and tell your human to raise it with @wz.
+For any other endpoint, the **API Specification v2.2** ([`docs/API-SPEC-UNITRADE-v2.2.md`](docs/API-SPEC-UNITRADE-v2.2.md)) is the contract; its "สถานะการพัฒนาเทียบกับ spec" section lists where the code differs from it. If this file and the spec disagree, follow the spec and tell your human to raise it with @wz.
 
-Last updated: 5 Nov 2026 by the Backend Lead (@wz).
+Last updated: 15 Nov 2026 by the Backend Lead (@wz).
 
 ---
 
@@ -40,17 +40,18 @@ If something here is ambiguous, stop and tell your human to ask @wz. Do not inve
 
 | Task | Status |
 |---|---|
-| TASK-04 Database + Supabase setup | Done. Migrations 0001–0005 are applied to the shared Supabase project (0005 is TASK-19's `moderation_logs`, applied 5 Nov; its file reaches `main` with TASK-19). |
+| TASK-04 Database + Supabase setup | Done. Migrations 0001–0005 are applied to the shared Supabase project (0005 is TASK-19's `moderation_logs`, applied 5 Nov). |
 | TASK-05 API spec | Done (v2.2). The contract for every endpoint. |
 | TASK-06 Auth API | Done and tested: register, login, `GET/PATCH /auth/me`, `/faculties`, `requireAuth`, `optionalAuth`. |
 | TASK-09 Product read API | Done (PR #1). Section 7. |
 | TASK-12 Product create/edit/delete + image upload | Done (PR #2). Section 8. |
 | TASK-15 Search & filter (backend) | Done inside TASK-09; Bruno examples 53–63. See `docs/TASK-15-CHANGELOG.md`. |
-| TASK-07, 10, 16, 18 Frontend: layout, home, search/filter UI, product page | Done (PR #3, PR #7). TASK-18's contact button waits for `GET /products/:id/contact` (section 11). |
+| TASK-07, 10, 16, 18 Frontend: layout, home, search/filter UI, product page | Done (PR #3, PR #7). The contact button uses `GET /products/:id/contact`. |
 | TASK-23 Deploy to Vercel | Guide merged (`docs/TASK-23-DEPLOY.md`); not deployed yet. |
-| TASK-08, 13, 14, 17 (@warixm) | In progress on feature branches. |
-| TASK-19 Report + admin (@SArunPoB) | In progress on `feature/TASK-19-admin-reports`. |
-| TASK-11, TASK-20 | Not on GitHub yet (TASK-20 waits for TASK-19). |
+| TASK-08, 13, 14, 17, 20 (@warixm) | Done (PR #10–#14): auth forms, listing form, product status / My Listings, wishlist, admin dashboard. |
+| TASK-19 Report + admin (@SArunPoB) | Done (PR #9). |
+| TASK-11 test cases, TASK-21 test report (@Aud) | Done (PR #15, PR #16): `docs/UniTrade_TASK-11_Test_Cases.xlsx`, `docs/TEST_REPORT.md`. |
+| `GET /products/:id/contact`, `GET /me/products` | Done (15 Nov, @wz): `lib/contact.js`, `lib/my-products.js`, Bruno 80–94. See `docs/CONTACT-MY-PRODUCTS-CHANGELOG.md`. Rate limiting (spec §1.6) is not built. |
 
 The status table in `README.md` is updated more often; check it too.
 
@@ -98,6 +99,7 @@ app/api/v1/auth/{register,login,me}/route.js   TASK-06, done
 app/api/v1/faculties/route.js                  TASK-06, done
 app/api/v1/{categories,pickup-locations}/      TASK-09, done
 app/api/v1/products/...                        TASK-09 (GET) + TASK-12 (POST, PATCH, DELETE, status), done
+app/api/v1/products/[id]/contact, me/products  seller contact (FR-06) and My Listings (UC-03), done
 app/ (outside app/api), components/            frontend pages and components (TASK-07, 10, 16, 18)
 lib/http.js        ok(body, status) · noContent() · ApiError(status, code, message, field?) · route(handler) · readJson(request)
 lib/auth.js        requireAuth(handler) · optionalAuth(handler) · signToken(user) · TOKEN_TTL_SECONDS
@@ -107,11 +109,13 @@ lib/validation.js  user rules (TASK-06)
 lib/users.js       PROFILE_COLUMNS · getUserRow · getProfile
 lib/products.js    PRODUCT_SELECT · parseProductQuery · applyProductFilters · toCard · toDetail (TASK-09, TASK-12)
 lib/product-images.js  validateImages · sniffImageType · removeProductFolder (TASK-12)
+lib/contact.js     CONTACT_SELECT · buildChannels · toContact (GET /products/:id/contact)
+lib/my-products.js MY_PRODUCT_SELECT · parseMyProductsQuery · summarizeStatuses · toMyProductCard (GET /me/products)
 lib/client/        frontend only: api.js request() · session.js / useAuth.js · routes.js · format.js · mock/
 supabase/          migrations + seed.sql (already applied; for reference)
 test/              node:test unit tests
 bruno/             API collection; environments/local.bru sets baseUrl
-docs/              per-task notes (TASK-<n>-CHANGELOG.md) and the deploy guide
+docs/              API spec (API-SPEC-UNITRADE-v2.2.md), SRS, report, test report, per-task notes (TASK-<n>-CHANGELOG.md), deploy guide
 ```
 
 ### 5.1 How a route looks
@@ -154,7 +158,7 @@ These are the codes of TASK-06, TASK-09 and TASK-12. The full catalog, including
 | `INVALID_PAYLOAD` | 400 | Body is not JSON / not multipart when it must be |
 | `UNAUTHORIZED` / `TOKEN_EXPIRED` | 401 | Handled by `requireAuth` |
 | `NOT_OWNER` | 403 | Logged in, but not the listing's seller |
-| `PRODUCT_NOT_FOUND` | 404 | Write routes only (`PATCH`/`DELETE /products/:id`): no product with that id, **or the id is not a valid UUID**. `GET /products/:id` does **not** use it — it answers `200` + `{ "data": [] }` |
+| `PRODUCT_NOT_FOUND` | 404 | Logged-in routes only (`PATCH`/`DELETE /products/:id`, `/contact`, `/wishlist`, `/reports`): no product with that id, **or the id is not a valid UUID**. `GET /products/:id` does **not** use it — it answers `200` + `{ "data": [] }` |
 | `FILE_TOO_LARGE` | 413 | One image > 2 MB, or all images together > 4 MB |
 | `VALIDATION_ERROR` | 422 | Any field or query param fails a rule without a more specific code. Always set `field`. |
 | `NO_IMAGE` | 422 | POST with zero images |
@@ -373,7 +377,7 @@ Response: **204** with no body (`noContent()`).
 
 ### 9.2 Bruno
 
-- Use the next free number, and check open branches too: TASK-19 uses 42–52 and 99, TASK-15 uses 53–63. Existing request 02 registers a user and saves `{{email}}`; 09 logs in and saves `{{token}}`. Requests that run after 09 can use `auth: bearer` with `{{token}}`.
+- Use the next free number (95 and up), and check open branches too: TASK-19 uses 42–52, 64–79 and 99, TASK-15 uses 53–63, contact and My Listings use 80–94. The admin requests (67–79) need `bruno/.env` (see `bruno/.env.example`); without it they are skipped. Existing request 02 registers a user and saves `{{email}}`; 09 logs in and saves `{{token}}`. Requests that run after 09 can use `auth: bearer` with `{{token}}`.
 - For the `NOT_OWNER` cases, register and log in a second user in pre-request or post-response scripts (save it as `token2`), with an email that also starts `bruno.` and ends `@student.chula.ac.th`.
 - Save the created product's id with `bru.setVar("product_id", res.getBody().product_id)`.
 - Multipart syntax (verified against Bruno's parser):
@@ -439,10 +443,10 @@ Every task in the team sheet has an owner (section 2). The task your human gives
 | Item | Owner / status |
 |---|---|
 | Frontend pages and components: `app/` (except `app/api`), `components/`, `lib/client/` | Frontend team (@yat, @warixm). Backend tasks don't edit them. |
-| Report and admin endpoints (spec UC-06, UC-07) | TASK-19, @SArunPoB |
-| Wishlist endpoints (spec UC-05) | TASK-17, @warixm |
-| `GET /products/:id/contact` (spec FR-06) | Needed by TASK-18. **Owner not decided:** ask @wz before building it. |
-| `GET /me/products` (spec UC-03) | Needed by TASK-14. **Owner not decided:** ask @wz before building it. |
+| Report and admin endpoints (spec UC-06, UC-07) | Done in TASK-19 (@SArunPoB) |
+| Wishlist endpoints (spec UC-05) | Done in TASK-17 (@warixm) |
+| `GET /products/:id/contact` (spec FR-06) | Done (15 Nov, @wz) |
+| `GET /me/products` (spec UC-03) | Done (15 Nov, @wz) |
 | Rate limiting, changes to auth | Out of scope unless @wz asks. |
 
 Backend files (`app/api`, backend `lib/*.js`, `supabase/`, `bruno/`) follow sections 4–6 whoever changes them, and @wz reviews them.

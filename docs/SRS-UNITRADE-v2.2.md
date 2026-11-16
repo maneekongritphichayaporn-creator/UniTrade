@@ -5,13 +5,10 @@
 | Document control | Value |
 |---|---|
 | Document version | 2.2 |
-| Status | Submission draft for review; formal approval and open decisions remain pending |
-| Date | 12 November 2026 |
+| Status | Submission draft; formal approval and open decisions are not recorded as closed in this repository |
+| Date | 15 November 2026 |
 | Product | UniTrade |
-| Project team | VISIT CMU |
-| Requirements basis | Source SRS v2.0; API Specification v2.2; team confirmation for TASK-01–05; repository reviewed on 12 November 2026; latest documented delivery snapshot in README dated 9 November 2026 |
-
-> This revision keeps the product intent of the supplied SRS, aligns requirements with the current API and repository, and distinguishes requirements from implementation status. TASK-01–05 are recorded as complete based on the project owner’s confirmation; their source artifacts are not present in this repository. This document is organized in the style of IEEE 830 / ISO/IEC/IEEE 29148 SRS documents; it is not a claim of formal certification against either standard. The supplied file is named “SRS Document v1.0” but its contents identify it as version 2.0. This document resolves that version ambiguity by using version 2.2.
+| Project team | VISIT CMU | 
 
 ## Revision history
 
@@ -21,6 +18,7 @@
 | 2.1 | 8 November 2026 | Consolidated requirements, clarified interfaces and constraints, aligned runtime and API requirements, and added traceability to current delivery status. |
 | 2.2 | 8 November 2026 | Expanded report-aligned SRS sections, added stakeholder/priority/acceptance and data dictionary material, recorded TASK-01–05 as complete based on team confirmation, mapped US-01–US-06 to requirements and current evidence, linked the original schedule to the Kanban/task tracker, and updated the Sprint 4 window to include the 17 November presentation. |
 | 2.2 editorial update | 12 November 2026 | Updated requirements-elicitation details from the team-provided interview and Facebook-observation summary; refreshed delivery traceability using the latest documented project status; clarified pending acceptance and approval items. |
+| 2.2 editorial update | 15 November 2026 | Refreshed task status against the project Kanban and repository; updated authentication UI, test-case, testing, bug-fixing, deployment, and presentation evidence; added project/test references and clarified outstanding verification and approval records. |
 
 ## Contents
 
@@ -96,6 +94,11 @@ The product is a marketplace and coordination tool. UniTrade does not process a 
 9. Frontend requirements and delivery notes: [`TASK-07-10-16-18-CHANGELOG.md`](TASK-07-10-16-18-CHANGELOG.md).
 10. System context: [`CONTEXT-DIAGRAM.md`](CONTEXT-DIAGRAM.md).
 11. Project plan, approved Figma screens, original ERD/sequence/data dictionary, and API Specification v2.2: **completed under TASK-01–05 according to project-owner confirmation on 8 November 2026; source files/links were not available in the repository at the time this revision was prepared.**
+12. QA test results: [`TEST_REPORT.md`](TEST_REPORT.md).
+13. User acceptance test summary: [`UAT-UNITRADE.md`](UAT-UNITRADE.md).
+14. Team workflow and ownership guide: [`TEAM-GUIDE.md`](TEAM-GUIDE.md).
+15. Deployment preparation and smoke-test checklist: [`TASK-23-DEPLOY.md`](TASK-23-DEPLOY.md).
+16. TASK-19 API collection and environment: [Postman collection](postman/UniTrade-TASK-19.postman_collection.json) and [local environment](postman/UniTrade-local.postman_environment.json).
 
 If this SRS conflicts with API Specification v2.2 for an endpoint, the API specification is the contract until the project owner approves a change.
 
@@ -139,10 +142,10 @@ Requirements are grouped by feature and MUST be implemented only according to th
 
 | Review role | Reviewer | Decision / date |
 |---|---|---|
-| Project owner / PM | @Snow212 | Pending review |
-| Backend lead | @wz | Pending review |
-| Frontend lead | @yat | Pending review |
-| QA / technical writer | @Aud | Pending review |
+| Project owner / PM | @Snow212 | Review/sign-off not recorded in repository (checked 15 November 2026) |
+| Backend lead | @wz | Review/sign-off not recorded in repository (checked 15 November 2026) |
+| Frontend lead | @yat | Review/sign-off not recorded in repository (checked 15 November 2026) |
+| QA / technical writer | @Aud | Review/sign-off not recorded in repository (checked 15 November 2026) |
 
 ## 2. Overall description
 
@@ -228,7 +231,7 @@ This account is based on the team-provided summary. Individual interview transcr
 
 ### 2.8 Project lifecycle and release scope
 
-The project is organized into sprint-based tasks. Planning, UI/UX, system design, database setup, and API specification (TASK-01–05) are confirmed complete by the project owner. Implementation work is delivered by later tasks and can be complete, partial, or pending independently of the planning deliverables. Deployment preparation is not equivalent to a production release; production URL and release evidence require separate confirmation.
+The project is organized into sprint-based tasks. Planning, UI/UX, system design, database setup, and API specification (TASK-01–05) are confirmed complete by the project owner. The current project tracker records TASK-23 deployment as done on 14 November 2026, but no production URL or deployment smoke-test evidence is recorded in this repository; a production release therefore cannot be independently confirmed here. Implementation and verification status are summarized separately in Section 9 and the project Kanban.
 
 ## 3. System features and functional requirements
 
@@ -345,7 +348,7 @@ The project is organized into sprint-based tasks. Planning, UI/UX, system design
 2. The system shall require an authenticated member before disclosing seller contact channels.
 3. The system shall return only contact channels that the seller has supplied, along with the product’s pickup location and any approved safety notice.
 4. The system shall not provide in-app messaging; members contact one another through the returned phone or LINE channel.
-5. The contact API path, response schema, seller-self-contact behavior, and product-status eligibility require approval by the backend lead and incorporation into the API specification before this requirement is considered implementation-ready.
+5. The contact API is implemented at `GET /products/:id/contact` following API Specification v2.2 §8.1. It is available to authenticated members for listings in any status, including the seller's own listing; implementation details and verification evidence are recorded in [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md).
 
 ### 3.10 Product reports
 
@@ -388,14 +391,14 @@ The stakeholder-provided user stories and their full acceptance criteria are rec
 
 | Story | User goal | Priority | Related SRS requirements | Current evidence / unresolved acceptance |
 |---|---|---|---|---|
-| US-01 | Register and sign in with a university email | Must Have | FR-01, FR-02, FR-09 | Registration and profile UI routes are present; the login route still uses a placeholder. The acceptance criterion specifies only `@student.chula.ac.th`, while FR-01 and the current API also accept `@chula.ac.th` for staff. Confirm the intended domain policy. |
+| US-01 | Register and sign in with a university email | Must Have | FR-01, FR-02, FR-09 | Registration, login, and profile UI routes are present (TASK-08, PR #14). The acceptance criterion specifies only `@student.chula.ac.th`, while FR-01 and the current API also accept `@chula.ac.th` for staff. Confirm the intended domain policy. |
 | US-02 | Create a product listing with details and images | Must Have | FR-03 | Backend validation and image upload are present; create/edit listing UI routes are present. End-to-end acceptance evidence remains part of system testing. |
 | US-03 | Manage own listings and status | Must Have | FR-04, FR-10 | Owner checks, status API, and my-listings UI are present. Verify edit/delete behavior and any status-dependent contact behavior during system testing. |
 | US-04 | Search and filter products | Must Have | FR-05, FR-10 | Search/filter UI and API are present. Verify the acceptance wording and empty-state behavior during system testing. |
-| US-05 | Save favorites and contact sellers | Should Have | FR-06, FR-07, FR-10 | Wishlist routes and UI are present. Contact UI exists, but the contact API and its approved contract are still pending; the complete acceptance flow is not met. |
+| US-05 | Save favorites and contact sellers | Should Have | FR-06, FR-07, FR-10 | Wishlist routes and UI, and the seller-contact UI/API, are implemented. The contact endpoint is verified by Bruno requests 81–87 and 94; verify the Sold-button UI acceptance behavior during system testing. |
 | US-06 | Report inappropriate listings and moderate as Admin | Should Have | FR-08, FR-10 | Report/moderation API and Admin UI are present. Verify the full flow and confirm the intended reporting access policy during system testing. |
 
-These are stakeholder acceptance targets, not claims that the criteria have passed. Formal verification results and sign-off are deferred to TASK-21. The detailed criteria and repository evidence notes are maintained in the report to avoid duplicating long acceptance text here.
+These are stakeholder acceptance targets, not claims that every criterion has passed. TASK-21 execution and UAT summaries are now available in [`TEST_REPORT.md`](TEST_REPORT.md) and [`UAT-UNITRADE.md`](UAT-UNITRADE.md); QA totals require reconciliation, and formal acceptance sign-off is not recorded in this repository. The detailed criteria and evidence notes are maintained in the project report.
 
 ## 4. External interface requirements
 
@@ -436,7 +439,7 @@ The API base path is `/api/v1`. Existing endpoint contracts are governed by API 
 | Dismiss report | `PATCH /admin/reports/:id` | Bearer token; `{ "status": "dismissed" }` | `200`, operation result | Admin |
 | Moderation delete | `DELETE /admin/products/:id` | Bearer token | `204`, report actioning/logging and storage cleanup | Admin |
 
-The table summarizes behavior documented in API Specification v2.2 and repository implementation notes; it is not a replacement for the complete approved API specification. The approved specification file itself is not present in the repository. Wishlist endpoints are implemented and summarized above; the seller-contact endpoint contract remains pending and shall not be inferred from frontend route names.
+The table summarizes behavior documented in API Specification v2.2 and repository implementation notes; it is not a replacement for the complete approved API specification. The approved specification file itself is not present in the repository. Wishlist endpoints are implemented and summarized above; the seller-contact endpoint is implemented following the response shape described in API Specification v2.2 §8.1, with details in [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md).
 
 ### 4.2.1 Shared response and error format
 
@@ -496,7 +499,7 @@ The `field` member is optional and appears when the error is associated with a s
 | Edit/change status/delete a listing | No | No, unless owner | Yes | Moderation delete only |
 | Submit product report | No | Yes, subject to report rules | Cannot self-report | Yes as member unless otherwise specified |
 | Read/write own wishlist | No | Yes | Yes | Yes |
-| Request seller contact | No | Yes, contract pending | Self-contact behavior TBD | Yes, contract pending |
+| Request seller contact | No | Yes | Yes | Yes |
 | List/dismiss reports | No | No | No | Yes |
 
 ## 5. Data requirements
@@ -730,7 +733,7 @@ A release candidate is acceptable when:
 
 ## 9. Requirements traceability and delivery status
 
-Status below reflects the repository contents reviewed on **12 November 2026** and the latest project-status summary in README (updated 9 November 2026). “Complete” describes delivered artifacts, not a claim of production deployment or independent acceptance testing. End-to-end acceptance remains subject to TASK-21 verification.
+Status below reflects the repository and project Kanban reviewed on **15 November 2026**. “Complete” describes delivered artifacts or the tracker status, not necessarily independently verified production behavior. Known verification gaps and unrecorded evidence are called out explicitly.
 
 | Task | Related requirements | Status | Repository evidence / gap |
 |---|---|---|---|
@@ -741,31 +744,31 @@ Status below reflects the repository contents reviewed on **12 November 2026** a
 | TASK-05 — API Specification and request/response mock | Sections 4.2–4.3 | Complete (team-confirmed) | API Specification v2.2 file/mock artifact is not stored in this repository; this SRS summarizes the known API contract and is not a substitute. |
 | TASK-06 — Auth API | FR-01, FR-02, FR-09, NFR-01–NFR-08 | Complete (backend) | Register, login, profile API and JWT/auth helpers are present. |
 | TASK-07 — Core layout | FR-10, NFR-13–NFR-16 | Complete | Shared layout, navigation, and theme are present. |
-| TASK-08 — Auth UI | FR-01, FR-02, FR-09, FR-10 | Partial | Registration and profile UI routes are present; the login route remains a placeholder. |
+| TASK-08 — Auth UI | FR-01, FR-02, FR-09, FR-10 | Complete (PR #14, 9 Nov) | Registration, login, and profile UI routes are present. |
 | TASK-09 — Product read API | FR-05 | Complete | Public product, category, pickup-location APIs and query handling are present. |
 | TASK-10 — Home UI | FR-05, FR-10 | Complete | Home page, product cards, and product grid are present. |
-| TASK-11 — QA test cases | Section 8 | Pending deliverable | Unit tests and Bruno requests exist; a standalone QA test-case document for login and product display was not found. |
+| TASK-11 — QA test cases | Section 8 | Complete (PR #15, 12 Nov) | [`UniTrade_TASK-11_Test_Cases.xlsx`](UniTrade_TASK-11_Test_Cases.xlsx) contains 75 authentication and product-read cases. |
 | TASK-12 — Product CRUD API | FR-03, FR-04 | Complete | Create/edit/delete/status APIs and image validation are present. |
 | TASK-13 — Listing UI | FR-03, FR-04, FR-10 | Complete (UI) | Create and edit listing routes/forms are present. |
 | TASK-14 — My listings/status UI | FR-04, FR-10 | Complete (UI) | My-listings route and status-management flow are present per the latest documented project status. |
 | TASK-15 — Search/filter API | FR-05 | Complete | Search and filtering are implemented with Bruno examples. |
 | TASK-16 — Search/filter UI | FR-05, FR-10 | Complete | Search and filter controls are present on the home page. |
 | TASK-17 — Wishlist | FR-07 | Complete (UI/API) | Wishlist page and API routes are present; verify contract and behavior in system testing. |
-| TASK-18 — Product detail/contact | FR-05, FR-06, FR-10 | Partial | Product detail UI and contact button exist; the contact API is absent and awaits ownership/contract approval. |
+| TASK-18 — Product detail/contact | FR-05, FR-06, FR-10 | Complete (implementation) | Product detail UI and contact API are implemented; Bruno 81–87 and 94 verify the endpoint. See [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md). Verify the Sold-button UI acceptance behavior during system testing. |
 | TASK-19 — Reports/admin API | FR-08 | Complete (backend) | Report, admin moderation routes, migration, tests, and Bruno examples are present. |
 | TASK-20 — Admin UI | FR-08, FR-10 | Complete (UI) | Admin dashboard route and UI component are present. |
-| TASK-21 — Integration and system testing | Section 8; FR-01–FR-10, NFR-01–NFR-16 | Ready to start | Feature-level testing can begin; contact API flow remains pending. Test plan, execution results, and defect records are not yet evidenced here. |
-| TASK-22 — Bug fixing | Findings from TASK-21 | Ready to address verified defects | Fixes may proceed as QA confirms defects during TASK-21; regression results remain to be recorded. |
-| TASK-23 — Vercel deployment and domain/database connection | NFR-05, NFR-14–NFR-15 | Pending | Await QA-confirmed defect resolution and regression; production URL and deployment evidence are not present. |
-| TASK-24 — Complete five-chapter project report | Sections 1–12; verification results | In preparation; final evidence pending | Final evaluation and deployment claims must use verified test, fix, and deployment results. |
-| TASK-25 — Presentation slides and demo preparation | Sections 8–9; final system and report | Planned | Presentation/demo materials and rehearsal evidence are pending. |
+| TASK-21 — Integration and system testing | Section 8; FR-01–FR-10, NFR-01–NFR-16 | Done per Kanban (12 Nov) | [`TEST_REPORT.md`](TEST_REPORT.md) and [`UAT-UNITRADE.md`](UAT-UNITRADE.md) are present. Test totals conflict between report rows; TC-PROD-044 is recorded as FAIL and TC-AUTH-018 as Blocked. |
+| TASK-22 — Bug fixing | Findings from TASK-21 | Done per Kanban; follow-up evidence needed | Tracker says no bug fixing was required, but the test report still records TC-PROD-044 as FAIL. Confirm disposition and regression evidence with QA before treating the finding as closed. |
+| TASK-23 — Vercel deployment and domain/database connection | NFR-05, NFR-14–NFR-15 | Done per Kanban (14 Nov; not independently verified here) | The deployment guide remains procedural; production URL and smoke-test evidence are not recorded in this repository. Confirm with the owner before claiming a live production release. |
+| TASK-24 — Complete five-chapter project report | Sections 1–12; verification results | Done per Kanban (15 Nov) | Report and supporting QA/UAT/deployment documents are present; reconcile test totals and deployment evidence before final claims. |
+| TASK-25 — Presentation slides and demo preparation | Sections 8–9; final system and report | In Process; due 17 Nov (on schedule as of 15 Nov) | Prepare slides and demo; record rehearsal and confirm live/demo environment before presentation. |
 
 ## 10. Open decisions
 
-The following items require explicit team approval. Existing code or mock behavior is recorded as implementation evidence and does not by itself establish an approved requirement:
+The following items require explicit team approval unless marked resolved. Existing code or mock behavior is recorded as implementation evidence and does not by itself establish an approved requirement:
 
 1. **Wishlist contract alignment:** confirm that the implemented routes, toggle behavior, and ability to save one’s own listing match API Specification v2.2.
-2. **Seller contact API:** ownership, exact endpoint path, response schema, seller-self-contact behavior, and whether sold listings still reveal contact information.
+2. **Seller contact API — resolved (15 Nov 2026):** implemented at `GET /products/:id/contact` per API Specification v2.2 §8.1. Backend decisions allow seller self-contact and contact for sold listings; implementation and test evidence are recorded in [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md). Verify the Sold-button UI acceptance behavior during system testing.
 3. **Account verification:** whether domain validation alone is sufficient or an email verification flow is required.
 4. **Performance targets:** test environment, percentile, measurement tools, and load profile for NFR-10 through NFR-12.
 5. **Data lifecycle:** retention/deletion policy for inactive accounts, images, reports, and moderation logs.
@@ -773,7 +776,7 @@ The following items require explicit team approval. Existing code or mock behavi
 7. **Supported browser versions:** define “current stable” relative to a release date or support window.
 8. **Operational recovery:** backup frequency, recovery-point objective, recovery-time objective, and incident ownership.
 9. **US-01 email-domain policy:** confirm whether registration is restricted to students (`@student.chula.ac.th`) or includes university staff (`@chula.ac.th`) as supported by the current SRS/API.
-10. **User-story acceptance details:** confirm the exact empty-state text, guest-reporting policy, and whether contact must be disabled for Sold listings; record acceptance evidence during TASK-21.
+10. **User-story acceptance details:** confirm the exact empty-state text, guest-reporting policy, and whether contact must be disabled for Sold listings; reconcile these decisions with the completed TASK-21/UAT evidence and record any remaining approval.
 
 ## 11. Appendices
 
@@ -802,6 +805,11 @@ The API shall use the project’s approved error catalog. The following cases ar
 | Invalid pickup location | `422 INVALID_PICKUP_LOCATION` |
 | Invalid product status | `422 INVALID_STATUS` |
 | Invalid report reason | `422 INVALID_REPORT_REASON` |
+| Member reports own listing | `422 SELF_REPORT` |
+| Same member reports the same product again | `409 DUPLICATE_REPORT` |
+| Missing or invalid report for an admin action | `404 REPORT_NOT_FOUND` |
+| Report is no longer pending (already dismissed or actioned) | `409 REPORT_ALREADY_RESOLVED` |
+| Invalid admin report status body or report-list query (`status`, `page`, `per_page`) | `422 VALIDATION_ERROR` with a field |
 | Unexpected server/database/storage failure | Generic logged `500 INTERNAL_ERROR`; no raw Supabase error is returned |
 
 ### Appendix B — Product constraints
@@ -823,6 +831,9 @@ The API shall use the project’s approved error catalog. The following cases ar
 - An administrator may dismiss a report without deleting its product; the dismissed action is recorded.
 - Deleting a reported product through moderation preserves report records and records the moderation action.
 - The canonical list of report reasons and any additional allowed transitions are governed by the database and API specification.
+- Dismiss and moderation delete run inside database functions `admin_dismiss_report` and `admin_delete_product` (migration `0005_moderation_logs.sql`), so the report status change, product deletion, and moderation-log insert succeed or fail together. Image files are removed from Storage only after the function succeeds.
+- Because `(product_id, reporter_id)` is unique, a member whose report was dismissed cannot report the same product again.
+- When an owner deletes their own listing (`DELETE /products/:id`), its pending reports are not actioned automatically; they remain `pending` with `product_id = NULL` until an administrator dismisses them.
 
 ### Appendix D — Account input constraints
 
@@ -851,24 +862,24 @@ The project owner confirms TASK-01–05 are complete. Sprint/task information be
 | TASK-05 | API Specification and request/response mock | Sprint 0 | Backend Lead | Complete (confirmed) |
 | TASK-06 | Authentication API | Sprint 1 | Backend Lead | Complete |
 | TASK-07 | Core frontend layout | Sprint 1 | Frontend Lead | Complete |
-| TASK-08 | Authentication UI | Sprint 1 | Frontend Developer | Partial; registration/profile routes are present, login remains a placeholder |
+| TASK-08 | Authentication UI | Sprint 1 | Frontend Developer | Complete; registration, login, and profile routes are present (PR #14, 9 Nov) |
 | TASK-09 | Product read API | Sprint 1 | Backend Developer | Complete |
 | TASK-10 | Home and product-card grid | Sprint 1 | Frontend Lead | Complete |
-| TASK-11 | Login/product test cases | Sprint 1 | QA/Documentation | Pending; standalone QA test-case document not evidenced |
+| TASK-11 | Login/product test cases | Sprint 1 | QA/Documentation | Complete; 75-case workbook present (PR #15, 12 Nov) |
 | TASK-12 | Product CRUD API and image upload | Sprint 2 | Backend Developer | Complete |
 | TASK-13 | Listing create/edit UI | Sprint 2 | Frontend Developer | Complete; routes/forms present |
 | TASK-14 | Product status and my-listings UI | Sprint 2 | Frontend Developer | Complete per latest documented project status |
 | TASK-15 | Backend search and filter | Sprint 2 | Backend Lead | Complete |
 | TASK-16 | Search and filter UI | Sprint 2 | Frontend Lead | Complete |
 | TASK-17 | Wishlist frontend/backend | Sprint 2 | Frontend Developer | Complete per latest documented project status; system verification pending |
-| TASK-18 | Product detail and seller contact UI | Sprint 2 | Frontend Lead | Partial; Contact API pending |
+| TASK-18 | Product detail and seller contact UI | Sprint 2 | Frontend Lead | Implemented; contact API is complete and verified (Bruno 81–87, 94; 15 Nov 2026). See [`CONTACT-MY-PRODUCTS-CHANGELOG.md`](CONTACT-MY-PRODUCTS-CHANGELOG.md). |
 | TASK-19 | Reports and admin API | Sprint 3 | Backend Developer | Complete (backend) |
 | TASK-20 | Admin dashboard UI | Sprint 3 | Frontend Developer | Complete per latest documented project status |
-| TASK-21 | Integration and system testing for the complete system | Sprint 3 | QA/Documentation | Ready to start; test delivered flows and track contact API as pending |
-| TASK-22 | Bug fixing across the system | Sprint 3 | All developers | Address verified defects during/after TASK-21 and record regression results |
-| TASK-23 | Deploy frontend to Vercel and connect domain/database | Sprint 4 | Frontend Lead | Pending verified defect resolution and regression testing |
-| TASK-24 | Compile the complete five-chapter project report | Sprint 4 | QA/Documentation | In preparation; final test and deployment evidence pending |
-| TASK-25 | Prepare presentation slides and demo test scenarios | Sprint 4 | PM/BA | Planned; prepare after system and report evidence are ready |
+| TASK-21 | Integration and system testing for the complete system | Sprint 3 | QA/Documentation | Done per Kanban (12 Nov); test/UAT summaries are present, but test totals need reconciliation and TC-PROD-044/TC-AUTH-018 remain recorded as FAIL/Blocked |
+| TASK-22 | Bug fixing across the system | Sprint 3 | All developers | Done per Kanban (“No Bug Fixing”); QA report still records TC-PROD-044 as FAIL, so confirm disposition and regression evidence |
+| TASK-23 | Deploy frontend to Vercel and connect domain/database | Sprint 4 | Frontend Lead | Done per Kanban (14 Nov); production URL and smoke-test evidence are not recorded in this repository |
+| TASK-24 | Compile the complete five-chapter project report | Sprint 4 | QA/Documentation | Done per Kanban (15 Nov); reconcile test totals and deployment evidence before final claims |
+| TASK-25 | Prepare presentation slides and demo test scenarios | Sprint 4 | PM/BA | In Process; due 17 Nov and on schedule as of 15 Nov |
 
 **Original planned dates and sprint windows:** available in the provided [VISIT CMU.xlsx](https://docs.google.com/spreadsheets/d/1Zd48QRtN8vJbLhxd-7AXXygIyoLGOJxakk_m_XJarhU/edit?usp=sharing) and transcribed into the [Project Kanban & Task Tracker](PROJECT-KANBAN.md).
 
