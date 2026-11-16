@@ -231,7 +231,7 @@ This account is based on the team-provided summary. Individual interview transcr
 
 ### 2.8 Project lifecycle and release scope
 
-The project is organized into sprint-based tasks. Planning, UI/UX, system design, database setup, and API specification (TASK-01–05) are confirmed complete by the project owner. The current project tracker records TASK-23 deployment as done on 14 November 2026, but no production URL or deployment smoke-test evidence is recorded in this repository; a production release therefore cannot be independently confirmed here. Implementation and verification status are summarized separately in Section 9 and the project Kanban.
+The project is organized into sprint-based tasks. Planning, UI/UX, system design, database setup, and API specification (TASK-01–05) are confirmed complete by the project owner. TASK-23 was completed on 16 November 2026. The production site is available at [https://unitrade-rouge.vercel.app](https://unitrade-rouge.vercel.app), and deployment smoke-test results are recorded in [`TASK-23-DEPLOY.md`](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569). The production `/login` page was confirmed to respond with HTTP 200; a successful sign-in using a live account was not tested during that smoke test. Implementation and verification status are summarized separately in Section 9 and the project Kanban.
 
 ## 3. System features and functional requirements
 
@@ -391,7 +391,7 @@ The stakeholder-provided user stories and their full acceptance criteria are rec
 
 | Story | User goal | Priority | Related SRS requirements | Current evidence / unresolved acceptance |
 |---|---|---|---|---|
-| US-01 | Register and sign in with a university email | Must Have | FR-01, FR-02, FR-09 | Registration, login, and profile UI routes are present (TASK-08, PR #14). The acceptance criterion specifies only `@student.chula.ac.th`, while FR-01 and the current API also accept `@chula.ac.th` for staff. Confirm the intended domain policy. |
+| US-01 | Register and sign in with a university email | Must Have | FR-01, FR-02, FR-09 | Registration, login, and profile UI routes are implemented (TASK-08, PR #14), not placeholders. The production `/login` page was smoke-tested with HTTP 200; successful sign-in on production was not tested with a live account. The acceptance criterion specifies only `@student.chula.ac.th`, while FR-01 and the current API also accept `@chula.ac.th` for staff. Confirm the intended domain policy. |
 | US-02 | Create a product listing with details and images | Must Have | FR-03 | Backend validation and image upload are present; create/edit listing UI routes are present. End-to-end acceptance evidence remains part of system testing. |
 | US-03 | Manage own listings and status | Must Have | FR-04, FR-10 | Owner checks, status API, and my-listings UI are present. Verify edit/delete behavior and any status-dependent contact behavior during system testing. |
 | US-04 | Search and filter products | Must Have | FR-05, FR-10 | Search/filter UI and API are present. Verify the acceptance wording and empty-state behavior during system testing. |
@@ -733,7 +733,7 @@ A release candidate is acceptable when:
 
 ## 9. Requirements traceability and delivery status
 
-Status below reflects the repository and project Kanban reviewed on **15 November 2026**. “Complete” describes delivered artifacts or the tracker status, not necessarily independently verified production behavior. Known verification gaps and unrecorded evidence are called out explicitly.
+Status below reflects the repository and project Kanban reviewed on **16 November 2026**. “Complete” describes delivered artifacts or the tracker status, not necessarily independently verified production behavior. Known verification gaps and unrecorded evidence are called out explicitly.
 
 | Task | Related requirements | Status | Repository evidence / gap |
 |---|---|---|---|
@@ -759,7 +759,7 @@ Status below reflects the repository and project Kanban reviewed on **15 Novembe
 | TASK-20 — Admin UI | FR-08, FR-10 | Complete (UI) | Admin dashboard route and UI component are present. |
 | TASK-21 — Integration and system testing | Section 8; FR-01–FR-10, NFR-01–NFR-16 | Done per Kanban (12 Nov) | [`TEST_REPORT.md`](TEST_REPORT.md) and [`UAT-UNITRADE.md`](UAT-UNITRADE.md) are present. Test totals conflict between report rows; TC-PROD-044 is recorded as FAIL and TC-AUTH-018 as Blocked. |
 | TASK-22 — Bug fixing | Findings from TASK-21 | Done per Kanban; follow-up evidence needed | Tracker says no bug fixing was required, but the test report still records TC-PROD-044 as FAIL. Confirm disposition and regression evidence with QA before treating the finding as closed. |
-| TASK-23 — Vercel deployment and domain/database connection | NFR-05, NFR-14–NFR-15 | Done per Kanban (14 Nov; not independently verified here) | The deployment guide remains procedural; production URL and smoke-test evidence are not recorded in this repository. Confirm with the owner before claiming a live production release. |
+| TASK-23 — Vercel deployment and domain/database connection | NFR-05, NFR-14–NFR-15 | Done (16 Nov 2026) | Production: [https://unitrade-rouge.vercel.app](https://unitrade-rouge.vercel.app). Deployment and smoke-test evidence: [`TASK-23-DEPLOY.md`](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569). The login page returned HTTP 200; successful production sign-in was not part of the smoke test. |
 | TASK-24 — Complete five-chapter project report | Sections 1–12; verification results | Done per Kanban (15 Nov) | Report and supporting QA/UAT/deployment documents are present; reconcile test totals and deployment evidence before final claims. |
 | TASK-25 — Presentation slides and demo preparation | Sections 8–9; final system and report | In Process; due 17 Nov (on schedule as of 15 Nov) | Prepare slides and demo; record rehearsal and confirm live/demo environment before presentation. |
 
@@ -877,7 +877,7 @@ The project owner confirms TASK-01–05 are complete. Sprint/task information be
 | TASK-20 | Admin dashboard UI | Sprint 3 | Frontend Developer | Complete per latest documented project status |
 | TASK-21 | Integration and system testing for the complete system | Sprint 3 | QA/Documentation | Done per Kanban (12 Nov); test/UAT summaries are present, but test totals need reconciliation and TC-PROD-044/TC-AUTH-018 remain recorded as FAIL/Blocked |
 | TASK-22 | Bug fixing across the system | Sprint 3 | All developers | Done per Kanban (“No Bug Fixing”); QA report still records TC-PROD-044 as FAIL, so confirm disposition and regression evidence |
-| TASK-23 | Deploy frontend to Vercel and connect domain/database | Sprint 4 | Frontend Lead | Done per Kanban (14 Nov); production URL and smoke-test evidence are not recorded in this repository |
+| TASK-23 | Deploy frontend to Vercel and connect domain/database | Sprint 4 | Frontend Lead | Done (16 Nov 2026); [production site](https://unitrade-rouge.vercel.app), [deployment and smoke-test evidence](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569) |
 | TASK-24 | Compile the complete five-chapter project report | Sprint 4 | QA/Documentation | Done per Kanban (15 Nov); reconcile test totals and deployment evidence before final claims |
 | TASK-25 | Prepare presentation slides and demo test scenarios | Sprint 4 | PM/BA | In Process; due 17 Nov and on schedule as of 15 Nov |
 
