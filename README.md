@@ -6,7 +6,7 @@ The app does not process payments, provide shipping, or include in-app chat. Buy
 
 ## Website
 
-Live Demo: **[https://unitrade-rouge.vercel.app](https://unitrade-rouge.vercel.app)** — deploy บน Vercel 16 พ.ย. 2569 (ผลตรวจหลัง deploy: [`docs/TASK-23-DEPLOY.md`](docs/TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569))
+Live Demo: **[`https://unitrade-rouge.vercel.app`](https://unitrade-rouge.vercel.app)** — deploy บน Vercel 16 พ.ย. 2569 (ผลตรวจหลัง deploy: [`docs/TASK-23-DEPLOY.md`](docs/TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569))
 
 ## Features
 
