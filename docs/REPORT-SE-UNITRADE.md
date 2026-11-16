@@ -9,7 +9,7 @@
 | อาจารย์ที่ปรึกษา | Pakawan Pugsee (ภควรรณ ปักษี) |
 | คณะ / มหาวิทยาลัย | จุฬาลงกรณ์มหาวิทยาลัย |
 | ทีม | VISIT CMU |
-| วันที่จัดทำเอกสาร | 15 พฤศจิกายน 2569 |
+| วันที่จัดทำเอกสาร | 16 พฤศจิกายน 2569 |
 | สถานะ | ฉบับสมบูรณ์ |
 
 ## สารบัญ
@@ -940,17 +940,15 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 
 ## ภาคผนวก ก — หน้าที่หลักและการมีส่วนร่วมของสมาชิก
 
-| ชื่อ | บทบาทหลัก | รายละเอียดภาระงานและความรับผิดชอบในโปรเจกต์ | การยืนยัน |
-| :--- | :--- | :--- | :--- |
-| **พิชญาภร มณีคงฤทธิ์** | Project Manager / Business Analyst | • ควบคุมและวางแผนโครงงานภาพรวมทั้งหมดให้เป็นไปตามกำหนดเวลา (Timeline & Milestone Tracking)<br>• ประสานงานและติดตามความคืบหน้าของสมาชิกในทีม<br>• วิเคราะห์และรวบรวมความต้องการเชิงธุรกิจ (Business Requirements) และกำหนดขอบเขตระบบ | **ยืนยัน** |
-| **สุธิมา สมอแข็ง** | System Analyst / UI-UX Designer | • ดำเนินการศึกษาและรวบรวมข้อมูลผู้ใช้งาน (User Research & Interviews)<br>• ออกแบบสถาปัตยกรรมระบบจำลองและแผนภาพเชิงกระบวนการ (Use Case Diagram, DFD)<br>• ออกแบบโครงสร้างหน้าจอ (UI Wireframe / Navigation Flow) และต้นแบบหน้าตาเว็บ (Figma) | **ยืนยัน** |
-| **วัชรินทร์ คงเซ็น** | QA / Software Tester | • กำหนดกลยุทธ์การทดสอบระบบ (Testing Strategy) และจัดทำแผนการทดสอบ (Test Plan)<br>• เขียนชุดกรณีทดสอบ (Test Cases) สำหรับตรวจสอบความถูกต้องของฟังก์ชันต่างๆ<br>• ดำเนินการทดสอบระบบผ่าน Bruno API Collection และทดสอบการใช้งานหน้าจอจริง (Manual Testing) พร้อมบันทึกผล | **ยืนยัน** |
-| **กันตภณ ชัยรุ่งปัญญา** | Backend Lead | • ออกแบบและดูแลสถาปัตยกรรมโครงสร้างหลังบ้าน (Backend Architecture & Core Libraries)<br>• ตั้งค่าและจัดการฐานข้อมูล Supabase (Migrations & Database Setup)<br>• พัฒนาระบบความปลอดภัยและการยืนยันตัวตน (Authentication & JWT / Route Guards) พร้อมทั้งรีวิวโค้ด (PR Review)<br>• จัดทำ API Specification v2.2 (TASK-05) และงาน Search & Filter (TASK-15)<br>• พัฒนา API ข้อมูลติดต่อผู้ขาย (`GET /products/:id/contact`) และประกาศของฉัน (`GET /me/products`) | [เว้นไว้รอข้อมูล] |
-| **ฮิดายัต บูหา** | Frontend Lead | • วางโครงสร้างหน้าเว็บด้วย Next.js 15 App Router: layout, navbar, routing, ธีม และชั้นเรียก API กลาง (`lib/client/`) ที่ทีม frontend ใช้ร่วมกัน (TASK-07)<br>• พัฒนาหน้าแรก การ์ดสินค้า ระบบค้นหาและตัวกรอง (TASK-10, TASK-16) และหน้ารายละเอียดสินค้าพร้อมหน้าต่างข้อมูลติดต่อผู้ขาย (TASK-18)<br>• Deploy ระบบขึ้น Vercel พร้อมคู่มือและผลตรวจหลัง deploy (TASK-23)<br>• ควบคุมมาตรฐานโค้ดฝั่ง Frontend (ไม่เรียก Supabase จากเบราว์เซอร์, ไม่เพิ่ม library) และเขียนรายงานหัวข้อ 4.6 และส่วน frontend ของบทที่ 5 | **ยืนยัน** |
-| **ศรัณย์ภพ พิบูลธนาวนิช** | Backend Developer | • พัฒนา API เรียกดูสินค้า หมวดหมู่ และจุดนัดรับ พร้อมการค้นหา กรอง เรียงลำดับ และแบ่งหน้า (Product Read API - TASK-09) ซึ่งโค้ดค้นหา/กรองถูกนำไปใช้ต่อใน TASK-15<br>• พัฒนาระบบจัดการข้อมูลสินค้าแบบครบวงจร (CRUD) เปลี่ยนสถานะ และตรวจ/อัปโหลดไฟล์รูปภาพขึ้น Supabase Storage (TASK-12)<br>• พัฒนา API รายงานสินค้าและการจัดการของผู้ดูแลระบบ (Report & Admin Moderation) พร้อมตัวตรวจสิทธิ์ `requireAdmin` และ migration `0005` (ตาราง `moderation_logs` และ function แบบ atomic) (TASK-19)<br>• เขียน unit test ชุดทดสอบ API (Bruno Requests) และ Postman Collection สำหรับหน้า Admin Dashboard | **ยืนยัน** |
-| **วริทธิ์นันท์ สกุลกลาง** | Frontend Developer | • พัฒนาหน้าจอระบบสมาชิก (Login / Register / Profile)<br>• พัฒนาระบบฟอร์มสำหรับลงประกาศขายสินค้าและแก้ไขข้อมูล (Listing Create & Edit Forms)<br>• พัฒนาหน้าแดชบอร์ดสำหรับผู้ดูแลระบบ (Admin Dashboard) และหน้าจัดการสถานะสินค้า | **ยืนยัน** |
-
-**เมื่อยืนยันครบให้นำคอลัมม์ยืนยันออก**
+| ชื่อ | บทบาทหลัก | รายละเอียดภาระงานและความรับผิดชอบในโปรเจกต์ |
+| :--- | :--- | :--- |
+| **พิชญาภร มณีคงฤทธิ์** | Project Manager / Business Analyst | • ควบคุมและวางแผนโครงงานภาพรวมทั้งหมดให้เป็นไปตามกำหนดเวลา (Timeline & Milestone Tracking)<br>• ประสานงานและติดตามความคืบหน้าของสมาชิกในทีม<br>• วิเคราะห์และรวบรวมความต้องการเชิงธุรกิจ (Business Requirements) และกำหนดขอบเขตระบบ |
+| **สุธิมา สมอแข็ง** | System Analyst / UI-UX Designer | • ดำเนินการศึกษาและรวบรวมข้อมูลผู้ใช้งาน (User Research & Interviews)<br>• ออกแบบสถาปัตยกรรมระบบจำลองและแผนภาพเชิงกระบวนการ (Use Case Diagram, DFD)<br>• ออกแบบโครงสร้างหน้าจอ (UI Wireframe / Navigation Flow) และต้นแบบหน้าตาเว็บ (Figma) |
+| **วัชรินทร์ คงเซ็น** | QA / Software Tester | • กำหนดกลยุทธ์การทดสอบระบบ (Testing Strategy) และจัดทำแผนการทดสอบ (Test Plan)<br>• เขียนชุดกรณีทดสอบ (Test Cases) สำหรับตรวจสอบความถูกต้องของฟังก์ชันต่างๆ<br>• ดำเนินการทดสอบระบบผ่าน Bruno API Collection และทดสอบการใช้งานหน้าจอจริง (Manual Testing) พร้อมบันทึกผล |
+| **กันตภณ ชัยรุ่งปัญญา** | Backend Lead | • ออกแบบและดูแลสถาปัตยกรรมโครงสร้างหลังบ้าน (Backend Architecture & Core Libraries)<br>• ตั้งค่าและจัดการฐานข้อมูล Supabase (Migrations & Database Setup)<br>• พัฒนาระบบความปลอดภัยและการยืนยันตัวตน (Authentication & JWT / Route Guards) พร้อมทั้งรีวิวโค้ด (PR Review)<br>• จัดทำ API Specification v2.2 (TASK-05) และงาน Search & Filter (TASK-15)<br>• พัฒนา API ข้อมูลติดต่อผู้ขาย (`GET /products/:id/contact`) และประกาศของฉัน (`GET /me/products`) |
+| **ฮิดายัต บูหา** | Frontend Lead | • วางโครงสร้างหน้าเว็บด้วย Next.js 15 App Router: layout, navbar, routing, ธีม และชั้นเรียก API กลาง (`lib/client/`) ที่ทีม frontend ใช้ร่วมกัน (TASK-07)<br>• พัฒนาหน้าแรก การ์ดสินค้า ระบบค้นหาและตัวกรอง (TASK-10, TASK-16) และหน้ารายละเอียดสินค้าพร้อมหน้าต่างข้อมูลติดต่อผู้ขาย (TASK-18)<br>• Deploy ระบบขึ้น Vercel พร้อมคู่มือและผลตรวจหลัง deploy (TASK-23)<br>• ควบคุมมาตรฐานโค้ดฝั่ง Frontend (ไม่เรียก Supabase จากเบราว์เซอร์, ไม่เพิ่ม library) และเขียนรายงานหัวข้อ 4.6 และส่วน frontend ของบทที่ 5 |
+| **ศรัณย์ภพ พิบูลธนาวนิช** | Backend Developer | • พัฒนา API เรียกดูสินค้า หมวดหมู่ และจุดนัดรับ พร้อมการค้นหา กรอง เรียงลำดับ และแบ่งหน้า (Product Read API - TASK-09) ซึ่งโค้ดค้นหา/กรองถูกนำไปใช้ต่อใน TASK-15<br>• พัฒนาระบบจัดการข้อมูลสินค้าแบบครบวงจร (CRUD) เปลี่ยนสถานะ และตรวจ/อัปโหลดไฟล์รูปภาพขึ้น Supabase Storage (TASK-12)<br>• พัฒนา API รายงานสินค้าและการจัดการของผู้ดูแลระบบ (Report & Admin Moderation) พร้อมตัวตรวจสิทธิ์ `requireAdmin` และ migration `0005` (ตาราง `moderation_logs` และ function แบบ atomic) (TASK-19)<br>• เขียน unit test ชุดทดสอบ API (Bruno Requests) และ Postman Collection สำหรับหน้า Admin Dashboard |
+| **วริทธิ์นันท์ สกุลกลาง** | Frontend Developer | • พัฒนาหน้าจอระบบสมาชิก (Login / Register / Profile)<br>• พัฒนาระบบฟอร์มสำหรับลงประกาศขายสินค้าและแก้ไขข้อมูล (Listing Create & Edit Forms)<br>• พัฒนาหน้าแดชบอร์ดสำหรับผู้ดูแลระบบ (Admin Dashboard) และหน้าจัดการสถานะสินค้า |
 
 ## ภาคผนวก ข — ผู้รับผิดชอบการจัดทำรายงาน
 
