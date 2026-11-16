@@ -965,7 +965,7 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 
 ## ภาคผนวก ค — เอกสารและหลักฐานประกอบ
 
-- Live Demo: [https://unitrade-rouge.vercel.app](https://unitrade-rouge.vercel.app) (Vercel, deploy 16 พ.ย. 2569)
+- Live Demo: [`https://unitrade-rouge.vercel.app`](https://unitrade-rouge.vercel.app) (Vercel, deploy 16 พ.ย. 2569)
 - Source Code: [`GitHub Repo`](https://github.com/maneekongritphichayaporn-creator/UniTrade)
 - SRS: [`SRS-UNITRADE-v2.2.md`](SRS-UNITRADE-v2.2.md)
 - Kanban: [`PROJECT-KANBAN.md`](PROJECT-KANBAN.md)
