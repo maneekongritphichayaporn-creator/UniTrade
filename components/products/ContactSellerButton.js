@@ -4,6 +4,8 @@
 // ยังไม่ล็อกอิน: พาไปหน้าเข้าสู่ระบบ พร้อมจำหน้าที่ค้างไว้ใน ?next= เพื่อกลับมาที่เดิม
 // ล็อกอินแล้ว: ยิง GET /products/:id/contact (แนบ Bearer token ให้อัตโนมัติ) แล้วเปิด modal
 // ข้อมูลติดต่อไม่อยู่ใน GET /products/:id เพื่อไม่ให้เบอร์โทร/LINE หลุดสู่สาธารณะ (FR-06)
+// สินค้า Sold: ปิดปุ่มทุกกรณี ทั้งคนที่ล็อกอินและยังไม่ล็อกอิน (US-03 เกณฑ์ข้อ 3)
+//   API /contact ยังตอบทุกสถานะตามที่ @wz ตัดสิน — การปิดนี้ทำที่หน้าเว็บอย่างเดียว
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -15,12 +17,21 @@ import { routes } from '@/lib/client/routes.js';
 import { useAuth } from '@/lib/client/useAuth.js';
 import { SellerContactModal } from './SellerContactModal.js';
 
-export function ContactSellerButton({ productId }) {
+export function ContactSellerButton({ productId, sold = false }) {
   const { status } = useAuth();
   const pathname = usePathname();
   const [contact, setContact] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  if (sold) {
+    return (
+      <button type="button" className="btn btn--primary btn--lg btn--block" disabled>
+        <ChatIcon size={18} />
+        สินค้านี้ขายแล้ว ติดต่อผู้ขายไม่ได้
+      </button>
+    );
+  }
 
   if (status === 'loading') {
     return <div className="skeleton" style={{ height: 48, borderRadius: 999 }} aria-hidden="true" />;
