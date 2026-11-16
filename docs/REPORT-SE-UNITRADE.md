@@ -461,7 +461,7 @@ flowchart LR
 | ขั้นตอนปกติ | 1) ผู้ใช้เลือกสมัครสมาชิกหรือเข้าสู่ระบบ 2) กรอกและส่งข้อมูล 3) ระบบตรวจสอบข้อมูลและโดเมนอีเมล 4) กรณีสมัคร ระบบบันทึกบัญชีโดยเก็บรหัสผ่านเป็น bcrypt hash; กรณีเข้าสู่ระบบ ระบบตรวจสอบรหัสผ่าน 5) เมื่อเข้าสู่ระบบสำเร็จ ระบบออก JWT และส่งข้อมูลผู้ใช้ที่เปิดเผยได้กลับ |
 | ทางเลือก/ข้อผิดพลาด | ข้อมูลสมัครไม่ถูกต้องหรืออีเมลไม่รองรับ → แจ้งข้อผิดพลาดตาม API; อีเมลซ้ำ → ปฏิเสธการสมัคร; ข้อมูลเข้าสู่ระบบไม่ถูกต้อง → ปฏิเสธการเข้าสู่ระบบ |
 | เงื่อนไขหลังจบ | สมัครสำเร็จมีบัญชีสมาชิก; เข้าสู่ระบบสำเร็จมี session token อายุ 24 ชั่วโมง โดยไม่ส่ง password hash หรือ signing secret ให้ client |
-| สถานะการส่งมอบ | Auth API และหน้าสมัครมี; หน้า Login ยังเป็น placeholder จึงยังไม่ถือว่าจบ flow ฝั่ง UI |
+| สถานะการส่งมอบ | ส่งมอบครบทั้ง flow: Auth API (TASK-06) และหน้าสมัครสมาชิก เข้าสู่ระบบ และโปรไฟล์ (TASK-08, PR #14) ใช้งานได้บน Production ที่ https://unitrade-rouge.vercel.app |
 
 ### 4.3.5 Use Case Description: UC-02 สร้างประกาศสินค้า
 
@@ -734,7 +734,7 @@ flowchart LR
     home --> admin
 ```
 
-เส้นทางในผังเป็นแบบเป้าหมายการใช้งาน ไม่ใช่หลักฐานว่าทุกหน้าถูกพัฒนาแล้ว; หน้าที่ยังไม่มีจะเข้าสู่ not-found route
+ทุกหน้าในผังส่งมอบแล้วตามตาราง 4.6.2 และเปิดใช้งานได้บน Production; URL ที่ไม่ตรงกับหน้าใดจะเข้าสู่หน้า Not found (S-12) ของระบบ
 
 ### 4.6.4 Theme และรายละเอียด UI
 
@@ -763,7 +763,9 @@ flowchart LR
 7. API ตอบ error ตาม error code ไม่ส่งข้อความ Supabase ตรงให้ client
 8. migration `0005` ใช้ Postgres functions เพื่อทำ moderation state change + delete + audit log ใน transaction
 
-**สิ่งที่ยังต้องตรวจสำหรับการส่งมอบ:** ทบทวนทุก route ด้วย security review, ตรวจ HTTPS/deployment settings, ตรวจ secret scanning และยืนยันการตั้งค่าบัญชี Admin
+**ผลตรวจบน Production (16 พ.ย. 2569):** เว็บและ API ให้บริการผ่าน HTTPS ที่ Vercel ออกใบรับรองให้อัตโนมัติ; ไม่พบ service-role key หรือ JWT secret ในไฟล์ JavaScript ที่ส่งให้เบราว์เซอร์; `GET /products/:id` ไม่มี `email`, `phone_number` และ `line_id`; `GET /products/:id/contact` ตอบ 401 เมื่อไม่ได้ล็อกอิน; ไม่พบคีย์จริงใน source control (ตรวจทั้งประวัติ git); บัญชี Admin สำหรับทดสอบสร้างแล้วใน TASK-19 — รายละเอียดใน [`TASK-23-DEPLOY.md` หัวข้อ 7](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569)
+
+**สิ่งที่ยังไม่ได้ทำ:** security review แบบไล่ทุก route โดยผู้ตรวจภายนอกทีม และ rate limiting (ดูหัวข้อ 6.2)
 
 # บทที่ 5 การพัฒนาและการทดสอบระบบ (System Implementation and Testing)
 
@@ -781,8 +783,9 @@ flowchart LR
 | Styling | CSS Modules + global CSS variables | `app/`, `components/` |
 | Code editor | Visual Studio Code | project workflow |
 | Version control | Git/GitHub | repository branches and pull requests |
-| Hosting target | Vercel | guide prepared; actual deployment not confirmed |
-| UI automated test framework | [เว้นไว้รอข้อมูล/การตัดสินใจ] | ยังไม่พบใน dependencies |
+| Hosting | Vercel (Hobby, region Singapore `sin1`, Node.js 22.x) | deploy แล้ว 16 พ.ย. 2569 ที่ https://unitrade-rouge.vercel.app ด้วย Vercel CLI; ขั้นตอนและผลตรวจใน [`TASK-23-DEPLOY.md` หัวข้อ 7](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569) |
+| Frontend libraries | ไม่มี library เพิ่ม (ไม่ใช้ UI kit, icon library หรือ state library) | ไอคอนเป็น SVG ใน `components/ui/icons.js`; สถานะการกรองเก็บใน URL ด้วย `useSearchParams` |
+| Mock API (โหมดข้อมูลจำลอง) | `NEXT_PUBLIC_USE_MOCK_API=true` + `lib/client/mock/` | ใช้พัฒนาหน้าเว็บก่อน API เสร็จ; ปิดบน Production |
 
 ## 5.2 แนวทางและวิธีการทดสอบระบบ (Testing Strategy)
 
@@ -796,7 +799,7 @@ flowchart LR
 | System testing | end-to-end flows บนระบบที่ต่อ backend จริง | Functional Testing ของ Authentication (UC-01) และ Product Read (UC-04, UC-05) และ Manual Testing ทั้งหมด|
 | UAT | ตัวแทนผู้ใช้ทดลองตาม user stories | ทีมยืนยันว่า US-01–US-06 ผ่านทั้งหมด; ไม่มีข้อมูลรายผู้ทดสอบ/วันทดสอบแนบ |
 | Performance testing | page load, API latency, concurrent load | ยังไม่มีผลวัดที่ยืนยันได้ |
-| Manual UI testing | หน้าหลัก/รายละเอียด/หน้าต่างติดต่อใน mock mode | เอกสาร TASK-07/10/16/18 บันทึก 16 cases ผ่าน |
+| Manual UI testing | หน้าหลัก/ค้นหา/ตัวกรอง/รายละเอียด/หน้าต่างติดต่อ | ระหว่างพัฒนาทดสอบใน mock mode 16 cases ผ่าน ([TASK-07/10/16/18](TASK-07-10-16-18-CHANGELOG.md)); หลัง deploy ทดสอบซ้ำบน Production กับ API จริง 16 พ.ย. 2569 ([`TASK-23-DEPLOY.md` หัวข้อ 7](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569)) |
 
 ### 5.2.2 ผลการทดสอบ
 
@@ -943,7 +946,7 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 | **สุธิมา สมอแข็ง** | System Analyst / UI-UX Designer | • ดำเนินการศึกษาและรวบรวมข้อมูลผู้ใช้งาน (User Research & Interviews)<br>• ออกแบบสถาปัตยกรรมระบบจำลองและแผนภาพเชิงกระบวนการ (Use Case Diagram, DFD)<br>• ออกแบบโครงสร้างหน้าจอ (UI Wireframe / Navigation Flow) และต้นแบบหน้าตาเว็บ (Figma) | **ยืนยัน** |
 | **วัชรินทร์ คงเซ็น** | QA / Software Tester | • กำหนดกลยุทธ์การทดสอบระบบ (Testing Strategy) และจัดทำแผนการทดสอบ (Test Plan)<br>• เขียนชุดกรณีทดสอบ (Test Cases) สำหรับตรวจสอบความถูกต้องของฟังก์ชันต่างๆ<br>• ดำเนินการทดสอบระบบผ่าน Bruno API Collection และทดสอบการใช้งานหน้าจอจริง (Manual Testing) พร้อมบันทึกผล | **ยืนยัน** |
 | **กันตภณ ชัยรุ่งปัญญา** | Backend Lead | • ออกแบบและดูแลสถาปัตยกรรมโครงสร้างหลังบ้าน (Backend Architecture & Core Libraries)<br>• ตั้งค่าและจัดการฐานข้อมูล Supabase (Migrations & Database Setup)<br>• พัฒนาระบบความปลอดภัยและการยืนยันตัวตน (Authentication & JWT / Route Guards) พร้อมทั้งรีวิวโค้ด (PR Review)<br>• จัดทำ API Specification v2.2 (TASK-05) และงาน Search & Filter (TASK-15)<br>• พัฒนา API ข้อมูลติดต่อผู้ขาย (`GET /products/:id/contact`) และประกาศของฉัน (`GET /me/products`) | [เว้นไว้รอข้อมูล] |
-| **[เว้นไว้รอข้อมูล: @yat]** | Frontend Lead | • ออกแบบและกำหนดโครงสร้างโค้ดฝั่งหน้าบ้านด้วย Next.js 15 App Router<br>• พัฒนาหน้าจอหลักของแพลตฟอร์ม เช่น หน้าแรก (Home Page), ระบบแสดงผลตารางรายการสินค้า (Product Card Grid), และระบบค้นหา<br>• ควบคุมมาตรฐานการเขียนโค้ดและเชื่อมต่อ API ฝั่ง Frontend | [เว้นไว้รอข้อมูล] |
+| **ฮิดายัต บูหา** | Frontend Lead | • วางโครงสร้างหน้าเว็บด้วย Next.js 15 App Router: layout, navbar, routing, ธีม และชั้นเรียก API กลาง (`lib/client/`) ที่ทีม frontend ใช้ร่วมกัน (TASK-07)<br>• พัฒนาหน้าแรก การ์ดสินค้า ระบบค้นหาและตัวกรอง (TASK-10, TASK-16) และหน้ารายละเอียดสินค้าพร้อมหน้าต่างข้อมูลติดต่อผู้ขาย (TASK-18)<br>• Deploy ระบบขึ้น Vercel พร้อมคู่มือและผลตรวจหลัง deploy (TASK-23)<br>• ควบคุมมาตรฐานโค้ดฝั่ง Frontend (ไม่เรียก Supabase จากเบราว์เซอร์, ไม่เพิ่ม library) และเขียนรายงานหัวข้อ 4.6 และส่วน frontend ของบทที่ 5 | **ยืนยัน** |
 | **ศรัณย์ภพ พิบูลธนาวนิช** | Backend Developer | • พัฒนา API เรียกดูสินค้า หมวดหมู่ และจุดนัดรับ พร้อมการค้นหา กรอง เรียงลำดับ และแบ่งหน้า (Product Read API - TASK-09) ซึ่งโค้ดค้นหา/กรองถูกนำไปใช้ต่อใน TASK-15<br>• พัฒนาระบบจัดการข้อมูลสินค้าแบบครบวงจร (CRUD) เปลี่ยนสถานะ และตรวจ/อัปโหลดไฟล์รูปภาพขึ้น Supabase Storage (TASK-12)<br>• พัฒนา API รายงานสินค้าและการจัดการของผู้ดูแลระบบ (Report & Admin Moderation) พร้อมตัวตรวจสิทธิ์ `requireAdmin` และ migration `0005` (ตาราง `moderation_logs` และ function แบบ atomic) (TASK-19)<br>• เขียน unit test ชุดทดสอบ API (Bruno Requests) และ Postman Collection สำหรับหน้า Admin Dashboard | **ยืนยัน** |
 | **วริทธิ์นันท์ สกุลกลาง** | Frontend Developer | • พัฒนาหน้าจอระบบสมาชิก (Login / Register / Profile)<br>• พัฒนาระบบฟอร์มสำหรับลงประกาศขายสินค้าและแก้ไขข้อมูล (Listing Create & Edit Forms)<br>• พัฒนาหน้าแดชบอร์ดสำหรับผู้ดูแลระบบ (Admin Dashboard) และหน้าจัดการสถานะสินค้า | **ยืนยัน** |
 
@@ -963,7 +966,7 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 
 ## ภาคผนวก ค — เอกสารและหลักฐานประกอบ
 
-- Live Demo: [เว้นไว้รอข้อมูล]
+- Live Demo: [https://unitrade-rouge.vercel.app](https://unitrade-rouge.vercel.app) (Vercel, deploy 16 พ.ย. 2569)
 - Source Code: [`GitHub Repo`](https://github.com/maneekongritphichayaporn-creator/UniTrade)
 - SRS: [`SRS-UNITRADE-v2.2.md`](SRS-UNITRADE-v2.2.md)
 - Kanban: [`PROJECT-KANBAN.md`](PROJECT-KANBAN.md)
@@ -972,6 +975,6 @@ UniTrade เป็นเว็บแอปตลาดกลางสำหร�
 - API Specification v2.2: [`API-SPEC-UNITRADE-v2.2.md`](API-SPEC-UNITRADE-v2.2.md) (รวมตารางสถานะการพัฒนาเทียบกับ spec)
 - Backend change notes: [`TASK-09`](TASK-09-CHANGELOG.md), [`TASK-12`](TASK-12-CHANGELOG.md), [`TASK-15`](TASK-15-CHANGELOG.md), [`TASK-19`](TASK-19-CHANGELOG.md), [`Contact และ My Listings API`](CONTACT-MY-PRODUCTS-CHANGELOG.md)
 - Postman collection (Admin/Report): [`docs/postman/`](postman/)
-- Test Report: [`Test Report.mp`](TEST_REPORT.md)
-- Screenshot/production deployment evidence: [เว้นไว้รอข้อมูล]
+- Test Report: [`TEST_REPORT.md`](TEST_REPORT.md)
+- Production deployment evidence และ screenshot: [`TASK-23-DEPLOY.md` หัวข้อ 7](TASK-23-DEPLOY.md#7-ผล-deploy-จริง-16-พฤศจิกายน-2569) (ผล smoke test, ภาพหน้าจอใน [`images/deploy/`](images/deploy/)) · คู่มือ deploy: [`TASK-23-DEPLOY.md`](TASK-23-DEPLOY.md)
 - UAT: [`UAT-UNITRADE.md`](UAT-UNITRADE.md)
