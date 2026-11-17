@@ -122,6 +122,12 @@ export const ShieldCheckIcon = (props) => (
   </Icon>
 );
 
+export const FlagIcon = (props) => (
+  <Icon {...props}>
+    <path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.3 2a6 6 0 0 0 3.9-1.3 1 1 0 0 1 1.6.8v10a1 1 0 0 1-.4.8A6 6 0 0 1 16.7 16c-2.5 0-4.4-2-7.3-2a6 6 0 0 0-4.6 1.9" />
+  </Icon>
+);
+
 export const ImageIcon = (props) => (
   <Icon {...props}>
     <rect width="18" height="18" x="3" y="3" rx="2" />
