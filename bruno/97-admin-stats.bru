@@ -1,0 +1,61 @@
+meta {
+  name: Admin stats - counts for the dashboard
+  type: http
+  seq: 97
+}
+
+get {
+  url: {{baseUrl}}/admin/stats
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
+}
+
+script:pre-request {
+  // ข้ามเมื่อยังไม่มีบัญชี admin ใน bruno/.env (ไม่มี admin_token)
+  if (!bru.getVar("admin_token")) {
+    bru.runner.skipRequest();
+  }
+}
+
+tests {
+  test("200 with product, category, report and user counts", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+
+    const p = body.products;
+    for (const key of ["total", "available", "reserved", "sold", "free", "removed_by_admin"]) {
+      expect(p[key], `products.${key}`).to.be.a("number");
+    }
+    expect(p.total).to.equal(p.available + p.reserved + p.sold);
+
+    expect(body.categories).to.have.lengthOf(6);
+    for (const c of body.categories) {
+      expect(c).to.have.all.keys("category_id", "name", "product_count");
+    }
+    const inCategories = body.categories.reduce((n, c) => n + c.product_count, 0);
+    expect(inCategories).to.equal(p.total);
+
+    const r = body.reports;
+    expect(r.by_status).to.have.all.keys("pending", "actioned", "dismissed");
+    expect(r.by_reason).to.have.all.keys(
+      "scam", "prohibited_item", "spam", "wrong_category", "offensive_content", "already_sold", "other"
+    );
+    expect(r.total).to.equal(r.by_status.pending + r.by_status.actioned + r.by_status.dismissed);
+    expect(Object.values(r.by_reason).reduce((n, v) => n + v, 0)).to.equal(r.total);
+
+    expect(body.users.total).to.be.at.least(1);
+    expect(body.users.new_last_7_days).to.be.at.most(body.users.total);
+    expect(body.generated_at).to.be.a("string");
+  });
+
+  test("numbers only, no personal data", function () {
+    const text = JSON.stringify(res.getBody());
+    for (const field of ["email", "phone_number", "line_id", "password_hash", "full_name"]) {
+      expect(text).to.not.include(`"${field}"`);
+    }
+  });
+}

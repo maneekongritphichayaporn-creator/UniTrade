@@ -1,0 +1,22 @@
+meta {
+  name: Admin stats - member is refused
+  type: http
+  seq: 96
+}
+
+get {
+  url: {{baseUrl}}/admin/stats
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token2}}
+}
+
+tests {
+  test("403 ADMIN_REQUIRED for a normal member", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().error.code).to.equal("ADMIN_REQUIRED");
+  });
+}
