@@ -1,53 +1,61 @@
 .section { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 16px 80px; }
 
-.header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; padding-top: 28px; border-top: 1px solid var(--line); }
-.header h2 { color: var(--brand-500); font-size: 22px; }
-.header p { margin-top: 4px; color: var(--muted); font-size: 13px; }
+.header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; padding-top: 28px; border-top: 1px solid var(--line); }
+.header h2 { color: var(--ink); font-size: 20px; }
+.refresh { display: flex; align-items: baseline; gap: 12px; color: var(--muted); font-size: 13px; }
+.refresh button { padding: 0; border: 0; background: none; color: var(--brand-600); font-size: 13px; font-weight: 600; cursor: pointer; }
+.refresh button:hover:not(:disabled) { text-decoration: underline; }
+.refresh button:disabled { color: var(--muted); cursor: default; }
 
-.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
-.card { display: grid; align-content: start; gap: 2px; padding: 14px 16px; border: 1px solid var(--line); border-left: 4px solid var(--brand-200); border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-sm); }
-.cardLabel { color: var(--ink-soft); font-size: 13px; font-weight: 600; }
-.cardValue { color: var(--ink); font-size: 28px; line-height: 1.25; font-variant-numeric: tabular-nums; }
-.cardHint { color: var(--muted); font-size: 12px; }
+/* แถวบน: ประกาศ (กว้าง) + ผู้ใช้ · แถวล่าง: รายงาน + หมวดหมู่ */
+.grid { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
+.box { padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+.boxTitle { color: var(--muted); font-size: 13px; font-weight: 600; }
+.big { margin: 4px 0 14px; color: var(--ink); font-size: 34px; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.big small { color: var(--muted); font-size: 14px; font-weight: 400; }
 
-.toneBrand { border-left-color: var(--brand-500); }
-.toneBrand .cardValue { color: var(--brand-600); }
-.toneAvailable { border-left-color: var(--available); }
-.toneReserved { border-left-color: var(--reserved); }
-.toneSold { border-left-color: var(--sold); }
-.toneRemoved { border-left-color: #c62828; }
-.toneUsers { border-left-color: var(--brand-700); }
+.segments { display: flex; gap: 2px; height: 10px; overflow: hidden; border-radius: 3px; background: var(--surface); }
+.segments span { min-width: 4px; }
 
-.panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.panel { padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-sm); }
-.panelHead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.panelHead h3 { font-size: 16px; }
-.panelHead span { flex: none; color: var(--muted); font-size: 13px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 10px 0 0; padding: 0; list-style: none; color: var(--ink-soft); font-size: 13px; }
+.legend li { display: flex; align-items: center; gap: 6px; }
+.legend strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+.dot { width: 8px; height: 8px; border-radius: 2px; }
 
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
-.chip { padding: 4px 10px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; }
-.chipPending { background: var(--brand-50); color: var(--brand-700); }
-.chipActioned { background: #fff0f0; color: #a72222; }
-.chipDismissed { background: var(--sold-soft); color: var(--sold); }
+.cAvailable { background: var(--available); }
+.cReserved { background: var(--reserved); }
+.cSold { background: #a1a1aa; }
+.cPending { background: var(--brand-500); }
+.cActioned { background: #c62828; }
+.cDismissed { background: #a1a1aa; }
 
-.bars { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
-.barText { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 5px; font-size: 14px; }
-.barCount { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
-.barCount small { color: var(--muted); font-size: 12px; font-weight: 400; }
-.barTrack { height: 8px; overflow: hidden; border-radius: var(--radius-pill); background: var(--surface); }
-.barFill { height: 100%; border-radius: inherit; background: var(--brand-400); }
+.facts { display: flex; gap: 32px; margin: 18px 0 0; padding-top: 14px; border-top: 1px dashed var(--line); }
+.facts dt { color: var(--muted); font-size: 12px; }
+.facts dd { margin: 2px 0 0; color: var(--ink); font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
-.emptyNote { padding: 28px 0; color: var(--muted); font-size: 14px; text-align: center; }
+.note { color: var(--ink-soft); font-size: 14px; }
+.up { color: var(--available); }
+.muted { margin-top: 14px; color: var(--muted); font-size: 12px; }
+.subTitle { margin: 22px 0 10px; color: var(--ink-soft); font-size: 13px; font-weight: 600; }
 
-.skeletonCard { height: 92px; border-radius: var(--radius); }
-.skeletonPanel { height: 320px; border-radius: var(--radius); }
+.rank { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.boxTitle + .rank { margin-top: 16px; }
+.rank li { display: grid; grid-template-columns: 1fr auto; row-gap: 5px; align-items: baseline; font-size: 14px; }
+.rankLabel { color: var(--ink); }
+.rankValue { font-weight: 600; font-variant-numeric: tabular-nums; }
+.rankLine { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: var(--surface); }
+.rankLine span { display: block; height: 100%; border-radius: inherit; background: var(--brand-400); }
+
+.skeletonBox { height: 200px; border-radius: var(--radius); }
+.tall { height: 300px; }
 
 @media (max-width: 900px) {
-  .panels { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
-  .header { align-items: flex-start; }
-  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .cardValue { font-size: 24px; }
+  .header { flex-direction: column; gap: 4px; }
+  .box { padding: 18px; }
+  .big { font-size: 28px; }
+  .facts { gap: 24px; }
 }
