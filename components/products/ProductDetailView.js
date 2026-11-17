@@ -12,6 +12,7 @@ import { categoryLabel, conditionLabel, formatDate, formatPrice, formatRelativeT
 import { getProduct } from '@/lib/client/products.js';
 import { routes } from '@/lib/client/routes.js';
 import { ContactSellerButton } from './ContactSellerButton.js';
+import { ReportProductButton } from './ReportProductButton.js';
 import { StatusBadge } from './StatusBadge.js';
 import { WishlistButton } from './WishlistButton.js';
 import styles from './ProductDetailView.module.css';
@@ -142,6 +143,7 @@ export function ProductDetailView({ productId }) {
             <ContactSellerButton productId={product.product_id} sold={product.status === 'sold'} />
             <WishlistButton productId={product.product_id} initialSaved={product.is_wishlisted} />
           </div>
+          <ReportProductButton productId={product.product_id} isOwner={product.is_owner} />
 
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>รายละเอียด</h2>
